@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  Card, 
-  Table, 
-  Button, 
-  Tag, 
-  Space, 
-  Statistic, 
-  Row, 
-  Col, 
+import {
+  Card,
+  Table,
+  Button,
+  Tag,
+  Space,
+  Statistic,
+  Row,
+  Col,
   Input,
   message,
   Modal,
@@ -17,7 +17,8 @@ import {
   Alert,
   InputNumber,
   Select,
-  Progress
+  Progress,
+  Upload
 } from 'antd'
 import {
   ReloadOutlined,
@@ -28,9 +29,13 @@ import {
   ClockCircleOutlined,
   ExclamationCircleOutlined,
   FileTextOutlined,
-  DatabaseOutlined
+  DatabaseOutlined,
+  UploadOutlined,
+  InboxOutlined,
+  CloudServerOutlined,
+  DownloadOutlined
 } from '@ant-design/icons'
-import { dataService } from '../services/api'
+import { dataService, ingestionService } from '../services/api'
 
 const { Search } = Input
 const { Title, Text } = Typography
@@ -48,6 +53,11 @@ const DataManagePage = () => {
   const [cleanupDays, setCleanupDays] = useState(30)
   const [batchProcessing, setBatchProcessing] = useState(false)
   const [batchProgress, setBatchProgress] = useState(0)
+
+  // 文件接入相关状态
+  const [ingestionRecords, setIngestionRecords] = useState([])
+  const [ingestionStats, setIngestionStats] = useState(null)
+  const [uploadLoading, setUploadLoading] = useState(false)
 
   // 加载数据统计
   const loadStatistics = async () => {
@@ -90,26 +100,116 @@ const DataManagePage = () => {
     }
   }
 
+  // 加载接入记录
+  const loadIngestionRecords = async () => {
+    try {
+      const response = await ingestionService.getRecords({ limit: 50 })
+      setIngestionRecords(response.records || [])
+    } catch (error) {
+      message.error('加载接入记录失败: ' + error.message)
+    }
+  }
+
+  // 加载接入统计
+  const loadIngestionStats = async () => {
+    try {
+      const response = await ingestionService.getStats()
+      setIngestionStats(response)
+    } catch (error) {
+      console.error('加载接入统计失败:', error)
+    }
+  }
+
+  // 文件上传处理
+  const handleFileUpload = async (info) => {
+    const { file } = info
+    if (file.status === 'uploading') {
+      setUploadLoading(true)
+      return
+    }
+
+    if (file.status === 'done') {
+      setUploadLoading(false)
+      message.success(`${file.name} 上传成功!`)
+      loadIngestionRecords()
+      loadIngestionStats()
+    } else if (file.status === 'error') {
+      setUploadLoading(false)
+      message.error(`${file.name} 上传失败`)
+    }
+  }
+
+  // 自定义上传
+  const customUpload = async ({ file, onSuccess, onError }) => {
+    try {
+      setUploadLoading(true)
+      const response = await ingestionService.uploadFile(file, 'file_upload', true)
+      onSuccess(response, file)
+      message.success(`文件 ${file.name} 上传成功! 提取了 ${response.extracted_text_length || 0} 字符`)
+      loadIngestionRecords()
+      loadIngestionStats()
+    } catch (error) {
+      onError(error)
+      message.error(`文件上传失败: ${error.message}`)
+    } finally {
+      setUploadLoading(false)
+    }
+  }
+
+  // 下载原始文件
+  const handleDownloadFile = async (recordId) => {
+    try {
+      const response = await ingestionService.downloadRecord(recordId)
+      if (response.download_url) {
+        window.open(response.download_url, '_blank')
+      }
+    } catch (error) {
+      message.error('获取下载链接失败: ' + error.message)
+    }
+  }
+
+  // 处理接入记录(NLP)
+  const handleProcessIngestionRecord = async (recordId) => {
+    try {
+      setLoading(true)
+      const response = await ingestionService.processRecord(recordId)
+      message.success(`处理成功! 提取了 ${response.entities_count || 0} 个实体`)
+      loadIngestionRecords()
+    } catch (error) {
+      message.error('处理失败: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     // 优先加载统计数据
     loadStatistics()
-    
+
     // 延迟加载文章列表和任务历史，避免并发请求过多
     const timer1 = setTimeout(() => {
       if (activeTab === 'articles') {
         loadArticles()
       }
     }, 100)
-    
+
     const timer2 = setTimeout(() => {
       if (activeTab === 'tasks') {
         loadTaskHistory()
       }
     }, 200)
-    
+
+    const timer3 = setTimeout(() => {
+      if (activeTab === 'ingestion') {
+        loadIngestionRecords()
+        loadIngestionStats()
+      }
+    }, 300)
+
     return () => {
       clearTimeout(timer1)
       clearTimeout(timer2)
+      clearTimeout(timer3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -120,7 +220,7 @@ const DataManagePage = () => {
       message.warning('请输入关键词')
       return
     }
-    
+
     setLoading(true)
     try {
       const response = await dataService.crawlKeyword(keyword.trim())
@@ -203,10 +303,10 @@ const DataManagePage = () => {
       onOk: async () => {
         setBatchProcessing(true)
         setBatchProgress(0)
-        
+
         try {
           const response = await dataService.batchProcessArticles(selectedRowKeys)
-          
+
           // 显示实体和关系提取统计
           const entitiesTotal = response.entities_extracted || 0
           const relationsTotal = response.relations_extracted || 0
@@ -218,7 +318,7 @@ const DataManagePage = () => {
             `批量处理完成! 成功: ${response.success}, 失败: ${response.failed}, 跳过: ${response.skipped}${statsMsg}`,
             8
           )
-          
+
           setSelectedRowKeys([])
           loadArticles(pagination.current, pagination.pageSize)
           loadStatistics()
@@ -272,7 +372,7 @@ const DataManagePage = () => {
         try {
           const response = await dataService.batchDeleteArticles(selectedRowKeys)
           message.success(`批量删除完成! 已删除 ${response.deleted_count} 篇文章`)
-          
+
           setSelectedRowKeys([])
           loadArticles(pagination.current, pagination.pageSize)
           loadStatistics()
@@ -340,8 +440,8 @@ const DataManagePage = () => {
       dataIndex: 'processed',
       key: 'processed',
       width: '10%',
-      render: (processed) => processed ? 
-        <Tag color="success" icon={<CheckCircleOutlined />}>已处理</Tag> : 
+      render: (processed) => processed ?
+        <Tag color="success" icon={<CheckCircleOutlined />}>已处理</Tag> :
         <Tag color="default" icon={<ClockCircleOutlined />}>未处理</Tag>
     },
     {
@@ -351,24 +451,24 @@ const DataManagePage = () => {
       render: (_, record) => (
         <Space>
           {!record.processed && (
-            <Button 
-              type="primary" 
-              size="small" 
+            <Button
+              type="primary"
+              size="small"
               icon={<RobotOutlined />}
               onClick={() => handleProcessArticle(record._id)}
             >
               处理
             </Button>
           )}
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             size="small"
             href={record.url}
             target="_blank"
           >
             查看
           </Button>
-          <Button 
+          <Button
             danger
             type="link"
             size="small"
@@ -459,7 +559,7 @@ const DataManagePage = () => {
   return (
     <div style={{ padding: '24px' }}>
       <Title level={2}>
-        <DatabaseOutlined /> 数据采集管理 
+        <DatabaseOutlined /> 数据采集管理
       </Title>
 
       {/* 数据统计卡片 */}
@@ -519,17 +619,17 @@ const DataManagePage = () => {
             style={{ width: 300 }}
             loading={loading}
           />
-          <Button 
-            type="primary" 
-            icon={<CloudDownloadOutlined />} 
+          <Button
+            type="primary"
+            icon={<CloudDownloadOutlined />}
             size="large"
             onClick={handleUpdateRss}
             loading={loading}
           >
             更新RSS订阅 (推荐)
           </Button>
-          <Button 
-            icon={<ReloadOutlined />} 
+          <Button
+            icon={<ReloadOutlined />}
             size="large"
             onClick={() => {
               loadStatistics()
@@ -539,9 +639,9 @@ const DataManagePage = () => {
           >
             刷新数据
           </Button>
-          <Button 
+          <Button
             danger
-            icon={<DeleteOutlined />} 
+            icon={<DeleteOutlined />}
             size="large"
             onClick={handleCleanup}
           >
@@ -569,15 +669,15 @@ const DataManagePage = () => {
                       style={{ marginBottom: 16 }}
                       action={
                         <Space>
-                          <Button 
-                            type="primary" 
+                          <Button
+                            type="primary"
                             size="small"
                             onClick={handleBatchProcess}
                             loading={batchProcessing}
                           >
                             批量处理
                           </Button>
-                          <Button 
+                          <Button
                             danger
                             size="small"
                             icon={<DeleteOutlined />}
@@ -585,8 +685,8 @@ const DataManagePage = () => {
                           >
                             批量删除
                           </Button>
-                          <Button 
-                            size="small" 
+                          <Button
+                            size="small"
                             onClick={() => setSelectedRowKeys([])}
                           >
                             取消选择
@@ -596,9 +696,9 @@ const DataManagePage = () => {
                     />
                   )}
                   {batchProcessing && (
-                    <Progress 
-                      percent={batchProgress} 
-                      status="active" 
+                    <Progress
+                      percent={batchProgress}
+                      status="active"
                       style={{ marginBottom: 16 }}
                     />
                   )}
@@ -661,6 +761,180 @@ const DataManagePage = () => {
                   pagination={false}
                 />
               )
+            },
+            {
+              key: 'ingestion',
+              label: (
+                <span>
+                  <CloudServerOutlined /> 文件接入
+                </span>
+              ),
+              children: (
+                <>
+                  {/* 统计信息 */}
+                  {ingestionStats && (
+                    <Row gutter={16} style={{ marginBottom: 16 }}>
+                      <Col span={8}>
+                        <Statistic
+                          title="已接入文件"
+                          value={ingestionStats.total_records || 0}
+                          prefix={<FileTextOutlined />}
+                        />
+                      </Col>
+                      <Col span={8}>
+                        <Statistic
+                          title="按来源类型"
+                          value={Object.keys(ingestionStats.by_source_type || {}).length}
+                          prefix={<DatabaseOutlined />}
+                        />
+                      </Col>
+                      <Col span={8}>
+                        <Statistic
+                          title="待处理"
+                          value={ingestionStats.by_processed?.['False'] || 0}
+                          prefix={<ClockCircleOutlined />}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+
+                  {/* 文件上传区域 */}
+                  <Card
+                    title={<><UploadOutlined /> 上传文件</>}
+                    style={{ marginBottom: 16 }}
+                  >
+                    <Upload.Dragger
+                      name="file"
+                      multiple={false}
+                      customRequest={customUpload}
+                      onChange={handleFileUpload}
+                      accept=".pdf,.xlsx,.xls,.csv,.docx,.doc,.txt,.json,.xml"
+                      showUploadList={false}
+                    >
+                      <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                      </p>
+                      <p className="ant-upload-text">点击或拖拽文件到此区域上传</p>
+                      <p className="ant-upload-hint">
+                        支持 PDF、Excel、CSV、Word、TXT、JSON、XML 格式
+                      </p>
+                    </Upload.Dragger>
+                    {uploadLoading && (
+                      <Progress percent={50} status="active" style={{ marginTop: 16 }} />
+                    )}
+                  </Card>
+
+                  {/* 刷新按钮 */}
+                  <div style={{ marginBottom: 16 }}>
+                    <Button
+                      icon={<ReloadOutlined />}
+                      onClick={() => {
+                        loadIngestionRecords()
+                        loadIngestionStats()
+                      }}
+                    >
+                      刷新列表
+                    </Button>
+                  </div>
+
+                  {/* 接入记录表格 */}
+                  <Table
+                    columns={[
+                      {
+                        title: '文件名',
+                        dataIndex: ['metadata', 'filename'],
+                        key: 'filename',
+                        width: '25%',
+                        ellipsis: true,
+                        render: (filename) => (
+                          <Tooltip title={filename}>
+                            <FileTextOutlined style={{ marginRight: 8 }} />
+                            {filename}
+                          </Tooltip>
+                        )
+                      },
+                      {
+                        title: '类型',
+                        dataIndex: 'content_type',
+                        key: 'content_type',
+                        width: '15%',
+                        render: (type) => {
+                          const typeMap = {
+                            'application/pdf': { color: 'red', label: 'PDF' },
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': { color: 'green', label: 'Excel' },
+                            'text/csv': { color: 'blue', label: 'CSV' },
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { color: 'purple', label: 'Word' },
+                            'text/plain': { color: 'default', label: 'TXT' }
+                          }
+                          const config = typeMap[type] || { color: 'default', label: type?.split('/')[1] || '未知' }
+                          return <Tag color={config.color}>{config.label}</Tag>
+                        }
+                      },
+                      {
+                        title: '大小',
+                        dataIndex: ['metadata', 'file_size'],
+                        key: 'file_size',
+                        width: '10%',
+                        render: (size) => {
+                          if (!size) return '-'
+                          if (size < 1024) return `${size} B`
+                          if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
+                          return `${(size / 1024 / 1024).toFixed(1)} MB`
+                        }
+                      },
+                      {
+                        title: '接入时间',
+                        dataIndex: 'ingested_at',
+                        key: 'ingested_at',
+                        width: '18%',
+                        render: (date) => date ? new Date(date).toLocaleString('zh-CN') : '-'
+                      },
+                      {
+                        title: '状态',
+                        dataIndex: 'is_processed',
+                        key: 'is_processed',
+                        width: '10%',
+                        render: (processed) => processed ?
+                          <Tag color="success" icon={<CheckCircleOutlined />}>已处理</Tag> :
+                          <Tag color="default" icon={<ClockCircleOutlined />}>待处理</Tag>
+                      },
+                      {
+                        title: '操作',
+                        key: 'action',
+                        width: '22%',
+                        render: (_, record) => (
+                          <Space>
+                            <Button
+                              size="small"
+                              icon={<DownloadOutlined />}
+                              onClick={() => handleDownloadFile(record.record_id)}
+                            >
+                              下载
+                            </Button>
+                            {!record.is_processed && (
+                              <Button
+                                type="primary"
+                                size="small"
+                                icon={<RobotOutlined />}
+                                onClick={() => handleProcessIngestionRecord(record.record_id)}
+                                loading={loading}
+                              >
+                                处理
+                              </Button>
+                            )}
+                          </Space>
+                        )
+                      }
+                    ]}
+                    dataSource={ingestionRecords}
+                    rowKey="record_id"
+                    pagination={{
+                      pageSize: 10,
+                      showTotal: (total) => `共 ${total} 条记录`
+                    }}
+                  />
+                </>
+              )
             }
           ]}
         />
@@ -696,7 +970,7 @@ const DataManagePage = () => {
           </div>
           <div>
             <Text type="secondary">
-              快速选择: 
+              快速选择:
               <Button type="link" size="small" onClick={() => setCleanupDays(1)}>1天</Button>
               <Button type="link" size="small" onClick={() => setCleanupDays(7)}>7天</Button>
               <Button type="link" size="small" onClick={() => setCleanupDays(30)}>30天</Button>

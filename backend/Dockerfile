@@ -21,10 +21,10 @@ ENV PYTHONUNBUFFERED=1 \
 COPY requirements.txt .
 
 # 安装Python依赖（优先使用预编译的二进制轮子）
-# 使用清华镜像加速下载
+# 使用阿里云镜像加速下载，失败则使用官方PyPI
 RUN pip install --upgrade pip && \
-    pip install --only-binary=:all: -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple || \
-    pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com || \
+    pip install -r requirements.txt
 
 # 复制应用代码
 COPY --chown=appuser:appuser . .

@@ -124,6 +124,55 @@ export const dataService = {
   }
 }
 
+// 数据接入相关API (新功能)
+export const ingestionService = {
+  // 上传文件
+  uploadFile: (file, sourceName = 'file_upload', processImmediately = true) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('source_name', sourceName)
+    formData.append('process_immediately', processImmediately)
+    return apiClient.post('/api/v1/ingestion/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  },
+
+  // 批量上传文件
+  uploadBatch: (files, sourceName = 'batch_upload') => {
+    const formData = new FormData()
+    files.forEach(file => formData.append('files', file))
+    formData.append('source_name', sourceName)
+    return apiClient.post('/api/v1/ingestion/upload/batch', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  },
+
+  // 获取原始数据记录列表
+  getRecords: (params = {}) => {
+    return apiClient.get('/api/v1/ingestion/records', { params })
+  },
+
+  // 获取单条记录
+  getRecord: (recordId) => {
+    return apiClient.get(`/api/v1/ingestion/records/${recordId}`)
+  },
+
+  // 下载原始文件
+  downloadRecord: (recordId) => {
+    return apiClient.get(`/api/v1/ingestion/records/${recordId}/download`)
+  },
+
+  // 处理记录(NLP提取)
+  processRecord: (recordId) => {
+    return apiClient.post(`/api/v1/ingestion/records/${recordId}/process`)
+  },
+
+  // 获取接入统计
+  getStats: () => {
+    return apiClient.get('/api/v1/ingestion/stats')
+  }
+}
+
 // 实体操作相关API
 export const entityActionsService = {
   // 添加到监控
@@ -176,5 +225,6 @@ export default {
   nlp: nlpService,
   graph: graphService,
   data: dataService,
+  ingestion: ingestionService,
   entityActions: entityActionsService
 }

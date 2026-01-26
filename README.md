@@ -145,6 +145,7 @@ docker-compose ps
 | MongoDB | 8.0 | 文章和 RSS 数据 |
 | MySQL | 8.0 | 任务配置和元数据 |
 | Redis | 7-alpine | Celery broker + 缓存 |
+| MinIO | latest | 原始文件对象存储 |
 
 ---
 
@@ -159,8 +160,10 @@ zhilian-robot/
 │   │   ├── nlp/                 # NLP 处理（DeepSeek LLM）
 │   │   ├── services/            # 业务逻辑（Neo4j 图谱服务、实体规范化）
 │   │   ├── crawler/             # 数据采集（RSS + 新闻爬虫）
+│   │   ├── ingestion/           # 📦 数据接入（文件/API/流式）
+│   │   ├── processing/          # 🔧 数据清洗与标准化
 │   │   ├── tasks/               # Celery 异步任务
-│   │   ├── database/            # 数据库连接（Neo4j/MongoDB/Redis）
+│   │   ├── database/            # 数据库连接（Neo4j/MongoDB/Redis/MinIO）
 │   │   └── models/              # Pydantic 数据模型
 │   ├── scripts/                 # 后台维护脚本
 │   │   ├── init_sources.py     # 初始化数据源可信度

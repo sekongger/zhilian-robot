@@ -79,6 +79,14 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FILE: str = "logs/app.log"
     
+    # MinIO对象存储配置
+    MINIO_ENDPOINT: str = "minio:9000"
+    MINIO_ACCESS_KEY: str = "admin"
+    MINIO_SECRET_KEY: str = "password123"
+    MINIO_SECURE: bool = False
+    MINIO_BUCKET_RAW: str = "raw-data"
+    MINIO_BUCKET_PROCESSED: str = "processed-data"
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(python3:*)",
+      "Skill(superpowers:brainstorming)"
+    ]
+  }
+}

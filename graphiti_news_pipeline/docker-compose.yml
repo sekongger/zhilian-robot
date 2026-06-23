@@ -1,0 +1,99 @@
+services:
+  # MongoDB (crawler runtime store)
+  mongodb:
+    image: mongo:7
+    container_name: graphiti-project-mongodb
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - graphiti-network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"db.runCommand({ ping: 1 }).ok\" | grep 1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  # Neo4j Graph Database
+  neo4j:
+    image: neo4j:5.26
+    container_name: graphiti-project-neo4j
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-password123}
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - graphiti-network
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+  # Backend Service (FastAPI Application)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: graphiti-project-backend:latest
+    container_name: graphiti-project-backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      # Mounts the current directory on the host to /app in the container
+      # This allows for live-reloading of code changes during development
+      - .:/app
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password123}
+      - GRAPHITI_ATTR_SANITIZE_MODE=${GRAPHITI_ATTR_SANITIZE_MODE:-hybrid}
+      - GRAPHITI_ATTR_FLATTEN_MAX_DEPTH=${GRAPHITI_ATTR_FLATTEN_MAX_DEPTH:-2}
+      - OPENAI_API_KEY=your_api_key_here
+      - OPENAI_API_BASE=${OPENAI_API_BASE}
+      - OPENAI_MODEL=${OPENAI_MODEL}
+      - CRAWLER_MONGODB_URI=${CRAWLER_MONGODB_URI:-mongodb://mongodb:27017}
+      - CRAWLER_MONGODB_DATABASE=${CRAWLER_MONGODB_DATABASE:-graphiti_crawler}
+      - CRAWLER_MONGODB_COLLECTION=${CRAWLER_MONGODB_COLLECTION:-crawler_articles}
+      - CRAWLER_MONGODB_RUN_COLLECTION=${CRAWLER_MONGODB_RUN_COLLECTION:-crawler_runs}
+      - CRAWLER_GRAPHITI_API_BASE=${CRAWLER_GRAPHITI_API_BASE:-http://localhost:8000/api}
+      - OCTOPUS_API_BASE=${OCTOPUS_API_BASE:-https://openapi.bazhuayu.com}
+      - OCTOPUS_USERNAME=${OCTOPUS_USERNAME}
+      - OCTOPUS_PASSWORD=${OCTOPUS_PASSWORD}
+      - OCTOPUS_TASK_GROUP_NAME=${OCTOPUS_TASK_GROUP_NAME:-}
+      - OCTOPUS_TASK_IDS=${OCTOPUS_TASK_IDS:-}
+      - OCTOPUS_TASK_NAMES=${OCTOPUS_TASK_NAMES:-}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=15)"]
+      interval: 45s
+      timeout: 20s
+      retries: 5
+      start_period: 20s
+    networks:
+      - graphiti-network
+
+volumes:
+  mongodb_data:
+  neo4j_data:
+  neo4j_logs:
+
+networks:
+  graphiti-network:
+    driver: bridge

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据库管理导入页</title>
+    <style>
+        :root {
+            --bg-1: #f1f5f9;
+            --bg-2: #e2e8f0;
+            --ink: #0f172a;
+            --muted: #475569;
+            --panel: #ffffff;
+            --line: #cbd5e1;
+            --accent: #0f766e;
+            --danger: #b91c1c;
+            --ok: #166534;
+            --shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 10% 10%, #dbeafe 0, transparent 36%),
+                radial-gradient(circle at 90% 12%, #dcfce7 0, transparent 32%),
+                linear-gradient(125deg, var(--bg-1), var(--bg-2));
+            min-height: 100vh;
+        }
+
+        .shell {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px 14px 34px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a, #0f766e);
+            color: #f8fafc;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 16px 18px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            font-size: 13px;
+            color: #dbeafe;
+        }
+
+        .panel {
+            margin-top: 14px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .panel-body {
+            padding: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 9px 10px;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.16);
+        }
+
+        .row {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .check {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--ink);
+            user-select: none;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            color: #fff;
+            background: #0f766e;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn:disabled {
+            opacity: 0.72;
+            cursor: not-allowed;
+        }
+
+        .btn-light {
+            background: #334155;
+        }
+
+        .btn-octopus {
+            background: #065f46;
+        }
+
+        .result {
+            margin-top: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 10px;
+            background: #f8fafc;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #0f172a;
+            min-height: 64px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .result.error {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        .result.success {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+            color: var(--ok);
+        }
+
+        .source-list {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .source-list code {
+            color: #0f172a;
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <section class="hero">
+            <h1 class="title">数据库管理导入页</h1>
+            <p class="subtitle">仅用于管理侧执行爬取导入任务，不面向普通用户展示。</p>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h2 class="panel-title">爬取导入控制台</h2>
+                <span class="hint">调用接口: <code>/api/crawler/run-once</code></span>
+            </div>
+            <div class="panel-body">
+                <div class="grid">
+                    <div class="field">
+                        <label for="crawl-count-input">每个源抓取数量 (1-100)</label>
+                        <input id="crawl-count-input" class="input" type="number" min="1" max="100" value="1">
+                    </div>
+                    <div class="field">
+                        <label for="crawl-source-select">数据源</label>
+                        <select id="crawl-source-select" class="select">
+                            <option value="">全部启用源</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="since-hours-input">回看时间窗口 (小时)</label>
+                        <input id="since-hours-input" class="input" type="number" min="1" max="720" value="24">
+                    </div>
+                    <div class="field">
+                        <label for="process-limit-input">处理上限</label>
+                        <input id="process-limit-input" class="input" type="number" min="1" max="2000" value="200">
+                    </div>
+                    <div class="field">
+                        <label for="ingest-retry-limit-input">Ingest 重试上限 (0-500)</label>
+                        <input id="ingest-retry-limit-input" class="input" type="number" min="0" max="500" value="5">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="check">
+                        <input id="ingest-checkbox" type="checkbox" checked>
+                        执行入库
+                    </label>
+                    <label class="check">
+                        <input id="force-ingest-checkbox" type="checkbox" checked>
+                        强制忽略灰度开关（管理模式）
+                    </label>
+                </div>
+
+                <div class="row">
+                    <button id="run-btn" class="btn">执行一键爬取导入</button>
+                    <button id="run-octopus-full-btn" class="btn btn-octopus">八爪鱼一键全流程</button>
+                    <button id="refresh-sources-btn" class="btn btn-light">刷新数据源</button>
+                </div>
+
+                <div id="result-box" class="result">待执行。</div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h2 class="panel-title">当前启用数据源</h2>
+                <span class="hint">来自 <code>crawler/config/sources.yaml</code></span>
+            </div>
+            <div class="panel-body">
+                <ul id="source-list" class="source-list">
+                    <li>加载中...</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000/api";
+
+        function escapeHtml(text) {
+            return String(text || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function requestJson(url, options = undefined) {
+            const res = await fetch(url, options);
+            if (!res.ok) {
+                let detail = `HTTP ${res.status}`;
+                try {
+                    const body = await res.json();
+                    detail = body.detail || detail;
+                } catch (_) {}
+                throw new Error(detail);
+            }
+            return res.json();
+        }
+
+        function setResult(message, type = "") {
+            const box = document.getElementById("result-box");
+            box.className = `result${type ? " " + type : ""}`;
+            box.textContent = message;
+        }
+
+        function formatStage(stageName, stage) {
+            const info = stage || {};
+            const status = info.status || "pending";
+            const details = info.details ? JSON.stringify(info.details) : "{}";
+            const err = info.error ? ` error=${info.error}` : "";
+            return `${stageName}: ${status}${err} details=${details}`;
+        }
+
+        async function pollOctopusFullRun(runId) {
+            const maxRounds = 480; // ~20 minutes with 2.5s interval
+            for (let i = 0; i < maxRounds; i += 1) {
+                const data = await requestJson(`${API_BASE}/crawler/full-run/${encodeURIComponent(runId)}`);
+                const result = data.result || {};
+                const stages = result.stages || {};
+                const lines = [
+                    `run_id: ${result.run_id || runId}`,
+                    `status: ${result.status || "--"}`,
+                    formatStage("fetch", stages.fetch),
+                    formatStage("compress", stages.compress),
+                    formatStage("ingest", stages.ingest),
+                    formatStage("calculation", stages.calculation),
+                    formatStage("storyline", stages.storyline),
+                ];
+                if (result.error) {
+                    lines.push(`error: ${result.error}`);
+                }
+                setResult(lines.join("\n"), result.status === "success" ? "success" : (result.status === "failed" ? "error" : ""));
+                if (result.status === "success" || result.status === "failed") {
+                    return result;
+                }
+                await new Promise((resolve) => setTimeout(resolve, 2500));
+            }
+            throw new Error("轮询超时，请稍后手动刷新状态。");
+        }
+
+        async function loadSources() {
+            try {
+                const data = await requestJson(`${API_BASE}/crawler/sources`);
+                const sources = Array.isArray(data.sources) ? data.sources : [];
+                const enabled = sources.filter((item) => item && item.enabled);
+
+                const select = document.getElementById("crawl-source-select");
+                select.innerHTML = [
+                    "<option value=''>全部启用源</option>",
+                    ...enabled.map((item) =>
+                        `<option value="${escapeHtml(item.source_id)}">${escapeHtml(item.name)} (${escapeHtml(item.source_id)})</option>`
+                    ),
+                ].join("");
+
+                const list = document.getElementById("source-list");
+                if (!enabled.length) {
+                    list.innerHTML = "<li>暂无启用数据源。</li>";
+                    return;
+                }
+                list.innerHTML = enabled.map((item) =>
+                    `<li><strong>${escapeHtml(item.name)}</strong> <code>${escapeHtml(item.source_id)}</code> · ${escapeHtml(item.url)}</li>`
+                ).join("");
+            } catch (err) {
+                setResult(`加载数据源失败: ${err.message}`, "error");
+                document.getElementById("source-list").innerHTML = `<li>${escapeHtml(err.message)}</li>`;
+            }
+        }
+
+        async function runImport() {
+            const runBtn = document.getElementById("run-btn");
+            const count = Number.parseInt(document.getElementById("crawl-count-input").value || "", 10);
+            const sinceHours = Number.parseInt(document.getElementById("since-hours-input").value || "", 10);
+            const processLimit = Number.parseInt(document.getElementById("process-limit-input").value || "", 10);
+            const source = document.getElementById("crawl-source-select").value || null;
+            const ingest = document.getElementById("ingest-checkbox").checked;
+            const forceIngest = document.getElementById("force-ingest-checkbox").checked;
+
+            if (!Number.isFinite(count) || count < 1 || count > 100) {
+                setResult("每个源抓取数量必须是 1-100。", "error");
+                return;
+            }
+            if (!Number.isFinite(sinceHours) || sinceHours < 1 || sinceHours > 720) {
+                setResult("回看时间窗口必须是 1-720 小时。", "error");
+                return;
+            }
+            if (!Number.isFinite(processLimit) || processLimit < 1 || processLimit > 2000) {
+                setResult("处理上限必须是 1-2000。", "error");
+                return;
+            }
+
+            const payload = {
+                max_items_per_source: count,
+                since_hours: sinceHours,
+                process_limit: processLimit,
+                source: source,
+                ingest: ingest,
+                force_ingest: forceIngest,
+            };
+
+            runBtn.disabled = true;
+            runBtn.textContent = "执行中...";
+            setResult("任务执行中，请稍候...");
+            try {
+                const data = await requestJson(`${API_BASE}/crawler/run-once`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                const result = data.result || {};
+                const fetch = result.fetch || {};
+                const normalize = result.normalize || {};
+                const relevance = result.relevance || {};
+                const dedup = result.dedup || {};
+                const compress = result.compress || {};
+                const ingestResult = result.ingest || {};
+
+                const lines = [
+                    `运行完成: ${result.run_id || "--"}`,
+                    `抓取: ${fetch.total || 0} (inserted=${fetch.inserted || 0})`,
+                    `规范化: ${normalize.normalized || 0}, 过滤: ${normalize.rejected || 0}`,
+                    `相关性通过: ${relevance.passed || 0}, 拒绝: ${relevance.rejected || 0}`,
+                    `去重通过: ${dedup.passed || 0}, 拒绝: ${dedup.rejected || 0}`,
+                    `压缩成功: ${compress.compressed || 0}, 失败: ${compress.failed || 0}`,
+                    `入库成功: ${ingestResult.ingested || 0}, 失败: ${ingestResult.failed || 0}${ingestResult.skipped ? `, skipped=${ingestResult.reason || "unknown"}` : ""}`,
+                ];
+                setResult(lines.join("\n"), "success");
+            } catch (err) {
+                setResult(`执行失败: ${err.message}`, "error");
+            } finally {
+                runBtn.disabled = false;
+                runBtn.textContent = "执行一键爬取导入";
+            }
+        }
+
+        async function runOctopusFull() {
+            const octopusBtn = document.getElementById("run-octopus-full-btn");
+            const count = Number.parseInt(document.getElementById("crawl-count-input").value || "", 10);
+            const sinceHours = Number.parseInt(document.getElementById("since-hours-input").value || "", 10);
+            const processLimit = Number.parseInt(document.getElementById("process-limit-input").value || "", 10);
+            const ingestRetryLimit = Number.parseInt(document.getElementById("ingest-retry-limit-input").value || "", 10);
+            const forceIngest = document.getElementById("force-ingest-checkbox").checked;
+
+            if (!Number.isFinite(count) || count < 1 || count > 100) {
+                setResult("每个源抓取数量必须是 1-100。", "error");
+                return;
+            }
+            if (!Number.isFinite(sinceHours) || sinceHours < 1 || sinceHours > 720) {
+                setResult("回看时间窗口必须是 1-720 小时。", "error");
+                return;
+            }
+            if (!Number.isFinite(processLimit) || processLimit < 1 || processLimit > 2000) {
+                setResult("处理上限必须是 1-2000。", "error");
+                return;
+            }
+            if (!Number.isFinite(ingestRetryLimit) || ingestRetryLimit < 0 || ingestRetryLimit > 500) {
+                setResult("Ingest 重试上限必须是 0-500。", "error");
+                return;
+            }
+
+            const payload = {
+                max_items_per_source: count,
+                since_hours: sinceHours,
+                process_limit: processLimit,
+                ingest_retry_limit: ingestRetryLimit,
+                force_ingest: forceIngest,
+                rebuild_storylines: true,
+                storyline_since_days: 30,
+            };
+
+            octopusBtn.disabled = true;
+            octopusBtn.textContent = "执行中...";
+            setResult("八爪鱼全流程任务提交中...");
+            try {
+                const accepted = await requestJson(`${API_BASE}/crawler/run-octopus-full`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                const runId = accepted.run_id;
+                if (!runId) {
+                    throw new Error("接口未返回 run_id。");
+                }
+                setResult(`任务已提交，run_id=${runId}\n开始轮询进度...`);
+                await pollOctopusFullRun(runId);
+            } catch (err) {
+                setResult(`八爪鱼全流程执行失败: ${err.message}`, "error");
+            } finally {
+                octopusBtn.disabled = false;
+                octopusBtn.textContent = "八爪鱼一键全流程";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("run-btn").addEventListener("click", runImport);
+            document.getElementById("run-octopus-full-btn").addEventListener("click", runOctopusFull);
+            document.getElementById("refresh-sources-btn").addEventListener("click", loadSources);
+            loadSources();
+        });
+    </script>
+</body>
+</html>

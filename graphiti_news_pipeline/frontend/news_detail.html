@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资讯详情</title>
+    <style>
+        :root {
+            --bg-1: #f5f2e8;
+            --bg-2: #e8f2ee;
+            --ink: #1f2a2a;
+            --muted: #5d6767;
+            --panel: #fffdfa;
+            --line: #d7ddd4;
+            --accent: #0f766e;
+            --shadow: 0 12px 28px rgba(20, 30, 30, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 12% 8%, #ffedcc 0, transparent 28%),
+                radial-gradient(circle at 88% 18%, #c8f1e6 0, transparent 25%),
+                linear-gradient(130deg, var(--bg-1), var(--bg-2));
+            min-height: 100vh;
+        }
+
+        .shell {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 20px 14px 36px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .back-link {
+            display: inline-block;
+            border-radius: 8px;
+            border: 1px solid #c7d8d2;
+            background: #f7fffc;
+            color: var(--accent);
+            padding: 8px 10px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .top-note {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .panel + .panel {
+            margin-top: 12px;
+        }
+
+        .panel-body {
+            padding: 14px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 24px;
+            line-height: 1.35;
+            color: #16463e;
+        }
+
+        .tags {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 12px;
+            border-radius: 999px;
+            padding: 5px 10px;
+            background: #f4f7f5;
+            border: 1px solid #dce7e1;
+            color: #2f4a44;
+        }
+
+        .tag-hot {
+            background: #fff3dc;
+            border-color: #ffd89e;
+            color: #a45112;
+            font-weight: 700;
+        }
+
+        .detail-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 9px;
+        }
+
+        .detail-item {
+            border: 1px solid #deebe5;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 8px 9px;
+            min-height: 60px;
+        }
+
+        .detail-key {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .detail-value {
+            margin-top: 4px;
+            font-size: 13px;
+            line-height: 1.35;
+            color: var(--ink);
+            word-break: break-word;
+        }
+
+        .news-link {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .news-link:hover {
+            text-decoration: underline;
+        }
+
+        .text-block {
+            margin-top: 10px;
+            border: 1px solid #deebe5;
+            border-radius: 9px;
+            background: #ffffff;
+            padding: 9px;
+        }
+
+        .text-head {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .text-content {
+            margin: 6px 0 0;
+            color: #3f5151;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .panel-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            background: #fbfffd;
+            font-size: 15px;
+            font-weight: 700;
+            color: #16463e;
+        }
+
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 9px;
+        }
+
+        .entity-card {
+            border: 1px solid #d5e8df;
+            border-radius: 9px;
+            background: #fcfffe;
+            padding: 9px;
+        }
+
+        .entity-name {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .entity-summary {
+            margin: 7px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .entity-meta {
+            margin-top: 7px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .entity-metric {
+            font-size: 11px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            border: 1px solid #d9e6e0;
+            background: #f5fbf8;
+            color: #345852;
+        }
+
+        .storyline-head {
+            border: 1px solid #d5e8df;
+            border-radius: 10px;
+            background: #fcfffe;
+            padding: 10px;
+        }
+
+        .storyline-title {
+            margin: 0;
+            font-size: 16px;
+            color: #16463e;
+            line-height: 1.35;
+        }
+
+        .storyline-summary {
+            margin: 8px 0 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .storyline-timeline {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .storyline-item {
+            border: 1px dashed #cfe2da;
+            border-radius: 9px;
+            background: #ffffff;
+            padding: 9px;
+        }
+
+        .storyline-item.current {
+            border: 1px solid #7cc2ae;
+            background: #eefaf5;
+        }
+
+        .storyline-item-title {
+            margin: 0;
+            font-size: 14px;
+            color: #1f2a2a;
+            line-height: 1.4;
+        }
+
+        .storyline-item-text {
+            margin: 6px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .storyline-item-meta {
+            margin-top: 7px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty,
+        .error {
+            padding: 16px 14px;
+            font-size: 14px;
+        }
+
+        .empty {
+            color: var(--muted);
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 820px) {
+            .detail-grid,
+            .entity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="topbar">
+            <a class="back-link" href="./hot_news_demo.html">返回热点列表</a>
+            <div id="top-note" class="top-note">加载中...</div>
+        </div>
+
+        <section class="panel">
+            <div class="panel-body">
+                <h1 id="news-title" class="title">资讯详情</h1>
+                <div id="news-tags" class="tags"></div>
+                <div id="news-details" class="detail-grid"></div>
+                <div class="text-block">
+                    <div class="text-head">摘要文本</div>
+                    <p id="news-content" class="text-content">--</p>
+                </div>
+                <div id="raw-text-wrap" class="text-block" style="display:none;">
+                    <div class="text-head">原文文本（截断展示）</div>
+                    <p id="news-raw-content" class="text-content">--</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">关联实体</div>
+            <div id="entity-wrap" class="panel-body">
+                <div class="empty">正在加载关联实体...</div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">所属资讯脉络</div>
+            <div id="storyline-wrap" class="panel-body">
+                <div class="empty">正在加载资讯脉络...</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000/api";
+
+        function escapeHtml(text) {
+            return String(text || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function clip(text, size) {
+            const raw = String(text || "");
+            return raw.length <= size ? raw : `${raw.slice(0, size)}...`;
+        }
+
+        function formatDate(value) {
+            if (!value) return "未知时间";
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return "未知时间";
+            return d.toLocaleString("zh-CN");
+        }
+
+        function metricValue(value, digits = 2) {
+            return typeof value === "number" ? value.toFixed(digits) : "--";
+        }
+
+        function getEpisodeUuidFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return (params.get("episode_uuid") || "").trim();
+        }
+
+        async function requestJson(url, options = undefined) {
+            const res = await fetch(url, options);
+            if (!res.ok) {
+                let detail = `HTTP ${res.status}`;
+                try {
+                    const body = await res.json();
+                    detail = body.detail || detail;
+                } catch (_) {}
+                throw new Error(detail);
+            }
+            return res.json();
+        }
+
+        function getCachedEpisode(uuid) {
+            if (!uuid) return null;
+            try {
+                const raw = sessionStorage.getItem(`news_detail_${uuid}`);
+                return raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function renderUrl(url) {
+            const raw = String(url || "").trim();
+            if (!raw) return "无";
+            if (!/^https?:\/\//i.test(raw)) return escapeHtml(raw);
+            return `<a class="news-link" href="${escapeHtml(raw)}" target="_blank" rel="noopener noreferrer">${escapeHtml(clip(raw, 96))}</a>`;
+        }
+
+        function renderEpisode(episode) {
+            const item = episode || {};
+            const title = item.title || item.name || clip((item.content || "").replace(/\s+/g, " ").trim(), 42) || "无标题";
+            const publishTime = item.publish_time || item.created_at || null;
+            const source = item.news_source || item.source || "未知来源";
+            const hotnessText = typeof item.news_hotness_score === "number" ? item.news_hotness_score.toFixed(3) : "N/A";
+
+            document.getElementById("news-title").textContent = title;
+            document.getElementById("top-note").textContent = `Episode UUID: ${item.uuid || "--"}`;
+
+            document.getElementById("news-tags").innerHTML = `
+                <span class="tag tag-hot">热度 ${escapeHtml(hotnessText)}</span>
+                <span class="tag">发布时间 ${escapeHtml(formatDate(publishTime))}</span>
+                <span class="tag">来源 ${escapeHtml(source)}</span>
+                <span class="tag">连接实体 ${escapeHtml(String(Array.isArray(item.entity_edges) ? item.entity_edges.length : 0))}</span>
+            `;
+
+            const fields = [
+                { key: "标题", value: title },
+                { key: "来源", value: source },
+                { key: "发布时间", value: formatDate(publishTime) },
+                { key: "入库时间", value: formatDate(item.ingested_at || item.created_at) },
+                { key: "热度分", value: hotnessText },
+                { key: "UUID", value: item.uuid || "--" },
+                { key: "链接", value: renderUrl(item.news_url || item.url), html: true },
+                { key: "连接实体数", value: String(Array.isArray(item.entity_edges) ? item.entity_edges.length : 0) }
+            ];
+
+            document.getElementById("news-details").innerHTML = fields.map((field) => `
+                <div class="detail-item">
+                    <div class="detail-key">${escapeHtml(field.key)}</div>
+                    <div class="detail-value">${field.html ? field.value : escapeHtml(field.value)}</div>
+                </div>
+            `).join("");
+
+            document.getElementById("news-content").textContent = clip(item.content || "无内容。", 1200);
+
+            const rawText = (item.raw_text || "").trim();
+            const rawWrap = document.getElementById("raw-text-wrap");
+            if (rawText && rawText !== (item.content || "").trim()) {
+                document.getElementById("news-raw-content").textContent = clip(rawText, 2200);
+                rawWrap.style.display = "block";
+            } else {
+                rawWrap.style.display = "none";
+            }
+        }
+
+        function renderEntities(entities) {
+            const wrap = document.getElementById("entity-wrap");
+            if (!Array.isArray(entities) || !entities.length) {
+                wrap.innerHTML = '<div class="empty">该资讯暂未提及可展示实体。</div>';
+                return;
+            }
+
+            wrap.innerHTML = `
+                <div class="entity-grid">
+                    ${entities.map((entity) => {
+                        const labels = Array.isArray(entity.labels) ? entity.labels.filter((l) => l !== "Entity") : [];
+                        const summary = clip(entity.summary || entity.description || "暂无摘要。", 160);
+                        return `
+                            <div class="entity-card">
+                                <p class="entity-name">${escapeHtml(entity.name || "未命名实体")}</p>
+                                <div class="tags">
+                                    ${labels.length
+                                        ? labels.map((label) => `<span class="tag">${escapeHtml(label)}</span>`).join("")
+                                        : '<span class="tag">类型未标注</span>'}
+                                </div>
+                                <p class="entity-summary">${escapeHtml(summary)}</p>
+                                <div class="entity-meta">
+                                    <span class="entity-metric">动量 ${escapeHtml(metricValue(entity.momentum_score, 2))}</span>
+                                    <span class="entity-metric">PageRank ${escapeHtml(metricValue(entity.pageRank, 4))}</span>
+                                    <span class="entity-metric">社群 ${escapeHtml(entity.communityId === null || entity.communityId === undefined ? "--" : String(entity.communityId))}</span>
+                                </div>
+                                <div class="entity-meta">
+                                    <span class="entity-metric">更新 ${escapeHtml(formatDate(entity.momentum_updated_at))}</span>
+                                    <span class="entity-metric">UUID ${escapeHtml(entity.uuid || "--")}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join("")}
+                </div>
+            `;
+        }
+
+        function renderStoryline(storyline, currentEpisodeUuid) {
+            const wrap = document.getElementById("storyline-wrap");
+            if (!storyline || storyline.status === "not_found") {
+                wrap.innerHTML = '<div class="empty">当前资讯尚未归属到事件脉络。请先手动触发 `/api/calculate/rebuild-storylines`。</div>';
+                return;
+            }
+
+            const keyEntities = Array.isArray(storyline.key_entities) ? storyline.key_entities : [];
+            const timeline = Array.isArray(storyline.timeline) ? storyline.timeline : [];
+            const timelineHtml = timeline.map((item) => {
+                const isCurrent = item.uuid === currentEpisodeUuid;
+                const autoTitle = clip((item.content || "").replace(/\s+/g, " ").trim(), 34) || "无标题";
+                const title = item.title || autoTitle;
+                return `
+                    <article class="storyline-item ${isCurrent ? "current" : ""}">
+                        <p class="storyline-item-title">${escapeHtml(title)}</p>
+                        <p class="storyline-item-text">${escapeHtml(clip(item.content || "无内容。", 160))}</p>
+                        <div class="storyline-item-meta">
+                            <span class="entity-metric">时间 ${escapeHtml(formatDate(item.publish_at))}</span>
+                            <span class="entity-metric">来源 ${escapeHtml(item.source || "未知来源")}</span>
+                            <span class="entity-metric">热度 ${escapeHtml(metricValue(item.news_hotness_score, 2))}</span>
+                            <span class="entity-metric">序号 ${escapeHtml(String(item.rank || "--"))}</span>
+                            ${isCurrent ? '<span class="entity-metric">当前资讯</span>' : ""}
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            wrap.innerHTML = `
+                <div class="storyline-head">
+                    <h3 class="storyline-title">${escapeHtml(storyline.title || "未命名资讯脉络")}</h3>
+                    <p class="storyline-summary">${escapeHtml(storyline.summary || "暂无摘要。")}</p>
+                    <div class="tags">
+                        <span class="tag tag-hot">脉络热度 ${escapeHtml(metricValue(storyline.thread_hotness, 2))}</span>
+                        <span class="tag">资讯数量 ${escapeHtml(String(storyline.episode_count || 0))}</span>
+                        <span class="tag">起始 ${escapeHtml(formatDate(storyline.first_seen_at))}</span>
+                        <span class="tag">最新 ${escapeHtml(formatDate(storyline.last_seen_at))}</span>
+                    </div>
+                    <div class="tags">
+                        ${keyEntities.length
+                            ? keyEntities.slice(0, 8).map((entity) => `<span class="tag">${escapeHtml(entity.name || "未命名实体")}</span>`).join("")
+                            : '<span class="tag">暂无关键实体</span>'}
+                    </div>
+                </div>
+                <div class="storyline-timeline">
+                    ${timelineHtml || '<div class="empty">该脉络暂无可展示的时间线资讯。</div>'}
+                </div>
+            `;
+        }
+
+        async function loadDetailPage() {
+            const episodeUuid = getEpisodeUuidFromUrl();
+            if (!episodeUuid) {
+                document.getElementById("top-note").textContent = "缺少 episode_uuid 参数";
+                document.getElementById("news-details").innerHTML = '<div class="error">未提供资讯 UUID，无法加载详情。</div>';
+                document.getElementById("entity-wrap").innerHTML = '<div class="error">未提供资讯 UUID，无法加载关联实体。</div>';
+                return;
+            }
+
+            let cached = getCachedEpisode(episodeUuid) || {};
+            let episode = null;
+            try {
+                const fromApi = await requestJson(`${API_BASE}/episode/${encodeURIComponent(episodeUuid)}`);
+                episode = { ...fromApi, ...cached };
+            } catch (err) {
+                if (cached && cached.uuid) {
+                    episode = cached;
+                } else {
+                    document.getElementById("top-note").textContent = "加载资讯详情失败";
+                    document.getElementById("news-details").innerHTML = `<div class="error">加载资讯详情失败：${escapeHtml(err.message)}</div>`;
+                }
+            }
+
+            if (episode) {
+                renderEpisode(episode);
+            }
+
+            try {
+                const entities = await requestJson(`${API_BASE}/episode/${encodeURIComponent(episodeUuid)}/entities?limit=80`);
+                renderEntities(Array.isArray(entities) ? entities : []);
+            } catch (err) {
+                document.getElementById("entity-wrap").innerHTML = `<div class="error">加载关联实体失败：${escapeHtml(err.message)}</div>`;
+            }
+
+            try {
+                const storyline = await requestJson(`${API_BASE}/episode/${encodeURIComponent(episodeUuid)}/storyline?limit=40`);
+                renderStoryline(storyline, episodeUuid);
+            } catch (err) {
+                document.getElementById("storyline-wrap").innerHTML = `<div class="error">加载资讯脉络失败：${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadDetailPage);
+    </script>
+</body>
+</html>

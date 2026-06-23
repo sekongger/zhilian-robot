@@ -1,0 +1,46 @@
+engine:
+  name: supxmind-openks
+  version: 0.1.0
+  repository: supxmind/supxmind-openks
+  description: >
+    面向产业网链的知识计算引擎仓，负责公共知识规范、知识库工程、
+    跨 KG 调度以及对上层智能体提供求解结果。
+
+collaboration_flow:
+  - DataHub
+  - KAG
+  - OpenKS
+  - OpenSPG
+  - Agent
+
+stages:
+  fact:
+    - base_kg
+    - encyclopedia_kg
+    - news_kg
+    - report_kg
+    - enterprise_kg
+    - policy_kg
+    - patent_kg
+    - organization_kg
+    - technology_kg
+    - product_kg
+  cognition:
+    - industry_chain
+    - supply_chain
+    - innovation_chain
+    - capital_chain
+  decision:
+    - technology_foresight
+    - hotspot
+    - trend
+    - risk_alert
+    - recommendation
+
+support:
+  common:
+    owner: 平台共建
+  cross:
+    owner: 云飞
+  entry:
+    owner: 旭科

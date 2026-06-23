@@ -1,0 +1,48 @@
+namespace OpenKSNews
+
+NewsDocument(资讯文档): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float
+     relations:
+        involves(资讯涉及企业主体): OpenKSNews.Enterprise
+        mentions_technology(资讯提及技术要素): OpenKSNews.Technology
+        mentions_product(资讯提及产品要素): OpenKSNews.Product
+
+Enterprise(企业主体): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float
+     relations:
+        belongs_to_chain(企业属于产业链): OpenKSNews.Industry
+        collaborates_with(企业之间合作): OpenKSNews.Enterprise
+        develops(企业研发技术): OpenKSNews.Technology
+        supplies_to(企业供应产品): OpenKSNews.Product
+        co_occurs_with(实体同文共现): OpenKSNews.Technology
+        competes_with(企业竞争关系): OpenKSNews.Enterprise
+
+Technology(技术要素): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float
+
+Product(产品要素): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float
+
+Industry(产业概念): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float
+
+Event(资讯事件): EntityType
+     properties:
+        publish_time(资讯发布时间): Date
+        sentiment(情感倾向得分): Float
+        confidence(抽取或推理置信度): Float

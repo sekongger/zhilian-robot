@@ -123,7 +123,7 @@ cp .env.example .env
 cp backend/.env.example backend/.env
 
 # 3. 编辑 backend/.env，设置 DeepSeek API Key
-# OPENAI_API_KEY=sk-your_actual_key
+# OPENAI_API_KEY=your_api_key_here
 
 # 4. 启动服务
 docker-compose up -d
@@ -199,30 +199,30 @@ cat README.md | grep "git clone"
 
 ### 文件清理状态
 
-| 类别 | 状态 | 备注 |
-|-----|------|------|
-| 临时文件 | ✅ 已清理 | dashboard_replace.jsx 等 |
-| 测试脚本 | ✅ 已清理 | test_*.py, check_*.py |
-| 缓存文件 | ✅ 已清理 | __pycache__, .cache |
-| 敏感信息 | ✅ 已移除 | API Key 已用占位符替换 |
-| Console 日志 | ✅ 已清理 | 前端调试代码已移除 |
+|     类别     |  状态   |           备注            |
+|------------|-------|-------------------------|
+| 临时文件       | ✅ 已清理 | dashboard_replace.jsx 等 |
+| 测试脚本       | ✅ 已清理 | test_*.py, check_*.py   |
+| 缓存文件       | ✅ 已清理 | __pycache__, .cache     |
+| 敏感信息       | ✅ 已移除 | API Key 已用占位符替换         |
+| Console 日志 | ✅ 已清理 | 前端调试代码已移除               |
 
 ### 配置文件状态
 
-| 文件 | 状态 | 备注 |
-|-----|------|------|
-| .gitignore | ✅ 优化完成 | 添加测试脚本过滤 |
-| .dockerignore | ✅ 配置完整 | 排除不必要文件 |
-| .env.example | ✅ 安全 | 无敏感信息 |
-| docker-compose.yml | ✅ 可用 | 支持一键启动 |
+|         文件         |   状态   |    备注    |
+|--------------------|--------|----------|
+| .gitignore         | ✅ 优化完成 | 添加测试脚本过滤 |
+| .dockerignore      | ✅ 配置完整 | 排除不必要文件  |
+| .env.example       | ✅ 安全   | 无敏感信息    |
+| docker-compose.yml | ✅ 可用   | 支持一键启动   |
 
 ### 文档状态
 
-| 文档 | 状态 | 备注 |
-|-----|------|------|
-| README.md | ✅ 完整 | 包含完整说明 |
+|      文档       |  状态  |   备注    |
+|---------------|------|---------|
+| README.md     | ✅ 完整 | 包含完整说明  |
 | QUICKSTART.md | ✅ 新建 | 5分钟快速启动 |
-| docs/ | ✅ 完整 | 4个辅助文档 |
+| docs/         | ✅ 完整 | 4个辅助文档  |
 
 ---
 
@@ -264,3 +264,4 @@ git push -u origin main
 <p align="center">
   <strong>✅ 检查完成！项目已准备好上传到 GitHub！</strong>
 </p>
+

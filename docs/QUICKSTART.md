@@ -73,11 +73,13 @@ vim backend/.env
 ```
 
 修改以下参数：
+
 ```env
-OPENAI_API_KEY=sk-你的密钥
+OPENAI_API_KEY=your_api_key_here
 ```
 
 然后重启后端服务：
+
 ```bash
 docker-compose restart backend celery-worker celery-beat
 ```
@@ -88,12 +90,12 @@ docker-compose restart backend celery-worker celery-beat
 
 等待所有容器状态变为 `healthy` 后（约 1-2 分钟），在浏览器中打开：
 
-| 服务 | 访问地址 | 说明 |
-|-----|---------|------|
-| 🎨 **前端界面** | http://localhost | 主应用界面 |
-| 🔧 **API 文档** | http://localhost:8000/docs | Swagger 接口文档 |
-| 📊 **图数据库** | http://localhost:7474 | Neo4j Browser (账号: neo4j / 密码: 见 .env) |
-| 🌺 **任务监控** | http://localhost:5555 | Celery Flower |
+|      服务       |            访问地址            |                   说明                   |
+|---------------|----------------------------|----------------------------------------|
+| 🎨 **前端界面**   | http://localhost           | 主应用界面                                  |
+| 🔧 **API 文档** | http://localhost:8000/docs | Swagger 接口文档                           |
+| 📊 **图数据库**   | http://localhost:7474      | Neo4j Browser (账号: neo4j / 密码: 见 .env) |
+| 🌺 **任务监控**   | http://localhost:5555      | Celery Flower                          |
 
 ---
 
@@ -175,17 +177,17 @@ docker-compose up -d
 **解决方案**：
 
 1. 检查 API Key 是否正确：
+
    ```bash
    # Windows
    findstr OPENAI_API_KEY backend\.env
-   
+
    # Linux/Mac
    grep OPENAI_API_KEY backend/.env
    ```
-
 2. 确保 API Key 以 `sk-` 开头
-
 3. 重启后端容器：
+
    ```bash
    docker-compose restart backend
    ```
@@ -199,12 +201,13 @@ docker-compose up -d
 1. 按 `F12` 打开浏览器开发者工具，查看 Console 错误
 
 2. 检查后端是否启动：
+
    ```bash
    curl http://localhost:8000/health
    # 应返回: {"status":"ok"}
    ```
-
 3. 重新构建前端：
+
    ```bash
    docker-compose build --no-cache frontend
    docker-compose up -d frontend
@@ -249,3 +252,4 @@ FRONTEND_PORT=8080
 <p align="center">
   <strong>🎉 恭喜！你已成功部署智链机器人！</strong>
 </p>
+

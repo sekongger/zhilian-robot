@@ -1,0 +1,6 @@
+graph_id: technology_foresight
+graph_type: decision
+schema: openks.kg.decision.technology_foresight.schema.technology_foresight_schema.TechnologyForesightSchema
+builder: openks.kg.decision.technology_foresight.builder.technology_foresight_builder.TechnologyForesightBuilder
+reasoner: openks.kg.decision.technology_foresight.reasoner.technology_foresight_reasoner.TechnologyForesightReasoner
+solver: openks.kg.decision.technology_foresight.solver.technology_foresight_solver.TechnologyForesightSolver

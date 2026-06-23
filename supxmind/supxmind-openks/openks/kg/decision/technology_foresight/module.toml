@@ -1,0 +1,7 @@
+name = "technology_foresight"
+title = "技术前瞻"
+stage = "decision"
+owner = "林辉、徐梓毓"
+status = "skeleton"
+summary = "输出技术前瞻、路线分叉与长期趋势。"
+dependencies = ['innovation_chain']

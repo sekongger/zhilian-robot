@@ -1,0 +1,1 @@
+from .technology_foresight_schema import TechnologyForesightSchema

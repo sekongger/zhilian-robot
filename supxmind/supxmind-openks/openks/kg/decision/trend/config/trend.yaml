@@ -1,0 +1,6 @@
+graph_id: trend
+graph_type: decision
+schema: openks.kg.decision.trend.schema.trend_schema.TrendSchema
+builder: openks.kg.decision.trend.builder.trend_builder.TrendBuilder
+reasoner: openks.kg.decision.trend.reasoner.trend_reasoner.TrendReasoner
+solver: openks.kg.decision.trend.solver.trend_solver.TrendSolver

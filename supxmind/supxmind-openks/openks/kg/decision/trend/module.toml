@@ -1,0 +1,7 @@
+name = "trend"
+title = "趋势分析"
+stage = "decision"
+owner = "待定"
+status = "skeleton"
+summary = "输出趋势判断、变化拐点和结构演进。"
+dependencies = ['industry_chain', 'innovation_chain', 'capital_chain']

@@ -1,0 +1,6 @@
+graph_id: news_kg
+graph_type: fact
+schema: openks.kg.fact.news_kg.schema.news_kg_schema.NewsKgSchema
+builder: openks.kg.fact.news_kg.builder.news_kg_builder.NewsKgBuilder
+reasoner: openks.kg.fact.news_kg.reasoner.news_kg_reasoner.NewsKgReasoner
+solver: openks.kg.fact.news_kg.solver.news_kg_solver.NewsKgSolver

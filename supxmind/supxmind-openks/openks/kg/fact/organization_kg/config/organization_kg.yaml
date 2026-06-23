@@ -1,0 +1,6 @@
+graph_id: organization_kg
+graph_type: fact
+schema: openks.kg.fact.organization_kg.schema.organization_kg_schema.OrganizationKgSchema
+builder: openks.kg.fact.organization_kg.builder.organization_kg_builder.OrganizationKgBuilder
+reasoner: openks.kg.fact.organization_kg.reasoner.organization_kg_reasoner.OrganizationKgReasoner
+solver: openks.kg.fact.organization_kg.solver.organization_kg_solver.OrganizationKgSolver

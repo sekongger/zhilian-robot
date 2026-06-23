@@ -1,0 +1,7 @@
+name = "organization_kg"
+title = "机构知识库"
+stage = "fact"
+owner = "林辉"
+status = "skeleton"
+summary = "沉淀机构、园区、联盟和组织协同关系。"
+dependencies = ['base_kg']

@@ -1,0 +1,7 @@
+name = "news_kg"
+title = "资讯知识库"
+stage = "fact"
+owner = "楼彦炜"
+status = "active"
+summary = "提取资讯事实、事件与热点信号。"
+dependencies = ['base_kg']

@@ -1,0 +1,291 @@
+namespace FactLibraryQuick
+
+Chunk(文本块): EntityType
+	properties:
+		content(内容): Text
+			index: TextAndVector
+
+Others(其他): EntityType
+	properties:
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Product(产品): EntityType
+	properties:
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Technology(技术): EntityType
+	properties:
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Organization(组织): EntityType
+	properties:
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Company(企业): EntityType
+	properties:
+		usedName(历史名称): Text
+		creditCode(统一社会信用代码): Text
+		status(状态): Text
+		establishDate(成立日期): Text
+		province(省份): Text
+		city(城市): Text
+		registCapiValueCal(注册资本): Text
+		insuredNumber(参保人数): Text
+		website(官网): Text
+		businessScope(经营范围): Text
+			index: TextAndVector
+		description(简介): Text
+			index: TextAndVector
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		hasMainProduct(主营产品): Product
+
+Institution(科研机构): EntityType
+	properties:
+		supportOrgId(依托单位ID): Text
+		supportOrgName(依托单位): Text
+		type1(一级类型): Text
+		type2(二级类型): Text
+		domain(研究领域): Text
+			index: TextAndVector
+		province(省份): Text
+		city(城市): Text
+		website(官网): Text
+		description(简介): Text
+			index: TextAndVector
+		level(级别): Text
+		achievement(成果): Text
+			index: TextAndVector
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		supportedBy(依托于): Company
+
+Investor(投资机构): EntityType
+	properties:
+		capitalScale(管理规模): Text
+		totalInvestAmount(总投资数): Text
+		currentYearInvestAmount(今年投资数): Text
+		nextRoundRatio(进入下一轮率): Text
+		type(机构类型): Text
+		intro(简介): Text
+			index: TextAndVector
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Person(人物): EntityType
+	properties:
+		org(主聘机构): Text
+		orgs(任职机构列表): Text
+		profTitle(职称): Text
+		position(职位): Text
+		researchFields(研究领域): Text
+			index: TextAndVector
+		honors(荣誉): Text
+			index: TextAndVector
+		awards(奖项): Text
+			index: TextAndVector
+		resume(简历): Text
+			index: TextAndVector
+		province(省份): Text
+		city(城市): Text
+		url(详情链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+Project(项目): EntityType
+	properties:
+		approvalNum(批准号): Text
+		category(类别): Text
+		approvalYear(批准年份): Text
+		projectLeader(负责人): Text
+		org(依托单位): Text
+		keywords(关键词): Text
+			index: TextAndVector
+		abstractZh(摘要): Text
+			index: TextAndVector
+		fundingValue(资助金额): Text
+		startDate(开始时间): Text
+		endDate(结束时间): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		ledBy(负责人): Person
+		undertakenByCompany(承担企业): Company
+		undertakenByInstitution(承担机构): Institution
+
+Patent(专利): EntityType
+	properties:
+		titleCn(中文标题): Text
+			index: TextAndVector
+		title(原文标题): Text
+		applyCode(申请号): Text
+		publicCode(公开号): Text
+		patentType(专利类型): Text
+		grantDate(授权日期): Text
+		applyDate(申请日期): Text
+		publicDate(公开日期): Text
+		applicantsNorm(标准化申请人): Text
+		patenteesNorm(标准化权利人): Text
+		inventors(发明人): Text
+		mainIpc(主IPC): Text
+		citedOtherTimes(被他引次数): Text
+		abstractCn(摘要): Text
+			index: TextAndVector
+		pdfUrl(PDF链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		appliedByCompany(申请企业): Company
+		appliedByInstitution(申请机构): Institution
+		ownedByCompany(权利企业): Company
+		ownedByInstitution(权利机构): Institution
+		inventedBy(发明人): Person
+
+Article(文献): EntityType
+	properties:
+		title(标题): Text
+			index: TextAndVector
+		abstract(摘要): Text
+			index: TextAndVector
+		keywords(关键词): Text
+			index: TextAndVector
+		authors(作者): Text
+		year(年份): Text
+		subject(学科): Text
+		journal(期刊): Text
+		doi(DOI): Text
+		applicants(机构): Text
+		url(链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		authoredBy(作者): Person
+		publishedByCompany(机构企业): Company
+		publishedByInstitution(机构院校): Institution
+
+Achievement(技术成果): EntityType
+	properties:
+		type(类型): Text
+		publishTime(发布时间): Text
+		unit(所属单位): Text
+		person(完成人): Text
+		technicalField(技术领域): Text
+			index: TextAndVector
+		applicationField(应用领域): Text
+			index: TextAndVector
+		technologyMaturity(成熟度): Text
+		content(内容): Text
+			index: TextAndVector
+		url(链接): Text
+		ipr(知识产权): Text
+		honors(荣誉): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		completedByCompany(完成企业): Company
+		completedByInstitution(完成机构): Institution
+		completedByPerson(完成人): Person
+
+StandardLocal(地方标准): EntityType
+	properties:
+		standardCode(标准号): Text
+		standardName(标准名称): Text
+			index: TextAndVector
+		standardLevel(标准级别): Text
+		localName(地区): Text
+		publishDate(发布日期): Text
+		effectiveDate(生效日期): Text
+		abolishDate(废止日期): Text
+		industryClass(行业分类): Text
+		standardType(标准类别): Text
+		publishDepartment(发布部门): Text
+		draftingUnit(起草单位): Text
+		status(状态): Text
+		details(详情): Text
+			index: TextAndVector
+		urlLink(链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+StandardIndustry(行业标准): EntityType
+	properties:
+		standardCode(标准号): Text
+		standardName(标准名称): Text
+			index: TextAndVector
+		standardLevel(标准级别): Text
+		domainCode(领域编码): Text
+		domainName(领域名称): Text
+		publishDate(发布日期): Text
+		effectiveDate(生效日期): Text
+		abolishDate(废止日期): Text
+		industryClass(行业分类): Text
+		standardType(标准类别): Text
+		publishDepartment(发布部门): Text
+		draftingUnit(起草单位): Text
+		status(状态): Text
+		details(详情): Text
+			index: TextAndVector
+		urlLink(链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+StandardNation(国家标准): EntityType
+	properties:
+		standardCode(标准号): Text
+		standardName(标准名称): Text
+			index: TextAndVector
+		standardLevel(标准级别): Text
+		publishDate(发布日期): Text
+		effectiveDate(生效日期): Text
+		abolishDate(废止日期): Text
+		standardType(标准类别): Text
+		technicalUnit(归口单位): Text
+		effectUnit(执行单位): Text
+		competentDepartment(主管部门): Text
+		draftingUnit(起草单位): Text
+		status(状态): Text
+		details(详情): Text
+			index: TextAndVector
+		urlLink(链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+
+RankingList(榜单): EntityType
+	properties:
+		description(榜单说明): Text
+			index: TextAndVector
+		publishOrganization(发布机构): Text
+		publishTime(发布时间): Text
+		firstSort(一级分类): Text
+		secondSort(二级分类): Text
+		isOfficial(是否官方): Text
+		indicator(指标): Text
+			index: TextAndVector
+		lzIndustryChain(产业链): Text
+		url(链接): Text
+		desc(描述): Text
+			index: TextAndVector
+		semanticType(语义类型): Text
+	relations:
+		includesCompany(包含企业): Company

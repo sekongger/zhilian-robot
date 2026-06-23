@@ -1,0 +1,348 @@
+export const PLATFORM_SHOWCASE_SECTIONS = [
+  {
+    key: 'overview',
+    title: '整体概况',
+    eyebrow: 'Pilot Stage 00',
+    headline: '浙大 AI 中试平台统一展示前台',
+    summary: '负责看能力、看成果、看状态、看入口，不直接承载后台操作。前台以结果视角展示数据资源池、知识构建成果、四链分析和智能服务状态。',
+    metrics: [
+      { label: '展示重点', value: '统一能力总览', note: '对齐数智大脑入口口径' },
+      { label: '成果主线', value: '资源池 -> 知识库 -> 大图 -> 服务', note: '突出从数据到应用的闭环' },
+      { label: '当前要求', value: '外部能力先占位', note: '所有后台接入点统一标注后续接入' },
+    ],
+    keywordTags: ['整体概况', '关键成果', '运行动态', '后续接入'],
+    modules: [
+      {
+        title: '平台能力总览',
+        description: '展示数据汇聚、知识计算、网链分析、智能服务四类能力如何协同。',
+        bullets: ['统一前台口径', '统一能力说明', '统一入口展示'],
+        integration: 'local',
+        badge: '页面展示',
+      },
+      {
+        title: '关键成果总览',
+        description: '统一展示数据资源池、知识库、大图版本、四链专题和服务状态。',
+        bullets: ['突出结果导向', '适合汇报和演示', '支持后续接入真实指标'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '快捷跳转入口',
+        description: '为后续接入后台 Studio、详情页和应用服务留出统一入口位置。',
+        bullets: ['预留 DataHub 接口', '预留 OpenKS 详情', '预留 Agent 服务入口'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+    ],
+    contracts: [
+      {
+        title: 'OpenKS 独立域名',
+        status: '已切换',
+        endpoint: 'https://ai-openks.quant-chi.com/',
+        summary: '主前台跳转统一落到独立 OpenKS 域名，保留环境变量覆盖。',
+        fields: ['VITE_OPENKS_PORTAL_URL', '独立部署入口', '主前台跳转'],
+      },
+    ],
+    governance: [
+      {
+        title: '主前台入口边界',
+        summary: '中试平台只负责成果展示和跳转，不在前台直接承载 OpenKS 构建操作。',
+        bullets: ['前台看结果', '工作台做构建', '跨域名跳转到独立 OpenKS 门户'],
+      },
+    ],
+    flow: [
+      { title: '看整体', description: '先理解前台和后台的分层关系与展示口径。' },
+      { title: '看成果', description: '从资源池、知识库、大图、四链和智能服务几个层次查看结果。' },
+      { title: '看状态', description: '通过状态卡片识别哪些模块已展示、哪些模块待接入。' },
+      { title: '去详情', description: '后续再跳转到具体后台平台完成深度操作。' },
+    ],
+    outcomes: ['适合作为领导演示入口', '适合作为统一导航首页', '适合作为平台总览页面'],
+    actions: [
+      { label: '进入数据汇聚', mode: 'tab', target: 'data-hub', type: 'primary' },
+      { label: '后台入口后续接入', mode: 'placeholder', type: 'default' },
+    ],
+  },
+  {
+    key: 'data-hub',
+    title: '数据汇聚',
+    eyebrow: 'Pilot Stage 01',
+    headline: '资源池、数据源与治理流程展示',
+    summary: '前台聚焦展示 DataHub 的结果摘要，不直接接真实接入服务。重点看资源池数量、典型数据源、数据模型、数据加工流程与质量治理。',
+    metrics: [
+      { label: '展示主题', value: '数据资源池', note: '企业库、专利库等资源入口' },
+      { label: '过程重点', value: '数据模型 / 加工流程', note: '突出 pipeline 编排' },
+      { label: '接入状态', value: '后续接入', note: '先展示结构，暂不连 DataHub 接口' },
+    ],
+    keywordTags: ['数据资源池', '数据模型', '数据加工流程', '质量治理'],
+    modules: [
+      {
+        title: '数据资源池',
+        description: '展示已建设的数据资源池数量和典型资源，如企业库、专利库。',
+        bullets: ['展示资源池名称', '展示资源池说明', '展示代表性数据资产'],
+        integration: 'local',
+        badge: '页面展示',
+      },
+      {
+        title: '数据源情况',
+        description: '按资源池查看关联数据源和接入范围，后续与真实 DataHub 资源列表打通。',
+        bullets: ['企业库', '专利库', '资讯源', '研报源'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '数据模型',
+        description: '展示资源池的数据模型视图与字段口径说明。',
+        bullets: ['模型结构占位', '字段层级说明', '后续接入真实模型定义'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '数据加工流程',
+        description: '用前台流程图呈现 data-loader、data-operator、data-pipeline 的处理链路。',
+        bullets: ['接入', '治理', '编排', '入池'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+    ],
+    contracts: [
+      {
+        title: 'DataHub 头条资讯接口',
+        status: 'mock 已提供',
+        endpoint: 'GET /api/v1/datahub/mock/headlines',
+        summary: '第一阶段不接真实 DataHub，只明确标准字段并提供可供联调的头条资讯接口。',
+        fields: ['doc_id', 'title', 'summary', 'content', 'source_name', 'source_url', 'publish_time'],
+      },
+      {
+        title: 'DataHub 企业库接口',
+        status: '定义未接入',
+        endpoint: 'GET /api/v1/datahub/mock/enterprise',
+        summary: '企业库暂不实接，但页面与接口先对齐 Company 基础字段规范。',
+        fields: ['name', 'official_name', 'code', 'industry', 'region', 'website', 'status', 'description'],
+      },
+    ],
+    governance: [
+      {
+        title: 'DataHub 对接原则',
+        summary: 'DataHub 负责把数据交对，不直接拼 OpenSPG 顶点边，也不承载知识融合语义。',
+        bullets: ['先给业务层接口', '再给标准化 batch / manifest', '由 OpenKS 接管 schema 与构建'],
+      },
+    ],
+    flow: [
+      { title: '多源接入', description: '接入企业库、专利库、资讯和研报等多元数据。' },
+      { title: '治理算子', description: '对接清洗、标准化、映射和质量治理算子。' },
+      { title: 'Pipeline 编排', description: '围绕具体数据资源编排 loader、operator 和 pipeline。' },
+      { title: '资源池沉淀', description: '形成可被知识计算消费的数据资源池。' },
+    ],
+    outcomes: ['展示多少个资源池', '展示支持多少个数据源', '展示有多少类治理算子'],
+    actions: [
+      { label: 'DataHub 接口规范已定义', mode: 'placeholder', type: 'primary' },
+      { label: '查看资源池详情位', mode: 'placeholder', type: 'default' },
+    ],
+  },
+  {
+    key: 'knowledge-computing',
+    title: '知识计算',
+    eyebrow: 'Pilot Stage 02',
+    headline: 'OpenKS 统一承接知识构建与融合展示',
+    summary: '前台只展示 OpenKS 的统一知识计算口径，不直接连后台运行态。重点覆盖 schema、本体定义、抽取算子、子知识库、knowledge_fusion、产业网大图和模型能力。',
+    metrics: [
+      { label: '核心引擎', value: 'OpenKS', note: '统一承接 KAG + OpenSPG 口径' },
+      { label: '展示对象', value: 'Schema / KG / knowledge_fusion', note: '面向成果，不下钻后台执行态' },
+      { label: '图存底座', value: 'OpenSPG 格式', note: '大图底层存储格式说明' },
+    ],
+    keywordTags: ['Schema 体系', '抽取算子', 'knowledge_fusion', '产业网大图'],
+    modules: [
+      {
+        title: 'Schema 体系',
+        description: '展示本体论定义、实体关系框架和模块组织关系。',
+        bullets: ['本体定义', '实体关系', '模块分层'],
+        integration: 'local',
+        badge: '页面展示',
+      },
+      {
+        title: '抽取算子与模型组件',
+        description: '展示事件抽取、实体抽取等模型能力，并预留后续真实模型接入位。',
+        bullets: ['事件抽取', '实体抽取', '组件注册位'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '子知识库',
+        description: '展示 fact、场景知识、链图知识库等分层成果。',
+        bullets: ['产业', '政策', '企业', '专利', '资讯'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: 'knowledge_fusion',
+        description: '展示多个子知识库融合进入产业网大图的逻辑位置。',
+        bullets: ['融合前并列建设', '融合后进入大图', '底层遵循 OpenSPG 格式'],
+        integration: 'local',
+        badge: '融合主线',
+      },
+      {
+        title: '产业网大图',
+        description: '展示融合后的总成果以及大图版本、覆盖要素和演进方向。',
+        bullets: ['大图版本位', '实体关系覆盖', '成果发布位'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+    ],
+    contracts: [
+      {
+        title: 'Graphiti 接入契约',
+        status: '合同已定 / 暂不实接',
+        endpoint: 'POST /messages',
+        summary: 'Graphiti 暂时不落真实服务，但页面明确所需 group_id、message 内容与时态事件输入字段。',
+        fields: ['group_id', 'messages[].uuid', 'messages[].name', 'messages[].content', 'messages[].timestamp'],
+      },
+      {
+        title: 'OpenKS -> OpenSPG 内部代理',
+        status: '生产主链',
+        endpoint: 'schema sync + materialize + release',
+        summary: 'OpenSPG 不对外单独暴露，由 OpenKS 内部代理完成 schema 同步、图物化与版本绑定。',
+        fields: ['apply_openks_news_kg_schema', 'materialize_bridge_batch', 'register_workflow_runtime_binding'],
+      },
+    ],
+    governance: [
+      {
+        title: 'OpenSPG 主生产链',
+        summary: '当前主链已经明确为 kag_openspg；openks_direct 仅保留兼容与排障，不再作为主入口。',
+        bullets: ['主链：kag_openspg', 'Schema 由 OpenKS 同步', '图主存由 OpenSPG 承担', 'Release 继续走统一 runtime 对象'],
+      },
+    ],
+    flow: [
+      { title: '知识接入', description: '消费数据资源池和动态事件原料。' },
+      { title: '信息抽取', description: '基于模型组件抽取实体、事件、关系和属性。' },
+      { title: '知识融合', description: '通过 knowledge_fusion 汇聚子知识库。' },
+      { title: '图谱构建', description: '形成产业网大图并准备发布。' },
+      { title: '推理求解', description: '面向分析与服务沉淀可消费知识结果。' },
+    ],
+    outcomes: ['展示知识库数量口径', '展示大图成果口径', '展示 OpenKS 模型能力口径'],
+    actions: [
+      { label: '进入 OpenKS 工作台', mode: 'openks-portal', target: '/', type: 'primary' },
+      { label: '查看知识构建流程', mode: 'placeholder', type: 'default' },
+    ],
+  },
+  {
+    key: 'chain-analysis',
+    title: '网链分析',
+    eyebrow: 'Pilot Stage 03',
+    headline: '保持四链分析为独立前台菜单',
+    summary: '网链分析继续保持原来的独立一级菜单，承接产业链、创新链、资金链、人才链四链结果，以及要素关联和结构洞察。',
+    metrics: [
+      { label: '分析主轴', value: '四链分析', note: '产业链 / 创新链 / 资金链 / 人才链' },
+      { label: '分析对象', value: '链图与要素关联', note: '和大图并列展示' },
+      { label: '接入方式', value: '后续接入', note: '先展示页面与分析模块结构' },
+    ],
+    keywordTags: ['四链分析', '要素关联', '结构洞察', '关系探查'],
+    modules: [
+      {
+        title: '四链分析',
+        description: '以前台方式展示产业链、创新链、资金链、人才链四类分析专题。',
+        bullets: ['四链分类展示', '专题入口排布', '联动关系说明'],
+        integration: 'local',
+        badge: '页面展示',
+      },
+      {
+        title: '链图要素关联',
+        description: '展示主体、事件、资金、技术、人才等要素的关联视角。',
+        bullets: ['主体关联', '关系说明', '证据引用位'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '网链结构洞察',
+        description: '展示结构洞察、重点主体和关键链路的分析位。',
+        bullets: ['热点节点', '关键链路', '影响范围'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+    ],
+    contracts: [],
+    governance: [
+      {
+        title: '图谱审核与优化',
+        summary: '产业网图谱当前先做样例大图与关系抽样，重点保证证据回溯、事件正确性和节点去重审核。',
+        bullets: ['抽样核对 doc_id / source_url / publish_time', '复核事件主体、事件类型与关系方向', '补坏样本、别名归一与规则回放'],
+      },
+    ],
+    flow: [
+      { title: '链图分类', description: '先按四链梳理专题视图。' },
+      { title: '要素关联', description: '把企业、技术、资金、人才等要素关联起来。' },
+      { title: '结构洞察', description: '沉淀关系密度、关键节点和链路影响。' },
+      { title: '联动查看', description: '支持和知识计算成果做联动展示。' },
+    ],
+    outcomes: ['保留原有网链分析独立性', '强调四链成果展示', '为后续联动图分析留位置'],
+    actions: [
+      { label: '分析服务后续接入', mode: 'placeholder', type: 'primary' },
+      { label: '查看四链专题位', mode: 'placeholder', type: 'default' },
+    ],
+  },
+  {
+    key: 'intelligent-service',
+    title: '智能服务',
+    eyebrow: 'Pilot Stage 04',
+    headline: '面向问答、报告与头条推送的服务出口',
+    summary: '智能服务统一承接 Agent 和应用服务侧的消费结果，当前以前台入口方式展示智能对话、报告生成、头条推送和服务发布能力。',
+    metrics: [
+      { label: '当前主能力', value: '智能对话 / 报告生成', note: '承接 Agent 消费视图' },
+      { label: '推送闭环', value: '事件发布 -> 头条推送', note: '为应用服务侧留出接入位' },
+      { label: '服务形式', value: '入口展示', note: 'API 与应用发布先做占位' },
+    ],
+    keywordTags: ['智能对话', '报告生成', '头条推送', '服务发布'],
+    modules: [
+      {
+        title: '智能对话',
+        description: '展示产业问答类服务入口和问答价值说明。',
+        bullets: ['问答入口', '知识溯源说明', '应用服务视角'],
+        integration: 'local',
+        badge: '页面展示',
+      },
+      {
+        title: '报告生成',
+        description: '展示基于知识库和链图结果生成专题报告的能力位。',
+        bullets: ['报告入口', '专题模板位', '后续接入真实生成服务'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '头条推送',
+        description: '展示事件发布推送到应用服务侧后形成的智能体头条推送能力。',
+        bullets: ['事件摘要', '服务推送位', '头条卡片位'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+      {
+        title: '服务发布',
+        description: '预留 Open API、订阅提醒、风险预警等应用消费出口。',
+        bullets: ['Open API', '订阅提醒', '风险预警'],
+        integration: 'pending',
+        badge: '后续接入',
+      },
+    ],
+    contracts: [],
+    governance: [
+      {
+        title: '服务消费边界',
+        summary: '智能服务阶段只消费 release、头条摘要和问答上下文，不直接改写知识构建链路。',
+        bullets: ['服务消费 release', '保留证据链回溯', '头条推送后续接应用侧'],
+      },
+    ],
+    flow: [
+      { title: '事件发布', description: '将知识事件整理成可分发对象。' },
+      { title: '应用接收', description: '应用服务侧接收事件摘要和上下文。' },
+      { title: '服务生成', description: '生成问答、报告、头条推送和提醒。' },
+      { title: '用户触达', description: '通过智能体和服务界面交付最终结果。' },
+    ],
+    outcomes: ['展示问答与报告入口', '展示头条推送闭环', '预留 API 服务发布能力'],
+    actions: [
+      { label: 'Agent 服务后续接入', mode: 'placeholder', type: 'primary' },
+      { label: '查看推送链路', mode: 'placeholder', type: 'default' },
+    ],
+  },
+]
+
+export function getPlatformShowcaseByKey(key) {
+  return PLATFORM_SHOWCASE_SECTIONS.find((item) => item.key === key) || PLATFORM_SHOWCASE_SECTIONS[0]
+}

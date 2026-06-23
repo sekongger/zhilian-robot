@@ -46,9 +46,15 @@ export const graphService = {
   },
 
   // 获取企业关系
-  getCompanyRelations: (companyName, depth = 2) => {
+  getCompanyRelations: (companyName, depth = 2, artifactId = '') => {
     return apiClient.get(`/api/v1/graph/company/${encodeURIComponent(companyName)}`, {
-      params: { depth }
+      params: { depth, artifact_id: artifactId || undefined }
+    })
+  },
+
+  getArtifactCompanies: (artifactId, limit = 8) => {
+    return apiClient.get(`/api/v1/graph/artifacts/${encodeURIComponent(artifactId)}/companies`, {
+      params: { limit }
     })
   },
 
@@ -220,11 +226,65 @@ export const entityActionsService = {
   }
 }
 
+// 本体管理服务
+export const ontologyService = {
+  // 获取本体模型信息
+  getMeta: () => {
+    return apiClient.get('/api/v1/ontology/meta')
+  },
+
+  // 获取类定义列表
+  getClasses: (params) => {
+    return apiClient.get('/api/v1/ontology/classes', { params })
+  },
+
+  // 获取类层级树
+  getClassTree: () => {
+    return apiClient.get('/api/v1/ontology/classes/tree')
+  },
+
+  // 获取属性定义列表
+  getProperties: (params) => {
+    return apiClient.get('/api/v1/ontology/properties', { params })
+  },
+
+  // 获取关系定义列表
+  getRelations: (params) => {
+    return apiClient.get('/api/v1/ontology/relations', { params })
+  },
+
+  // 获取公理列表
+  getAxioms: (params) => {
+    return apiClient.get('/api/v1/ontology/axioms', { params })
+  },
+
+  // 获取产业概念列表
+  getConcepts: (params) => {
+    return apiClient.get('/api/v1/ontology/concepts', { params })
+  },
+
+  // 获取实例列表
+  getInstances: (params) => {
+    return apiClient.get('/api/v1/ontology/instances', { params })
+  },
+
+  // 注册实例
+  registerInstance: (data) => {
+    return apiClient.post('/api/v1/ontology/instances', data)
+  },
+
+  // 获取统计信息
+  getStatistics: () => {
+    return apiClient.get('/api/v1/ontology/statistics')
+  }
+}
+
 // 默认导出所有服务
 export default {
   nlp: nlpService,
   graph: graphService,
   data: dataService,
   ingestion: ingestionService,
-  entityActions: entityActionsService
+  entityActions: entityActionsService,
+  ontology: ontologyService
 }

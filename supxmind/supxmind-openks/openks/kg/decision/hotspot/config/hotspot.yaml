@@ -1,0 +1,6 @@
+graph_id: hotspot
+graph_type: decision
+schema: openks.kg.decision.hotspot.schema.hotspot_schema.HotspotSchema
+builder: openks.kg.decision.hotspot.builder.hotspot_builder.HotspotBuilder
+reasoner: openks.kg.decision.hotspot.reasoner.hotspot_reasoner.HotspotReasoner
+solver: openks.kg.decision.hotspot.solver.hotspot_solver.HotspotSolver

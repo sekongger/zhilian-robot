@@ -1,0 +1,6 @@
+graph_id: supply_chain
+graph_type: cognition
+schema: openks.kg.cognition.supply_chain.schema.supply_chain_schema.SupplyChainSchema
+builder: openks.kg.cognition.supply_chain.builder.supply_chain_builder.SupplyChainBuilder
+reasoner: openks.kg.cognition.supply_chain.reasoner.supply_chain_reasoner.SupplyChainReasoner
+solver: openks.kg.cognition.supply_chain.solver.supply_chain_solver.SupplyChainSolver

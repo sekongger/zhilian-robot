@@ -1,0 +1,7 @@
+name = "hotspot"
+title = "热点分析"
+stage = "decision"
+owner = "待定"
+status = "skeleton"
+summary = "聚合热点、热度传播与行业焦点。"
+dependencies = ['industry_chain', 'supply_chain']

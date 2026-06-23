@@ -1,0 +1,7 @@
+name = "supply_chain"
+title = "供应链图谱库"
+stage = "cognition"
+owner = "待定"
+status = "skeleton"
+summary = "建模供应依赖、替代关系与脆弱点。"
+dependencies = ['industry_chain']

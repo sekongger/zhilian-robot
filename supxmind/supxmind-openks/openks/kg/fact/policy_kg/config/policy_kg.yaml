@@ -1,0 +1,6 @@
+graph_id: policy_kg
+graph_type: fact
+schema: openks.kg.fact.policy_kg.schema.policy_kg_schema.PolicyKgSchema
+builder: openks.kg.fact.policy_kg.builder.policy_kg_builder.PolicyKgBuilder
+reasoner: openks.kg.fact.policy_kg.reasoner.policy_kg_reasoner.PolicyKgReasoner
+solver: openks.kg.fact.policy_kg.solver.policy_kg_solver.PolicyKgSolver

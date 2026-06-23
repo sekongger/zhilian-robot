@@ -1,0 +1,7 @@
+name = "policy_kg"
+title = "政策知识库"
+stage = "fact"
+owner = "陆文韬"
+status = "skeleton"
+summary = "抽取政策主体、扶持方向和影响对象。"
+dependencies = ['base_kg']

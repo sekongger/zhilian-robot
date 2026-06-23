@@ -1,0 +1,7 @@
+name = "patent_kg"
+title = "专利知识库"
+stage = "fact"
+owner = "林辉"
+status = "skeleton"
+summary = "提取专利主体、技术方向和关联技术。"
+dependencies = ['base_kg']

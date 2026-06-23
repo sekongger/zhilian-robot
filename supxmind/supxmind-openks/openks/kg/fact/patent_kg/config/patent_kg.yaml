@@ -1,0 +1,6 @@
+graph_id: patent_kg
+graph_type: fact
+schema: openks.kg.fact.patent_kg.schema.patent_kg_schema.PatentKgSchema
+builder: openks.kg.fact.patent_kg.builder.patent_kg_builder.PatentKgBuilder
+reasoner: openks.kg.fact.patent_kg.reasoner.patent_kg_reasoner.PatentKgReasoner
+solver: openks.kg.fact.patent_kg.solver.patent_kg_solver.PatentKgSolver

@@ -1,0 +1,7 @@
+name = "product_kg"
+title = "产品知识库"
+stage = "fact"
+owner = "雅馨"
+status = "skeleton"
+summary = "沉淀产品谱系、规格能力和应用场景。"
+dependencies = ['base_kg']

@@ -1,0 +1,6 @@
+graph_id: product_kg
+graph_type: fact
+schema: openks.kg.fact.product_kg.schema.product_kg_schema.ProductKgSchema
+builder: openks.kg.fact.product_kg.builder.product_kg_builder.ProductKgBuilder
+reasoner: openks.kg.fact.product_kg.reasoner.product_kg_reasoner.ProductKgReasoner
+solver: openks.kg.fact.product_kg.solver.product_kg_solver.ProductKgSolver

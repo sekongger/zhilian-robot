@@ -1,0 +1,7 @@
+name = "report_kg"
+title = "研报知识库"
+stage = "fact"
+owner = "李奕君"
+status = "skeleton"
+summary = "抽取研报观点、结论、指标与覆盖关系。"
+dependencies = ['base_kg']

@@ -1,0 +1,6 @@
+graph_id: report_kg
+graph_type: fact
+schema: openks.kg.fact.report_kg.schema.report_kg_schema.ReportKgSchema
+builder: openks.kg.fact.report_kg.builder.report_kg_builder.ReportKgBuilder
+reasoner: openks.kg.fact.report_kg.reasoner.report_kg_reasoner.ReportKgReasoner
+solver: openks.kg.fact.report_kg.solver.report_kg_solver.ReportKgSolver

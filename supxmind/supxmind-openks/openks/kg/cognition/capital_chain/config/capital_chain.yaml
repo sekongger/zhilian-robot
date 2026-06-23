@@ -1,0 +1,6 @@
+graph_id: capital_chain
+graph_type: cognition
+schema: openks.kg.cognition.capital_chain.schema.capital_chain_schema.CapitalChainSchema
+builder: openks.kg.cognition.capital_chain.builder.capital_chain_builder.CapitalChainBuilder
+reasoner: openks.kg.cognition.capital_chain.reasoner.capital_chain_reasoner.CapitalChainReasoner
+solver: openks.kg.cognition.capital_chain.solver.capital_chain_solver.CapitalChainSolver

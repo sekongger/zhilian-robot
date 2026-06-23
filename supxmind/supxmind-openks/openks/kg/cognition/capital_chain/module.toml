@@ -1,0 +1,7 @@
+name = "capital_chain"
+title = "资金链图谱库"
+stage = "cognition"
+owner = "待定"
+status = "skeleton"
+summary = "建模投融资关系与资金流向。"
+dependencies = ['industry_chain']

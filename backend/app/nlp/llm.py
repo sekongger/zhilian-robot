@@ -1,7 +1,7 @@
 """
 NLP模块 - 大语言模型集成
 """
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Iterator
 import logging
 import json
 from config.settings import settings
@@ -385,6 +385,50 @@ class LLMProcessor:
         except Exception as e:
             logger.error(f"LLM文本生成失败: {e}", exc_info=True)
             return f"AI简报生成失败: {str(e)}"
+
+    def generate_text_stream(self, prompt: str, max_tokens: int = 1000) -> Iterator[str]:
+        """
+        使用大模型进行真正的 token 级流式生成
+
+        Args:
+            prompt: 提示词
+            max_tokens: 最大生成token数
+
+        Yields:
+            流式文本片段
+        """
+        if not self.client:
+            raise RuntimeError("LLM客户端未初始化")
+
+        stream = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": "你是一个专业的数据分析师，擅长撰写简洁专业的分析报告。"},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=max_tokens,
+            temperature=0.7,
+            stream=True,
+        )
+
+        for chunk in stream:
+            choices = getattr(chunk, "choices", None) or []
+            if not choices:
+                continue
+            delta = getattr(choices[0], "delta", None)
+            if delta is None:
+                continue
+            content = getattr(delta, "content", None)
+            if isinstance(content, str) and content:
+                yield content
+                continue
+            if isinstance(content, list):
+                text = "".join(
+                    str(getattr(part, "text", "") or "")
+                    for part in content
+                )
+                if text:
+                    yield text
 
 
 # 全局LLM处理器实例

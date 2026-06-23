@@ -1,35 +1,74 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Input, Button, Select, message, Space, Spin, Empty, Tag, Row, Col } from 'antd'
+import { Alert, Card, Input, Button, Select, message, Space, Spin, Empty, Tag, Row, Col } from 'antd'
 import { SearchOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import D3ForceGraph from '../components/D3ForceGraph'
 import DashboardStats from '../components/DashboardStats'
 import { graphService } from '../services/api'
+import { parseArtifactContext } from './knowledgeContext.mjs'
+import { buildGraphQuickTags, pickInitialArtifactCompany } from './graphPageModel.mjs'
 
 const GraphPage = () => {
   const [loading, setLoading] = useState(false)
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] })
   const [depth, setDepth] = useState(2)
   const [searchText, setSearchText] = useState('')
+  const [artifactCompanies, setArtifactCompanies] = useState([])
   const [selectedNode, setSelectedNode] = useState(null)
+  const [artifactContext, setArtifactContext] = useState({ artifactId: '', artifactVersion: '', hasArtifactContext: false })
 
   // 自动搜索：检测URL参数并执行搜索
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
+    const nextArtifactContext = parseArtifactContext(urlParams)
+    setArtifactContext(nextArtifactContext)
     const entityName = urlParams.get('name')
-    const entityId = urlParams.get('entity')
-    
+    urlParams.delete('entity')
+
     if (entityName) {
-      // 设置搜索框文本
       setSearchText(entityName)
-      // 自动执行搜索
-      setTimeout(() => {
-        handleSearch(entityName)
-      }, 300)
-      
-      // 清除URL参数，避免刷新时重复搜索
-      window.history.replaceState({}, '', '/graph')
+      urlParams.delete('name')
+      const nextQuery = urlParams.toString()
+      window.history.replaceState({}, '', nextQuery ? `/graph?${nextQuery}` : '/graph')
     }
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const loadArtifactCompanies = async () => {
+      if (!artifactContext.hasArtifactContext || !artifactContext.artifactId) {
+        if (!cancelled) setArtifactCompanies([])
+        return
+      }
+      try {
+        const payload = await graphService.getArtifactCompanies(artifactContext.artifactId, 8)
+        const items = Array.isArray(payload?.items) ? payload.items : []
+        if (!cancelled) setArtifactCompanies(items)
+      } catch (_error) {
+        if (!cancelled) setArtifactCompanies([])
+      }
+    }
+
+    loadArtifactCompanies()
+    return () => {
+      cancelled = true
+    }
+  }, [artifactContext])
+
+  useEffect(() => {
+    const initialCompany = pickInitialArtifactCompany({
+      artifactContext,
+      availableCompanies: artifactCompanies,
+      searchName: searchText,
+    })
+    if (!initialCompany) return
+    if (graphData.nodes.length > 0 && searchText === initialCompany) return
+    setSearchText(initialCompany)
+    const timer = window.setTimeout(() => {
+      handleSearch(initialCompany)
+    }, 200)
+    return () => window.clearTimeout(timer)
+  }, [artifactCompanies, artifactContext.artifactId])
 
   const handleSearch = async (value) => {
     const term = value || searchText
@@ -40,7 +79,7 @@ const GraphPage = () => {
     setSearchText(term)
     setLoading(true)
     try {
-      const data = await graphService.getCompanyRelations(term, depth)
+      const data = await graphService.getCompanyRelations(term, depth, artifactContext.artifactId || '')
       setGraphData(data)
       
       if (data.nodes.length === 0) {
@@ -59,6 +98,11 @@ const GraphPage = () => {
     setSelectedNode(node)
   }
 
+  const quickTags = buildGraphQuickTags({
+    artifactContext,
+    availableCompanies: artifactCompanies,
+  })
+
   return (
     <div className="graph-page-container">
       {/* 搜索控制面板 */}
@@ -66,8 +110,17 @@ const GraphPage = () => {
         className="search-panel-card"
         bodyStyle={{ padding: '20px' }}
       >
+        {artifactContext.hasArtifactContext ? (
+          <Alert
+            type="info"
+            showIcon
+            message="当前正基于知识产物上下文查看网链分析"
+            description={`Artifact：${artifactContext.artifactId}${artifactContext.artifactVersion ? ` / 版本 ${artifactContext.artifactVersion}` : ''}`}
+            style={{ marginBottom: 16 }}
+          />
+        ) : null}
         <Row gutter={[16, 16]} align="middle">
-          <Col flex="auto">
+          <Col span={24}>
             <Space direction="vertical" style={{ width: '100%' }} size="small">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <SearchOutlined style={{ color: '#6366f1', fontSize: '18px' }}/> 
@@ -97,14 +150,25 @@ const GraphPage = () => {
                   style={{ flex: 1 }}
                 />
               </Space.Compact>
+              {artifactContext.hasArtifactContext && artifactCompanies.length > 0 ? (
+                <div style={{ fontSize: '13px', color: '#94a3b8' }}>
+                  已自动带入当前批次可查询企业，优先展示：{artifactCompanies.slice(0, 3).join(' / ')}
+                </div>
+              ) : null}
             </Space>
           </Col>
-          <Col>
-            <Space wrap>
-              <Tag color="blue" style={{ cursor: 'pointer', fontSize: '14px', padding: '4px 12px' }} onClick={() => handleSearch('华为')}>#华为</Tag>
-              <Tag color="cyan" style={{ cursor: 'pointer', fontSize: '14px', padding: '4px 12px' }} onClick={() => handleSearch('特斯拉')}>#特斯拉</Tag>
-              <Tag color="purple" style={{ cursor: 'pointer', fontSize: '14px', padding: '4px 12px' }} onClick={() => handleSearch('小米')}>#小米</Tag>
-              <Tag color="green" style={{ cursor: 'pointer', fontSize: '14px', padding: '4px 12px' }} onClick={() => handleSearch('ABB')}>#ABB</Tag>
+          <Col span={24}>
+            <Space wrap size={[10, 10]}>
+              {quickTags.map((item, index) => (
+                <Tag
+                  key={item}
+                  color={['blue', 'cyan', 'purple', 'green', 'gold', 'magenta'][index % 6]}
+                  style={{ cursor: 'pointer', fontSize: '14px', padding: '4px 12px', marginInlineEnd: 0 }}
+                  onClick={() => handleSearch(item)}
+                >
+                  #{item}
+                </Tag>
+              ))}
             </Space>
           </Col>
         </Row>

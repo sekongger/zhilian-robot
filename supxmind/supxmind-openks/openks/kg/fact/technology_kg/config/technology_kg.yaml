@@ -1,0 +1,6 @@
+graph_id: technology_kg
+graph_type: fact
+schema: openks.kg.fact.technology_kg.schema.technology_kg_schema.TechnologyKgSchema
+builder: openks.kg.fact.technology_kg.builder.technology_kg_builder.TechnologyKgBuilder
+reasoner: openks.kg.fact.technology_kg.reasoner.technology_kg_reasoner.TechnologyKgReasoner
+solver: openks.kg.fact.technology_kg.solver.technology_kg_solver.TechnologyKgSolver

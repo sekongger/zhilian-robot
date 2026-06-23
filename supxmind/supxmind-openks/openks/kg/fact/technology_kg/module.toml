@@ -1,0 +1,7 @@
+name = "technology_kg"
+title = "技术知识库"
+stage = "fact"
+owner = "林辉"
+status = "skeleton"
+summary = "整理技术路线、成熟度和能力依赖。"
+dependencies = ['base_kg']

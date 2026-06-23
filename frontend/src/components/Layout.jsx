@@ -1,147 +1,196 @@
 import React from 'react'
-import { Layout as AntLayout, Menu, Avatar, Dropdown, Space, theme } from 'antd'
-import { 
-  HomeOutlined, 
-  DeploymentUnitOutlined, 
-  ExperimentOutlined,
+import { Layout as AntLayout, Menu, Avatar, Dropdown, Space } from 'antd'
+import {
+  AppstoreOutlined,
+  BuildOutlined,
   DatabaseOutlined,
+  MessageOutlined,
   UserOutlined,
   RobotOutlined,
-  ThunderboltOutlined
+  RadarChartOutlined,
+  ApiOutlined,
+  ApartmentOutlined,
+  FireOutlined,
 } from '@ant-design/icons'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Outlet } from 'react-router-dom'
+import { logout, getAuth } from '../utils/auth'
+import { PLATFORM_TABS, resolvePlatformTabKey } from '../pages/platformTabs.mjs'
 
 const { Header, Content, Footer } = AntLayout
+
+const tabIconMap = {
+  overview: <AppstoreOutlined />,
+  'data-hub': <DatabaseOutlined />,
+  'knowledge-computing': <BuildOutlined />,
+  'chain-analysis': <RadarChartOutlined />,
+  'intelligent-service': <MessageOutlined />,
+}
+
+const routeToMenuKey = (pathname, search) => {
+  if (pathname.startsWith('/platform')) {
+    const currentTab = resolvePlatformTabKey(new URLSearchParams(search).get('tab'))
+    return `/platform?tab=${currentTab}`
+  }
+  if (pathname.startsWith('/operator-workbench')) {
+    return '/operator-workbench'
+  }
+  if (pathname.startsWith('/news-heat-rankings')) {
+    return '/news-heat-rankings'
+  }
+  if (pathname.startsWith('/workflow') || pathname.startsWith('/model-studio') || pathname.startsWith('/openspg-model-studio')) {
+    return '/platform?tab=knowledge-computing'
+  }
+  if (pathname.startsWith('/data-evidence') || pathname.startsWith('/document') || pathname.startsWith('/data')) {
+    return '/platform?tab=data-hub'
+  }
+  if (pathname.startsWith('/graph') || pathname.startsWith('/analysis') || pathname.startsWith('/temporal')) {
+    return '/platform?tab=chain-analysis'
+  }
+  if (pathname.startsWith('/applications') || pathname.startsWith('/agent/industry-qa')) {
+    return '/applications'
+  }
+  return '/platform?tab=overview'
+}
 
 const Layout = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { token } = theme.useToken()
+  const selectedMenuKey = routeToMenuKey(location.pathname, location.search)
 
   const menuItems = [
-    { key: '/', icon: <HomeOutlined />, label: '概览' },
-    { key: '/graph', icon: <DeploymentUnitOutlined />, label: '图谱探索' },
-    { key: '/temporal', icon: <ThunderboltOutlined />, label: '时序分析' },
-    { key: '/analysis', icon: <ExperimentOutlined />, label: '智能分析' },
-    { key: '/data', icon: <DatabaseOutlined />, label: '数据中心' },
+    ...PLATFORM_TABS.map((item) => ({
+      key: `/platform?tab=${item.key}`,
+      icon: tabIconMap[item.key],
+      label: item.title,
+    })),
+    { key: '/operator-workbench', icon: <ApartmentOutlined />, label: '知识计算工作台' },
+    { key: '/news-heat-rankings', icon: <FireOutlined />, label: '资讯热度榜' },
+    { key: '/applications', icon: <ApiOutlined />, label: '应用中心' },
   ]
 
+  const auth = getAuth()
+  const menu = {
+    items: [
+      {
+        key: 'logout',
+        label: '退出登录',
+        onClick: () => {
+          logout()
+          navigate('/login')
+        },
+      },
+    ],
+  }
+
   return (
-    <AntLayout style={{ minHeight: '100vh', background: '#0f172a' }}>
-      <Header style={{ 
-        position: 'sticky', 
-        top: 0, 
-        zIndex: 100, 
-        width: '100%', 
-        display: 'flex', 
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 32px',
-        background: 'rgba(30, 41, 59, 0.9)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #334155',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
-      }}>
-        {/* Logo 区域 */}
-        <div 
-          onClick={() => navigate('/')}
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px', 
+    <AntLayout style={{ minHeight: '100vh', background: 'var(--bg-page)' }}>
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 24px',
+          background: 'rgba(255, 255, 255, 0.88)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid var(--border-subtle)',
+          boxShadow: '0 4px 16px rgba(15, 40, 65, 0.06)'
+        }}
+      >
+        <div
+          onClick={() => navigate('/platform?tab=overview')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
             cursor: 'pointer',
-            marginRight: '40px',
-            transition: 'transform 0.2s ease'
+            marginRight: 20,
+            flexShrink: 0,
           }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <div style={{
-            width: 38, 
-            height: 38, 
-            background: `linear-gradient(135deg, #6366f1, #8b5cf6)`,
-            borderRadius: '10px',
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            color: 'white', 
-            fontSize: '22px',
-            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)'
-          }}>
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 12,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontSize: 22,
+              background: 'linear-gradient(135deg, #0b6e99 0%, #1c7ed6 100%)',
+              boxShadow: '0 8px 18px rgba(28, 126, 214, 0.22)',
+            }}
+          >
             <RobotOutlined />
           </div>
-          <span style={{ 
-            fontSize: '19px', 
-            fontWeight: 700, 
-            background: `linear-gradient(to right, #6366f1, #a855f7)`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            letterSpacing: '0.02em'
-          }}>
-            智链机器人
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+            <span style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)' }}>
+              浙大AI产业知识中心实验平台
+            </span>
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+              整体概况 / 数据汇聚 / 知识计算 / 网链分析 / 智能服务
+            </span>
+          </div>
         </div>
 
-        {/* 菜单区域 */}
         <Menu
           mode="horizontal"
-          selectedKeys={[location.pathname]}
+          selectedKeys={[selectedMenuKey]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          style={{ 
-            flex: 1, 
-            borderBottom: 'none', 
+          style={{
+            flex: 1,
+            minWidth: 0,
+            borderBottom: 'none',
             background: 'transparent',
-            fontSize: '15px',
-            fontWeight: 500
+            fontSize: 14,
+            fontWeight: 600,
           }}
         />
 
-        {/* 右侧用户区域 (预留) */}
         <Space>
-           <Avatar 
-             style={{ 
-               backgroundColor: '#6366f1',
-               boxShadow: '0 2px 8px rgba(99, 102, 241, 0.4)'
-             }} 
-             icon={<UserOutlined />} 
-           />
+          <Dropdown menu={menu} placement="bottomRight" trigger={['click']}>
+            <Space style={{ cursor: 'pointer' }}>
+              <Avatar
+                style={{
+                  backgroundColor: '#0b6e99',
+                  boxShadow: '0 2px 8px rgba(11, 110, 153, 0.2)'
+                }}
+                icon={<UserOutlined />}
+              />
+              <span style={{ color: 'var(--text-primary)', fontSize: 12 }}>{auth?.user || 'admin'}</span>
+            </Space>
+          </Dropdown>
         </Space>
       </Header>
 
-      <Content style={{ 
-        padding: '28px', 
-        maxWidth: '1600px', 
-        width: '100%', 
-        margin: '0 auto',
-        background: '#0f172a'
-      }}>
-        <div className="fade-in">
-          {children}
-        </div>
+      <Content
+        style={{
+          padding: '20px',
+          maxWidth: '1600px',
+          width: '100%',
+          margin: '0 auto',
+          background: 'var(--bg-page)',
+        }}
+      >
+        <div className="fade-in">{children || <Outlet />}</div>
       </Content>
 
-      <Footer style={{ 
-        textAlign: 'center', 
-        color: '#64748b', 
-        background: '#0f172a',
-        borderTop: '1px solid #1e293b',
-        padding: '24px 0',
-        fontSize: '14px'
-      }}>
-        <div style={{ marginBottom: 8 }}>
-          <span style={{ 
-            background: 'linear-gradient(to right, #6366f1, #a855f7)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontWeight: 600
-          }}>
-            智链机器人
-          </span>
-        </div>
-        <div style={{ fontSize: 13, opacity: 0.8 }}>
-          ©2025 | 大模型驱动的产业链图谱自动构建平台
-        </div>
+      <Footer
+        style={{
+          textAlign: 'center',
+          color: 'var(--text-secondary)',
+          background: 'var(--bg-page)',
+          borderTop: '1px solid var(--border-subtle)',
+          padding: '16px 0',
+          fontSize: 13,
+        }}
+      >
+        ©2026 浙江大学AI产业知识中心 | OpenSPG-First Platform
       </Footer>
     </AntLayout>
   )

@@ -3,7 +3,15 @@ import * as d3 from 'd3';
 import { Card, Switch, Space, Tooltip, Button, Tag } from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined, FireOutlined } from '@ant-design/icons';
 
-const D3ForceGraph = ({ data, onNodeClick }) => {
+const D3ForceGraph = ({
+  data,
+  onNodeClick,
+  title = null,
+  compact = false,
+  height = 600,
+  showLegend = true,
+  allowFullscreen = true,
+}) => {
   const svgRef = useRef(null);
   const wrapperRef = useRef(null);
   const containerRef = useRef(null);
@@ -115,7 +123,16 @@ const D3ForceGraph = ({ data, onNodeClick }) => {
 
     // 深拷贝数据
     const nodes = data.nodes.map(d => ({ ...d }));
-    const links = data.edges ? data.edges.map(d => ({ ...d })) : [];
+    const nodeIds = new Set(nodes.map(d => d.id));
+    const rawLinks = data.edges ? data.edges.map(d => ({ ...d })) : [];
+    const links = rawLinks.filter((d) => {
+      const sourceId = d?.source?.id || d?.source;
+      const targetId = d?.target?.id || d?.target;
+      return nodeIds.has(sourceId) && nodeIds.has(targetId);
+    });
+    if (rawLinks.length !== links.length) {
+      console.warn('[D3ForceGraph] 发现孤儿边，已自动过滤:', rawLinks.length - links.length);
+    }
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -499,7 +516,8 @@ const D3ForceGraph = ({ data, onNodeClick }) => {
         background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
         border: '1px solid #334155'
       }}
-      extra={
+      title={title}
+      extra={compact ? null : (
         <Space>
           <span style={{ fontSize: '13px', color: '#94a3b8' }}>动量热度</span>
           <Switch 
@@ -515,19 +533,21 @@ const D3ForceGraph = ({ data, onNodeClick }) => {
             onChange={setShowEdgeLabels}
             size="small"
           />
-          <Tooltip title={isFullscreen ? "退出全屏" : "全屏显示"}>
-            <Button
-              type="text"
-              icon={isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-              onClick={toggleFullscreen}
-              style={{ color: '#94a3b8' }}
-            />
-          </Tooltip>
+          {allowFullscreen ? (
+            <Tooltip title={isFullscreen ? "退出全屏" : "全屏显示"}>
+              <Button
+                type="text"
+                icon={isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                onClick={toggleFullscreen}
+                style={{ color: '#94a3b8' }}
+              />
+            </Tooltip>
+          ) : null}
         </Space>
-      }
+      )}
     >
       {/* 动量图例 */}
-      {showMomentum && (
+      {showMomentum && showLegend && !compact && (
         <div style={{
           position: 'absolute',
           top: '70px',
@@ -570,7 +590,7 @@ const D3ForceGraph = ({ data, onNodeClick }) => {
         ref={wrapperRef}
         style={{ 
           width: '100%', 
-          height: isFullscreen ? 'calc(100vh - 80px)' : '600px',
+          height: isFullscreen ? 'calc(100vh - 80px)' : `${height}px`,
           borderRadius: '8px',
           overflow: 'hidden'
         }}

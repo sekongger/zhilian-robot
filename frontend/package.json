@@ -1,7 +1,7 @@
 {
   "name": "zhilian-robot-frontend",
   "version": "1.0.0",
-  "description": "智链机器人前端应用",
+  "description": "数据海中试系统前端应用",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.2.6",

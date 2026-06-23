@@ -28,6 +28,18 @@ class MongoDBConnection:
         except Exception as e:
             logger.error(f"MongoDB连接失败: {str(e)}")
             raise
+
+    def connect_ods(self, uri: str, database: str):
+        """建立ODS数据库连接（用于外部研报数据）"""
+        try:
+            client = MongoClient(uri)
+            db = client[database]
+            client.server_info()
+            logger.info("ODS MongoDB连接成功")
+            return db
+        except Exception as e:
+            logger.error(f"ODS MongoDB连接失败: {str(e)}")
+            raise
     
     def close(self):
         """关闭连接"""

@@ -7,10 +7,211 @@ from app.services.graph_service import graph_service
 from app.analytics.momentum import momentum_engine
 from typing import Dict, List
 from datetime import datetime, timedelta
+from pathlib import Path
+import json
+import re
 import logging
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/graph", tags=["Graph"])
+
+
+def _get_mongo_conn():
+    from app.database.mongodb import mongodb_conn
+
+    return mongodb_conn
+
+
+def _build_artifact_scoped_graph(company_name: str, artifact_id: str) -> Dict:
+    mongo = _get_mongo_conn()
+    entity_rows = mongo.find_many("entity_instances", query={"artifact_id": artifact_id}, limit=1000)
+    statement_rows = mongo.find_many("inc_statement", query={"artifact_id": artifact_id}, limit=1000)
+
+    entity_index = {
+        str(item.get("entity_id") or item.get("_id") or ""): item
+        for item in entity_rows
+        if str(item.get("entity_id") or item.get("_id") or "").strip()
+    }
+    anchor_ids = {
+        entity_id
+        for entity_id, item in entity_index.items()
+        if company_name in str(item.get("canonical_name") or item.get("name") or "")
+    }
+    if not anchor_ids:
+        return _build_artifact_scoped_graph_from_batch(company_name, artifact_id)
+
+    nodes = {}
+    edges = []
+    for row in statement_rows:
+        subject_id = str(row.get("subject_id") or "").strip()
+        object_id = str(row.get("object_entity_id") or "").strip()
+        if subject_id not in anchor_ids and object_id not in anchor_ids:
+            continue
+        subject = entity_index.get(subject_id) or {}
+        obj = entity_index.get(object_id) or {}
+        if subject_id and subject_id not in nodes:
+            nodes[subject_id] = {
+                "id": subject_id,
+                "name": str(subject.get("canonical_name") or subject.get("name") or subject_id),
+                "type": str(subject.get("entity_type") or "entity"),
+            }
+        if object_id and object_id not in nodes:
+            nodes[object_id] = {
+                "id": object_id,
+                "name": str(obj.get("canonical_name") or obj.get("name") or object_id),
+                "type": str(obj.get("entity_type") or "entity"),
+            }
+        if subject_id and object_id:
+            edges.append(
+                {
+                    "source": subject_id,
+                    "target": object_id,
+                    "relation": str(row.get("predicate_label") or row.get("predicate_id") or "相关"),
+                    "confidence": float(row.get("confidence") or 0.0),
+                }
+            )
+
+    return {"nodes": list(nodes.values()), "edges": edges}
+
+
+_PREVIEW_COMPANY_PATTERN = re.compile(
+    r"([\u4e00-\u9fa5A-Za-z0-9·]{2,24}(?:机器人|车企|科技|智能|集团|股份|公司|厂|研究院))"
+)
+_COMPANY_SPLIT_PATTERN = re.compile(r"[与和及、/]")
+_COMPANY_TRIM_SUFFIXES = (
+    "合作",
+    "推进",
+    "布局",
+    "研究",
+    "研发",
+    "发布",
+    "推出",
+    "生产",
+    "打造",
+    "具身智能",
+    "控制器",
+)
+_COMPANY_SPLIT_MARKERS = ("推进", "合作", "布局", "研究", "研发", "发布", "推出", "打造", "生产")
+_COMPANY_IGNORE_NAMES = {"机器人", "具身智能", "控制器"}
+_COMPANY_INVALID_MARKERS = ("目标是", "将", "从", "到", "配备", "支持", "提升", "实现", "用于", "可以")
+
+
+def _bridge_batches_dir() -> Path:
+    from app.openspg_demo.bridge_runner import BridgeRunner
+
+    return BridgeRunner().batches_dir
+
+
+def _artifact_bridge_batch_records(artifact_id: str, limit: int = 100) -> List[Dict]:
+    mongo = _get_mongo_conn()
+    artifact = mongo.find_one("knowledge_artifacts", {"artifact_id": artifact_id}) or {}
+    bridge_run_id = str(artifact.get("bridge_run_id") or "").strip()
+    if not bridge_run_id:
+        return []
+    batch_file = _bridge_batches_dir() / f"{bridge_run_id}.jsonl"
+    if not batch_file.exists():
+        return []
+    rows = []
+    try:
+        for line in batch_file.read_text(encoding="utf-8").splitlines():
+            text = line.strip()
+            if not text:
+                continue
+            payload = json.loads(text)
+            if isinstance(payload, dict):
+                rows.append(payload)
+            if len(rows) >= limit:
+                break
+    except Exception:
+        return []
+    return rows
+
+
+def _is_queryable_company_name(name: str) -> bool:
+    text = str(name or "").strip()
+    if len(text) < 2 or text in _COMPANY_IGNORE_NAMES:
+        return False
+    if len(text) > 12 and not any(text.endswith(suffix) for suffix in ("科技", "集团", "股份", "公司", "机器人", "车企", "研究院", "厂")):
+        return False
+    if any(marker in text for marker in _COMPANY_INVALID_MARKERS):
+        return False
+    return True
+
+
+def _extract_batch_companies(record: Dict) -> List[str]:
+    text = f"{record.get('title') or ''} {record.get('content') or record.get('summary') or ''}".strip()
+    names = []
+    for match in _PREVIEW_COMPANY_PATTERN.findall(text):
+        raw_name = str(match).strip("，。；：、()（）[]【】 ")
+        candidates = [raw_name]
+        if _COMPANY_SPLIT_PATTERN.search(raw_name):
+            candidates = [part.strip() for part in _COMPANY_SPLIT_PATTERN.split(raw_name) if part.strip()]
+        for candidate in candidates:
+            name = candidate
+            for marker in _COMPANY_SPLIT_MARKERS:
+                if marker in name:
+                    name = name.split(marker, 1)[0].strip()
+            for suffix in _COMPANY_TRIM_SUFFIXES:
+                if name.endswith(suffix) and len(name) > len(suffix) + 1:
+                    name = name[: -len(suffix)].strip()
+            if not _is_queryable_company_name(name) or name in names:
+                continue
+            names.append(name)
+    return names
+
+
+def _list_artifact_company_names(artifact_id: str, limit: int = 8) -> List[str]:
+    mongo = _get_mongo_conn()
+    entity_rows = mongo.find_many(
+        "entity_instances",
+        query={"artifact_id": artifact_id},
+        limit=1000,
+    )
+    names = []
+    for item in entity_rows:
+        entity_type = str(item.get("entity_type") or "").strip().lower()
+        if entity_type != "company":
+            continue
+        name = str(item.get("canonical_name") or item.get("name") or "").strip()
+        if not _is_queryable_company_name(name) or name in names:
+            continue
+        names.append(name)
+        if len(names) >= max(int(limit or 8), 1):
+            return names
+
+    for record in _artifact_bridge_batch_records(artifact_id, limit=200):
+        for name in _extract_batch_companies(record):
+            if name in names:
+                continue
+            names.append(name)
+            if len(names) >= max(int(limit or 8), 1):
+                return names
+    return names
+
+
+def _build_artifact_scoped_graph_from_batch(company_name: str, artifact_id: str) -> Dict:
+    records = _artifact_bridge_batch_records(artifact_id, limit=100)
+    if not records:
+        return {"nodes": [], "edges": []}
+
+    normalized_company = str(company_name or "").strip()
+    nodes = {}
+    edges = []
+    for record in records:
+        doc_id = str(record.get("doc_id") or "").strip()
+        title = str(record.get("title") or doc_id or "文档").strip()
+        companies = _extract_batch_companies(record)
+        if normalized_company and normalized_company not in companies:
+            continue
+        if doc_id:
+            nodes.setdefault(doc_id, {"id": doc_id, "name": title, "type": "document"})
+        for company in companies:
+            company_id = f"company::{company}"
+            nodes.setdefault(company_id, {"id": company_id, "name": company, "type": "company"})
+            if doc_id:
+                edges.append({"source": doc_id, "target": company_id, "relation": "同批次共现", "confidence": 1.0})
+
+    return {"nodes": list(nodes.values()), "edges": edges}
 
 
 @router.post("/build")
@@ -61,16 +262,34 @@ async def query_industry_chain(query: IndustryChainQuery):
 @router.get("/company/{company_name}")
 async def get_company_relations(
     company_name: str,
-    depth: int = Query(default=2, ge=1, le=5)
+    depth: int = Query(default=2, ge=1, le=5),
+    artifact_id: str | None = Query(default=None),
 ):
     """
     获取企业的产业链关系
     """
     try:
+        if artifact_id:
+            return _build_artifact_scoped_graph(company_name, artifact_id)
         result = graph_service.query_industry_chain(company_name, depth)
         return result
     except Exception as e:
         logger.error(f"查询失败: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/artifacts/{artifact_id}/companies")
+async def get_artifact_companies(
+    artifact_id: str,
+    limit: int = Query(default=8, ge=1, le=20),
+):
+    try:
+        return {
+            "artifact_id": artifact_id,
+            "items": _list_artifact_company_names(artifact_id, limit=limit),
+        }
+    except Exception as e:
+        logger.error(f"读取 artifact 可查询企业失败: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

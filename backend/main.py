@@ -29,16 +29,7 @@ def create_app() -> FastAPI:
     # 配置CORS - 允许所有前端来源
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            "http://localhost",
-            "http://localhost:80",
-            "http://localhost:3000", 
-            "http://localhost:8000",
-            "http://127.0.0.1",
-            "http://127.0.0.1:80",
-            "http://127.0.0.1:3000",
-            "http://127.0.0.1:8000",
-        ],
+        allow_origins=settings.CORS_ORIGINS,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -59,8 +50,8 @@ def create_app() -> FastAPI:
         return {"status": "healthy"}
     
     # 注册路由
-    from app.api import api_router
-    app.include_router(api_router)
+    from app.api import build_api_router
+    app.include_router(build_api_router())
     
     # 启动时初始化数据库连接
     @app.on_event("startup")

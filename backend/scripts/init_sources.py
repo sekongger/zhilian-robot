@@ -11,7 +11,7 @@ from pathlib import Path
 backend_path = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_path))
 
-from app.database.mongodb import SourceManager
+from app.database.mongodb import SourceManager, MongoDBConnection
 import asyncio
 
 # 权威数据源配置（根据Recorded Future理念设置可信度分数）
@@ -108,9 +108,14 @@ AUTHORITATIVE_SOURCES = [
     }
 ]
 
-async def init_sources():
+def init_sources():
     """初始化数据源"""
-    source_mgr = SourceManager()
+    # 创建 MongoDB 连接
+    db_conn = MongoDBConnection()
+    db_conn.connect()
+    
+    # 创建 SourceManager 实例
+    source_mgr = SourceManager(db_conn)
     
     print("=" * 60)
     print("开始初始化权威数据源")
@@ -121,30 +126,51 @@ async def init_sources():
     
     for source_data in AUTHORITATIVE_SOURCES:
         try:
+            # 从 URL 提取域名
+            from urllib.parse import urlparse
+            domain = urlparse(source_data["url"]).netloc
+            
             # 检查是否已存在
-            existing = await source_mgr.sources_collection.find_one({
-                "name": source_data["name"]
-            })
+            existing = db_conn.find_one('sources', {"name": source_data["name"]})
             
             if existing:
                 # 更新现有数据源
-                await source_mgr.sources_collection.update_one(
+                db_conn.update_one(
+                    'sources',
                     {"_id": existing["_id"]},
-                    {"$set": source_data}
+                    {"$set": {
+                        "domain": domain,
+                        "credibility_scores": {
+                            source_data.get("category", "general"): source_data["credibility_score"]
+                        },
+                        "metadata": {
+                            "description": source_data.get("description"),
+                            "language": source_data.get("language"),
+                            "verified": source_data.get("verified", False)
+                        }
+                    }}
                 )
                 print(f"✓ 更新数据源: {source_data['name']} (可信度: {source_data['credibility_score']})")
             else:
                 # 注册新数据源
-                source_id = await source_mgr.register_source(
+                source_id = source_mgr.register_source(
                     name=source_data["name"],
-                    url=source_data["url"],
-                    credibility_score=source_data["credibility_score"],
-                    category=source_data.get("category"),
-                    metadata={
-                        "description": source_data.get("description"),
-                        "language": source_data.get("language"),
-                        "verified": source_data.get("verified", False)
+                    domain=domain,
+                    credibility_scores={
+                        source_data.get("category", "general"): source_data["credibility_score"]
                     }
+                )
+                # 添加额外的元数据
+                db_conn.update_one(
+                    'sources',
+                    {"_id": source_id},
+                    {"$set": {
+                        "metadata": {
+                            "description": source_data.get("description"),
+                            "language": source_data.get("language"),
+                            "verified": source_data.get("verified", False)
+                        }
+                    }}
                 )
                 print(f"✓ 新增数据源: {source_data['name']} (可信度: {source_data['credibility_score']})")
             
@@ -153,6 +179,9 @@ async def init_sources():
         except Exception as e:
             print(f"✗ 处理失败 {source_data['name']}: {str(e)}")
             error_count += 1
+    
+    # 关闭连接
+    db_conn.close()
     
     print("=" * 60)
     print(f"初始化完成!")
@@ -189,7 +218,7 @@ if __name__ == "__main__":
 ╚══════════════════════════════════════════════════════════╝
     """)
     
-    asyncio.run(init_sources())
+    init_sources()
     
     print("\n提示: 数据源可信度将直接影响实体的动量计算")
     print("建议定期审核和更新数据源的可信度评分")

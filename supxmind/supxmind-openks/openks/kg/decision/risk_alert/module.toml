@@ -1,0 +1,7 @@
+name = "risk_alert"
+title = "风险预警"
+stage = "decision"
+owner = "待定"
+status = "skeleton"
+summary = "输出供应、政策和波动风险预警。"
+dependencies = ['supply_chain', 'capital_chain']

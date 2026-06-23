@@ -1,0 +1,6 @@
+graph_id: recommendation
+graph_type: decision
+schema: openks.kg.decision.recommendation.schema.recommendation_schema.RecommendationSchema
+builder: openks.kg.decision.recommendation.builder.recommendation_builder.RecommendationBuilder
+reasoner: openks.kg.decision.recommendation.reasoner.recommendation_reasoner.RecommendationReasoner
+solver: openks.kg.decision.recommendation.solver.recommendation_solver.RecommendationSolver

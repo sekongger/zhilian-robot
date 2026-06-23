@@ -1,0 +1,7 @@
+name = "recommendation"
+title = "推荐决策"
+stage = "decision"
+owner = "待定"
+status = "skeleton"
+summary = "面向智能体与应用层输出推荐与排序结果。"
+dependencies = ['trend', 'hotspot', 'risk_alert']

@@ -1,0 +1,6 @@
+graph_id: risk_alert
+graph_type: decision
+schema: openks.kg.decision.risk_alert.schema.risk_alert_schema.RiskAlertSchema
+builder: openks.kg.decision.risk_alert.builder.risk_alert_builder.RiskAlertBuilder
+reasoner: openks.kg.decision.risk_alert.reasoner.risk_alert_reasoner.RiskAlertReasoner
+solver: openks.kg.decision.risk_alert.solver.risk_alert_solver.RiskAlertSolver

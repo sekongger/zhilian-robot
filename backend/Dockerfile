@@ -18,16 +18,25 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # 复制依赖文件
-COPY requirements.txt .
+COPY backend/requirements.txt /app/backend/requirements.txt
+COPY backend/requirements-openks.txt /app/backend/requirements-openks.txt
+COPY supxmind/supxmind-openks /app/supxmind/supxmind-openks
 
 # 安装Python依赖（优先使用预编译的二进制轮子）
 # 使用阿里云镜像加速下载，失败则使用官方PyPI
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com || \
-    pip install -r requirements.txt
+    pip install -r /app/backend/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com || \
+    pip install -r /app/backend/requirements.txt && \
+    pip install -r /app/backend/requirements-openks.txt && \
+    pip install ruamel.yaml cachetools
 
 # 复制应用代码
-COPY --chown=appuser:appuser . .
+COPY --chown=appuser:appuser backend /app/backend
+COPY --chown=appuser:appuser supxmind /app/supxmind
+COPY --chown=appuser:appuser modules /app/modules
+
+# 后端代码工作目录
+WORKDIR /app/backend
 
 # 切换到非root用户
 USER appuser

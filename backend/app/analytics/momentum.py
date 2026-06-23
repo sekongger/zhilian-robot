@@ -33,6 +33,119 @@ class MomentumEngine:
         self.recency_weight = 0.5   # 时间权重
         self.credibility_weight = 0.3  # 可信度权重
         self.reference_weight = 0.2    # 引用权重
+
+    def _parse_structured_time(self, value) -> Optional[datetime]:
+        if isinstance(value, datetime):
+            return value
+        text = str(value or "").strip()
+        if not text:
+            return None
+        try:
+            if len(text) == 10:
+                return datetime.fromisoformat(text)
+            return datetime.fromisoformat(text.replace("Z", "+00:00")).replace(tzinfo=None)
+        except Exception:
+            return None
+
+    def _get_structured_statements(self, start_date: datetime = None, end_date: datetime = None) -> Optional[List[Dict]]:
+        from app.database.mongodb import mongodb_conn
+
+        statements = list(mongodb_conn.find_many('inc_statement', {}))
+        filtered = []
+        for statement in statements:
+            source_kg = str(statement.get('source_kg') or '').strip().lower()
+            if source_kg and source_kg != 'news_kg':
+                continue
+            statement_time = (
+                self._parse_structured_time(statement.get('context_time_value'))
+                or self._parse_structured_time(statement.get('created_at'))
+            )
+            if start_date and statement_time and statement_time < start_date:
+                continue
+            if end_date and statement_time and statement_time > end_date:
+                continue
+            filtered.append({**statement, '_statement_time': statement_time})
+        return filtered if filtered else None
+
+    def _get_structured_entity_index(self) -> Dict[str, Dict]:
+        from app.database.mongodb import mongodb_conn
+
+        index: Dict[str, Dict] = {}
+        for row in mongodb_conn.find_many('entity_instances', {}):
+            entity_id = row.get('entity_id') or row.get('_id')
+            if entity_id and entity_id not in index:
+                index[entity_id] = row
+        return index
+
+    def _build_structured_entity_payloads(
+        self,
+        *,
+        entity_type: str = None,
+        start_date: datetime = None,
+        end_date: datetime = None,
+    ) -> Optional[List[Dict]]:
+        statements = self._get_structured_statements(start_date=start_date, end_date=end_date)
+        if not statements:
+            return None
+
+        entity_index = self._get_structured_entity_index()
+        as_of = end_date or datetime.now()
+        aggregates: Dict[str, Dict] = {}
+        for statement in statements:
+            confidence = float(statement.get('confidence') or 0.8)
+            statement_time = statement.get('_statement_time') or as_of
+            days_ago = max((as_of - statement_time).days, 0)
+            recency = self._calculate_recency_weight(days_ago)
+            contribution = confidence * recency
+            for key in ('subject_id', 'object_entity_id'):
+                entity_id = statement.get(key)
+                if not entity_id:
+                    continue
+                entity_doc = entity_index.get(entity_id) or {}
+                current_type = str(entity_doc.get('entity_type') or entity_doc.get('type') or '').strip().lower()
+                if entity_type and current_type != str(entity_type).strip().lower():
+                    continue
+                aggregate = aggregates.setdefault(
+                    entity_id,
+                    {
+                        'id': entity_id,
+                        'names': [entity_doc.get('canonical_name') or entity_doc.get('name') or entity_id],
+                        'type': current_type or 'unknown',
+                        'current_momentum': 0.0,
+                        'reference_count': 0,
+                        'momentum_history': [],
+                        'last_updated': statement_time,
+                    },
+                )
+                aggregate['current_momentum'] += contribution
+                aggregate['reference_count'] += 1
+                aggregate['last_updated'] = max(
+                    aggregate.get('last_updated') or statement_time,
+                    statement_time,
+                )
+
+        if not aggregates:
+            return []
+
+        results = []
+        for aggregate in aggregates.values():
+            momentum = self._normalize_momentum(aggregate['current_momentum'])
+            if momentum <= 0:
+                continue
+            results.append(
+                {
+                    **aggregate,
+                    'current_momentum': momentum,
+                    'momentum_history': [
+                        {
+                            'date': aggregate['last_updated'],
+                            'value': momentum,
+                        }
+                    ],
+                }
+            )
+        results.sort(key=lambda item: item.get('current_momentum', 0), reverse=True)
+        return results
     
     def calculate_momentum(self, entity_id: str, time_point: datetime = None) -> float:
         """
@@ -50,6 +163,16 @@ class MomentumEngine:
         """
         if time_point is None:
             time_point = datetime.now()
+
+        structured_entities = self._build_structured_entity_payloads(
+            start_date=time_point - timedelta(days=self.time_decay_days),
+            end_date=time_point,
+        )
+        if structured_entities is not None:
+            for item in structured_entities:
+                if item.get('id') == entity_id:
+                    return float(item.get('current_momentum') or 0.0)
+            return 0.0
         
         try:
             # 1. 获取实体信息
@@ -183,6 +306,30 @@ class MomentumEngine:
         Returns:
             [{date: "2024-12-01", value: 0.85}, ...]
         """
+        structured_entities = self._build_structured_entity_payloads(
+            start_date=start,
+            end_date=end,
+        )
+        if structured_entities is not None:
+            trends = []
+            current = start
+            while current <= end:
+                point_entities = self._build_structured_entity_payloads(
+                    start_date=start,
+                    end_date=current.replace(hour=23, minute=59, second=59),
+                ) or []
+                current_value = 0.0
+                for item in point_entities:
+                    if item.get('id') == entity_id:
+                        current_value = round(float(item.get('current_momentum') or 0.0), 4)
+                        break
+                trends.append({
+                    'date': current.strftime('%Y-%m-%d'),
+                    'value': current_value,
+                })
+                current += timedelta(days=interval_days)
+            return trends
+
         from app.database.mongodb import mongodb_conn
         
         # 首先检查该时间段内是否有该实体的文档引用
@@ -349,6 +496,14 @@ class MomentumEngine:
         Returns:
             实体列表（按动量排序）
         """
+        structured_results = self._build_structured_entity_payloads(
+            entity_type=entity_type,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        if structured_results is not None:
+            return structured_results[:limit]
+
         from app.database.mongodb import mongodb_conn
         
         # 如果指定了时间范围，需要重新计算该时间段的动量
@@ -536,6 +691,29 @@ class MomentumEngine:
         Returns:
             [{date: "2024-12-01", avg_momentum: 0.45}, ...]
         """
+        structured_results = self._build_structured_entity_payloads(
+            entity_type=entity_type,
+            start_date=start,
+            end_date=end,
+        )
+        if structured_results is not None:
+            trends = []
+            current = start
+            while current <= end:
+                items = self._build_structured_entity_payloads(
+                    entity_type=entity_type,
+                    start_date=start,
+                    end_date=current.replace(hour=23, minute=59, second=59),
+                ) or []
+                values = [item.get('current_momentum', 0.0) for item in items]
+                trends.append({
+                    'date': current.strftime('%Y-%m-%d'),
+                    'avg_momentum': round(sum(values) / len(values), 4) if values else 0.0,
+                    'count': len(values),
+                })
+                current += timedelta(days=interval_days)
+            return trends
+
         from app.database.mongodb import mongodb_conn
         
         # 首先获取时间范围内的所有文档
@@ -665,6 +843,47 @@ class MomentumEngine:
         Returns:
             统计信息字典
         """
+        structured_results = self._build_structured_entity_payloads(
+            entity_type=entity_type,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        if structured_results is not None:
+            momentum_levels = {
+                'low': 0,
+                'medium': 0,
+                'high': 0,
+                'very_high': 0
+            }
+            type_distribution: Dict[str, int] = {}
+            for entity in structured_results:
+                current_type = entity.get('type') or 'unknown'
+                type_distribution[current_type] = type_distribution.get(current_type, 0) + 1
+                momentum = entity.get('current_momentum', 0)
+                if momentum < 0.3:
+                    momentum_levels['low'] += 1
+                elif momentum < 0.5:
+                    momentum_levels['medium'] += 1
+                elif momentum < 0.7:
+                    momentum_levels['high'] += 1
+                else:
+                    momentum_levels['very_high'] += 1
+
+            total_entities = len(structured_results)
+            average_momentum = (
+                sum(item.get('current_momentum', 0) for item in structured_results) / total_entities
+                if total_entities
+                else 0.0
+            )
+            return {
+                'total_entities': total_entities,
+                'average_momentum': round(average_momentum, 4),
+                'total_references': sum(item.get('reference_count', 0) for item in structured_results),
+                'high_momentum_count': len([item for item in structured_results if item.get('current_momentum', 0) >= 0.7]),
+                'type_distribution': type_distribution,
+                'momentum_levels': momentum_levels,
+            }
+
         from app.database.mongodb import mongodb_conn
         
         try:

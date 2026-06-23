@@ -13,6 +13,12 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/data", tags=["Data Management"])
 
 
+def _process_crawled_article_record(article: dict, article_id: str):
+    from app.news_pipeline.service import news_pipeline_service
+
+    return news_pipeline_service.process_crawled_article(article, external_id=article_id)
+
+
 class CrawlRequest(BaseModel):
     """爬取请求"""
     keyword: str
@@ -87,8 +93,6 @@ async def process_articles_batch(request: BatchProcessRequest):
     """
     try:
         from bson import ObjectId
-        from app.nlp.llm import llm_processor
-        from app.services.graph_service import graph_service
         
         article_ids = request.article_ids
         
@@ -135,34 +139,15 @@ async def process_articles_batch(request: BatchProcessRequest):
                     errors.append({"article_id": article_id, "error": "文章内容为空"})
                     failed_count += 1
                     continue
-                
-                # 使用LLM提取
-                result = llm_processor.analyze_industry_chain(content)
-                entities_dict = result.get('entities', {})
-                relations = result.get('relations', [])
-                
-                # 保存到图谱
-                graph_service.save_analyzed_data(entities_dict, relations)
-                
-                # 计算实体总数
-                entities_count = sum(len(items) for items in entities_dict.values())
-                
-                # 更新文章状态
-                collection.update_one(
-                    {'_id': ObjectId(article_id)},
-                    {
-                        '$set': {
-                            'processed': True,
-                            'processed_at': datetime.now(),
-                            'entities_count': entities_count,
-                            'relations_count': len(relations)
-                        }
-                    }
-                )
+
+                pipeline_result = _process_crawled_article_record(article, article_id)
+                process_summary = pipeline_result.get('process_result') or {}
+                entities_count = int(process_summary.get('entities') or 0)
+                relations_count = int(process_summary.get('relations') or 0)
                 
                 success_count += 1
                 total_entities += entities_count
-                total_relations += len(relations)
+                total_relations += relations_count
                 
             except Exception as e:
                 logger.error(f"处理文章{article_id}失败: {e}")
@@ -197,8 +182,6 @@ async def process_article(article_id: str, background_tasks: BackgroundTasks):
     """
     try:
         from bson import ObjectId
-        from app.nlp.llm import llm_processor
-        from app.services.graph_service import graph_service
         
         logger.info(f"开始处理文章: {article_id}")
         
@@ -219,36 +202,17 @@ async def process_article(article_id: str, background_tasks: BackgroundTasks):
         content = article.get('content', '') or article.get('summary', '')
         if not content:
             raise HTTPException(status_code=400, detail="文章内容为空")
-        
-        # 使用LLM提取实体和关系
-        result = llm_processor.analyze_industry_chain(content)
-        entities_dict = result.get('entities', {})
-        relations = result.get('relations', [])
-        
-        # 保存到图谱 (使用字典格式的entities)
-        graph_service.save_analyzed_data(entities_dict, relations)
-        
-        # 计算实体总数
-        entities_count = sum(len(items) for items in entities_dict.values())
-        
-        # 更新文章状态
-        collection.update_one(
-            {'_id': ObjectId(article_id)},
-            {
-                '$set': {
-                    'processed': True,
-                    'processed_at': datetime.now(),
-                    'entities_count': entities_count,
-                    'relations_count': len(relations)
-                }
-            }
-        )
+
+        pipeline_result = _process_crawled_article_record(article, article_id)
+        process_summary = pipeline_result.get('process_result') or {}
+        entities_count = int(process_summary.get('entities') or 0)
+        relations_count = int(process_summary.get('relations') or 0)
         
         return {
             "message": "文章处理成功",
             "article_id": article_id,
             "entities_count": entities_count,
-            "relations_count": len(relations)
+            "relations_count": relations_count
         }
     except HTTPException:
         raise
@@ -559,4 +523,3 @@ async def update_all_momentum():
     except Exception as e:
         logger.error(f"启动动量更新任务失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-

@@ -1,6 +1,7 @@
 # Git
 .git/
 .gitignore
+.worktrees/
 
 # Documentation
 *.md
@@ -13,3 +14,13 @@ docs/
 # Temporary files
 *.tmp
 *.log
+tmp/
+hatch-runs/
+neo4j_v2_octopus_only_20260510*/
+
+# Build artifacts
+frontend/node_modules/
+frontend/dist/
+backend/__pycache__/
+backend/.pytest_cache/
+supxmind/**/__pycache__/

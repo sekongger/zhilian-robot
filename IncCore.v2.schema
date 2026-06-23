@@ -1,0 +1,367 @@
+namespace IncCore
+
+# ======= 产业网概念定义（v2，收敛版） =========================
+IndustrySector(产业分类): ConceptType
+  hypernymPredicate: isA
+
+CompanyCategory(企业分类): ConceptType
+  hypernymPredicate: isA
+
+ProductCategory(产品分类): ConceptType
+  hypernymPredicate: isA
+
+TechnologyCategory(技术分类): ConceptType
+  hypernymPredicate: isA
+
+PersonCategory(人物分类): ConceptType
+  hypernymPredicate: isA
+
+OrganizationCategory(机构分类): ConceptType
+  hypernymPredicate: isA
+
+RegionCategory(区域分类): ConceptType
+  hypernymPredicate: isA
+
+TermCategory(术语分类): ConceptType
+  hypernymPredicate: isA
+
+EventCategory(事件分类): ConceptType
+  hypernymPredicate: isA
+  relations:
+    CAU#leadTo(导致): EventCategory
+
+ApplicationScenarioCategory(应用场景分类): ConceptType
+  hypernymPredicate: isA
+
+ImpactCategory(影响分类): ConceptType
+  hypernymPredicate: isA
+
+# ================ 产业网核心实体定义（v2，收敛版） ==============
+IndustryNode(产业节点): EntityType
+  properties:
+    name(名称): Text
+    nameEn(英文名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    industryCategory(产业分类): IndustrySector
+
+Region(区域): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): RegionCategory
+
+IndustryActor(产业主体): EntityType
+
+Company(企业)->IndustryActor:
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): CompanyCategory
+      constraint: MultiValue
+    industry(所属行业): IndustrySector
+      constraint: MultiValue
+    region(所属区域): Region
+      constraint: MultiValue
+    nameEn(英文名称): Text
+    code(统一社会信用代码): Text
+    legalPerson(法人): Person
+    foundedDate(成立日期): STD.Date
+    status(经营状态): Text
+    website(官网): Text
+    businessScope(经营范围): Text
+    companyScale(企业规模): Text
+  relations:
+    shareholder(股东): Company
+    personShareholder(个人股东): Person
+    invest(对外投资): Company
+    branch(分支机构): Company
+    supplier(供应商): Company
+    customer(客户): Company
+    hasProduct(经营产品): ProductObject
+    hasTechnology(掌握技术): Technology
+
+Organization(机构)->IndustryActor:
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): OrganizationCategory
+      constraint: MultiValue
+    region(所属区域): Region
+      constraint: MultiValue
+    website(官网): Text
+  relations:
+    focusTechnology(关注技术): Technology
+
+Person(人物)->IndustryActor:
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    nameEn(英文名称): Text
+    gender(性别): Text
+      constraint: Enum="男,女"
+    jobTitle(职称): Text
+    eduDgree(学历): Text
+    birthYear(出生年份): Integer
+    nationality(国籍): Region
+    honors(荣誉): Text
+      constraint: MultiValue
+      index: Text
+    category(分类): PersonCategory
+      constraint: MultiValue
+  relations:
+    relatedCompany(关联企业): Company
+    relatedOrganization(关联机构): Organization
+
+Technology(技术): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): TechnologyCategory
+      constraint: MultiValue
+    applyScenarios(应用场景): ApplicationScenarioCategory
+      constraint: MultiValue
+  relations:
+    relatedTerm(关联术语): TermCategory
+
+ProductObject(产品对象): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): ProductCategory
+      constraint: MultiValue
+    industry(所属行业): IndustrySector
+      constraint: MultiValue
+    manufacturer(所属企业): Company
+    brand(品牌): Text
+    model(型号): Text
+  relations:
+    coreTechnology(核心技术): Technology
+    applyToScenario(适用场景): ApplicationScenarioCategory
+
+Chunk(文本块): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+    content(内容): Text
+      index: TextAndVector
+    chunkIndex(分块序号): Integer
+    startOffset(起始偏移): Integer
+    endOffset(结束偏移): Integer
+    source(来源): Document
+
+Document(文档): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    source(来源): DataSource
+    semanticType(语义类型): Text
+      index: Text
+    externalId(外部文档ID): Text
+    docType(文档类型): Text
+    url(原文链接): Text
+    publishTime(发布时间): STD.Timestamp
+
+DataSource(数据来源): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    confidence(置信度): Float
+    sourceType(来源类型): Text
+    authorityLevel(权威等级): Float
+
+Index(产业指标): EntityType
+  properties:
+    name(名称): Text
+    description(描述): Text
+      index: Text
+    alias(别名): Text
+      constraint: MultiValue
+      index: Text
+    officialName(标准名称): Text
+    semanticType(语义类型): Text
+      index: Text
+
+# ================ 产业网事件定义（v2，收敛版） =================
+Event(事件): EventType
+  properties:
+    name(名称): Text
+    summary(摘要): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    subject(主体): IndustryActor
+    location(地点): Region
+    category(事件分类): EventCategory
+      index: Text
+    source(来源): DataSource
+    publishTime(发布时间): STD.Timestamp
+    endTime(事件结束时间): STD.Timestamp
+    confidence(置信度): Float
+    impactCategory(影响分类): ImpactCategory
+      constraint: MultiValue
+    relatedIndustry(关联产业): IndustrySector
+      constraint: MultiValue
+    triggerTerms(触发术语): TermCategory
+      constraint: MultiValue
+  relations:
+    relatedActor(关联主体): IndustryActor
+    relatedProduct(关联产品): ProductObject
+    relatedTechnology(关联技术): Technology
+    mentionedIn(来源文档): Document
+    evidenceChunk(证据片段): Chunk
+    CAU#leadTo(导致事件): Event
+    affectActor(影响主体): IndustryActor
+    affectProduct(影响产品): ProductObject
+    affectTechnology(影响技术): Technology
+    affectRegion(影响区域): Region
+    affectIndustry(影响产业): IndustrySector
+
+GovernmentPublishPolicyEvent(政府发布政策事件): EventType
+  properties:
+    name(名称): Text
+    summary(摘要): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    subject(主体): Organization
+    object(客体): Text
+    location(区域): Region
+    category(事件分类): EventCategory
+      index: Text
+    source(来源): DataSource
+    publishTime(发布时间): STD.Timestamp
+    confidence(置信度): Float
+    impactCategory(影响分类): ImpactCategory
+      constraint: MultiValue
+    triggerTerms(触发术语): TermCategory
+      constraint: MultiValue
+    policyNo(文号): Text
+    policyLevel(政策级别): Text
+    policyType(政策类型): Text
+  relations:
+    mentionedIn(来源文档): Document
+    evidenceChunk(证据片段): Chunk
+    CAU#leadTo(导致事件): Event
+    affectActor(影响主体): IndustryActor
+    affectProduct(影响产品): ProductObject
+    affectTechnology(影响技术): Technology
+    affectRegion(影响区域): Region
+    affectIndustry(影响产业): IndustrySector
+
+CompanyCooperationEvent(企业合作事件): EventType
+  properties:
+    name(名称): Text
+    summary(摘要): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    subject(主体): Company
+    object(客体): IndustryActor
+    location(地点): Region
+    category(事件分类): EventCategory
+      index: Text
+    source(来源): DataSource
+    publishTime(发布时间): STD.Timestamp
+    confidence(置信度): Float
+    impactCategory(影响分类): ImpactCategory
+      constraint: MultiValue
+    triggerTerms(触发术语): TermCategory
+      constraint: MultiValue
+    cooperationMode(合作方式): Text
+    contractAmount(合同金额): Float
+  relations:
+    relatedProduct(关联产品): ProductObject
+    relatedTechnology(关联技术): Technology
+    mentionedIn(来源文档): Document
+    evidenceChunk(证据片段): Chunk
+    CAU#leadTo(导致事件): Event
+    affectActor(影响主体): IndustryActor
+    affectProduct(影响产品): ProductObject
+    affectTechnology(影响技术): Technology
+    affectRegion(影响区域): Region
+    affectIndustry(影响产业): IndustrySector
+
+CompanyFinancingEvent(企业融资事件): EventType
+  properties:
+    name(名称): Text
+    summary(摘要): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    subject(主体): Company
+    object(客体): Organization
+    financingAmount(融资金额): Float
+    financingRound(融资轮次): Text
+    location(地点): Region
+    category(事件分类): EventCategory
+      index: Text
+    source(来源): DataSource
+    publishTime(发布时间): STD.Timestamp
+    confidence(置信度): Float
+    impactCategory(影响分类): ImpactCategory
+      constraint: MultiValue
+    triggerTerms(触发术语): TermCategory
+      constraint: MultiValue
+    financingPurpose(融资用途): Text
+  relations:
+    relatedProduct(关联产品): ProductObject
+    relatedTechnology(关联技术): Technology
+    mentionedIn(来源文档): Document
+    evidenceChunk(证据片段): Chunk
+    CAU#leadTo(导致事件): Event
+    affectActor(影响主体): IndustryActor
+    affectProduct(影响产品): ProductObject
+    affectTechnology(影响技术): Technology
+    affectRegion(影响区域): Region
+    affectIndustry(影响产业): IndustrySector

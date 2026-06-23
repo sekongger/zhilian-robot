@@ -1,0 +1,134 @@
+namespace IChainNews
+
+TechnologyTerm(技术术语): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    officialName(标准名): Text
+      index: Text
+    aliases(别名): Text
+      constraint: MultiValue
+      index: Text
+
+Chunk(文本块): EntityType
+  properties:
+    content(内容): Text
+      index: TextAndVector
+
+News(新闻): EntityType
+  properties:
+    title(标题): Text
+      index: Text
+    url(URL): Text
+      index: Text
+    source(来源): Text
+      index: Text
+    publishedAt(发布时间): Text
+      index: Text
+    content(内容): Text
+      index: TextAndVector
+
+IndustrySegment(赛道): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+
+CompanyCategory(企业分类): ConceptType
+  hypernymPredicate: isA
+
+OrganizationCategory(机构分类): ConceptType
+  hypernymPredicate: isA
+
+RegionCategory(区域分类): ConceptType
+  hypernymPredicate: isA
+
+PersonCategory(人物分类): ConceptType
+  hypernymPredicate: isA
+
+Company(企业): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): CompanyCategory
+      constraint: MultiValue
+
+Organization(机构): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): OrganizationCategory
+      constraint: MultiValue
+
+Region(区域): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    category(分类): RegionCategory
+      constraint: MultiValue
+
+Technology(技术): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    term(术语): TechnologyTerm
+      constraint: MultiValue
+    provider(关联企业): Company
+      constraint: MultiValue
+
+Person(人物): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    title(职务): Text
+      index: Text
+    category(分类): PersonCategory
+      constraint: MultiValue
+    company(关联企业): Company
+      constraint: MultiValue
+    organization(关联机构): Organization
+      constraint: MultiValue
+
+ProductTerm(产品术语): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    officialName(标准名): Text
+      index: Text
+    aliases(别名): Text
+      constraint: MultiValue
+      index: Text
+
+Product(产品): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+    term(术语): ProductTerm
+      constraint: MultiValue
+    manufacturer(关联企业): Company
+      constraint: MultiValue
+
+Policy(政策): EntityType
+  properties:
+    desc(描述): Text
+      index: Text
+    semanticType(语义类型): Text
+      index: Text
+

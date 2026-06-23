@@ -1,9 +1,20 @@
 """
 数据模型定义
 """
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 from datetime import datetime
+
+
+class DocumentType(str, Enum):
+    """文档类型（V2本体：产业文档类子类）"""
+    NEWS = "news"           # 资讯文档
+    POLICY = "policy"       # 政策文档
+    RESEARCH = "research"   # 研报文档
+    PATENT = "patent"       # 专利文档
+    STANDARD = "standard"   # 标准文档
+    CREDENTIAL = "credential"  # 凭证文档
 
 
 class EntityModel(BaseModel):

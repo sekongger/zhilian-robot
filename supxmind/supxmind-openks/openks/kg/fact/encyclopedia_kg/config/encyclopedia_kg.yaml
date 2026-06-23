@@ -1,0 +1,6 @@
+graph_id: encyclopedia_kg
+graph_type: fact
+schema: openks.kg.fact.encyclopedia_kg.schema.encyclopedia_kg_schema.EncyclopediaKgSchema
+builder: openks.kg.fact.encyclopedia_kg.builder.encyclopedia_kg_builder.EncyclopediaKgBuilder
+reasoner: openks.kg.fact.encyclopedia_kg.reasoner.encyclopedia_kg_reasoner.EncyclopediaKgReasoner
+solver: openks.kg.fact.encyclopedia_kg.solver.encyclopedia_kg_solver.EncyclopediaKgSolver

@@ -1,0 +1,1 @@
+from .encyclopedia_kg_schema import EncyclopediaKgSchema

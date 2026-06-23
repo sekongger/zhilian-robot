@@ -1,0 +1,7 @@
+name = "encyclopedia_kg"
+title = "百科知识库"
+stage = "fact"
+owner = "杨辰"
+status = "skeleton"
+summary = "补充通用实体背景知识和百科语义。"
+dependencies = []

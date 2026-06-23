@@ -1,0 +1,7 @@
+name = "enterprise_kg"
+title = "企业知识库"
+stage = "fact"
+owner = "陆文韬"
+status = "skeleton"
+summary = "沉淀企业画像、上下游和经营要素。"
+dependencies = ['base_kg']

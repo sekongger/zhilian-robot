@@ -1,0 +1,6 @@
+graph_id: enterprise_kg
+graph_type: fact
+schema: openks.kg.fact.enterprise_kg.schema.enterprise_kg_schema.EnterpriseKgSchema
+builder: openks.kg.fact.enterprise_kg.builder.enterprise_kg_builder.EnterpriseKgBuilder
+reasoner: openks.kg.fact.enterprise_kg.reasoner.enterprise_kg_reasoner.EnterpriseKgReasoner
+solver: openks.kg.fact.enterprise_kg.solver.enterprise_kg_solver.EnterpriseKgSolver

@@ -1,0 +1,247 @@
+<html><head><meta charset="utf-8">
+<style>
+body{font-family:PingFang SC,Microsoft YaHei,Helvetica,Arial,sans-serif;font-size:12pt;line-height:1.6;color:#222;}
+h1,h2,h3,h4{color:#111;margin-top:18px;margin-bottom:10px;}
+p{margin:6px 0 10px 0;}
+ul,ol{margin:4px 0 10px 24px;}
+table{border-collapse:collapse;width:100%;margin:10px 0 16px 0;font-size:10.5pt;}
+th,td{border:1px solid #9aa4b2;padding:6px 8px;vertical-align:top;text-align:left;}
+th{background:#eef4fb;font-weight:700;}
+code{font-family:Menlo,Consolas,monospace;background:#f3f5f7;padding:1px 4px;border-radius:3px;}
+hr{border:none;border-top:1px solid #d7dce2;margin:14px 0;}
+</style></head><body>
+<h1>知识计算算子目录详细设计稿</h1>
+<p><strong>日期</strong>: 2026-04-13</p>
+<p><strong>关联文档</strong>:</p>
+<ul><li>知识计算算子目录重定方案</li><li>知识计算算子清单（适配KAG规范+自定义业务框架版）</li><li>知识计算算子清单（增加业务扩展）</li></ul>
+<h2>1. 目的</h2>
+<p>在已经确定的 7 类“知识计算”顶层目录基础上，进一步给出：</p>
+<ul><li>具体算子</li><li>算子功能</li><li>第一版关键参数</li><li>实现方案</li><li>是否优先复用 <code>KAG</code></li><li>是否需要自研</li></ul>
+<p>本稿的目标是为后续：</p>
+<ul><li>工作台目录重构</li><li>算子实现排期</li><li><code>KAG/OpenSPG</code> 结合方式落地</li></ul>
+<p>提供统一依据。</p>
+<hr/>
+<h2>2. 设计原则</h2>
+<h3>2.1 参数设计原则</h3>
+<p>本稿中的“参数”只写<strong>第一版关键参数</strong>，不等同于最终代码接口。参数说明遵循以下原则：</p>
+<ul><li>只列影响编排和实现边界的核心参数</li><li>优先列稳定业务参数，不展开底层模型/线程池等运行参数</li><li>优先列 DTO 级输入输出参数，不把所有内部字段都写成对外参数</li></ul>
+<h3>2.2 实现方案分类</h3>
+<p>每个算子的实现方案统一标成以下几类：</p>
+<ul><li><code>复用 KAG</code></li><li>直接包装现有 <code>KAG</code> 组件即可</li><li><code>包装 KAG + 自研</code></li><li>底层复用 <code>KAG</code>，但要补业务 DTO、规则、路由或结果整理</li><li><code>复用 OpenSPG</code></li><li>主要依赖 <code>OpenSPG</code> 的 schema、图查询、图存储能力</li><li><code>自研</code></li><li><code>KAG/OpenSPG</code> 没有直接可复用能力，需要自己实现</li></ul>
+<h3>2.3 实现优先级标记</h3>
+<ul><li><code>P0</code></li><li>必须尽快落地，支撑工作台和基础链路</li><li><code>P1</code></li><li>第二批落地，支撑完整知识计算链</li><li><code>P2</code></li><li>后续扩展能力</li></ul>
+<hr/>
+<h2>3. 顶层目录与实现侧重点</h2>
+<table>
+<thead><tr><th>顶层目录</th><th>当前是否已有基础实现</th><th>主要复用来源</th><th>主要新增来源</th></tr></thead>
+<tbody>
+<tr><td>数据接入与加载</td><td>部分有</td><td>自研接入层、少量 <code>KAG reader</code></td><td>自研</td></tr>
+<tr><td>数据预处理与结构化</td><td>部分有</td><td><code>KAG reader/splitter/extractor</code></td><td>包装层</td></tr>
+<tr><td>知识抽取</td><td>部分有</td><td><code>KAG extractor</code></td><td>包装层、业务抽取规则</td></tr>
+<tr><td>知识对齐与标准化</td><td>很少</td><td>少量现有 resolver 逻辑</td><td>自研</td></tr>
+<tr><td>知识融合与图构建</td><td>已有较多</td><td><code>KAG mapping/writer</code>、<code>OpenSPG</code></td><td>自研融合逻辑</td></tr>
+<tr><td>知识检索与召回</td><td>很少</td><td><code>OpenSPG</code> 查询、向量召回能力</td><td>自研检索编排</td></tr>
+<tr><td>推理与决策生成</td><td>很少</td><td><code>OpenSPG</code> 图查询、规则引擎</td><td>自研</td></tr>
+</tbody></table>
+<hr/>
+<h2>4. 数据接入与加载</h2>
+<h3>4.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>pdf_source_ingest</code></td><td>P0</td><td>接入本地文件、对象存储或上传得到的 PDF 源</td><td><code>source_uri</code>, <code>source_id</code>, <code>source_name</code>, <code>metadata</code>, <code>load_mode</code></td><td>自研。源接入本身不是 <code>KAG</code> 强项，建议统一封装到我们自己的 source adapter。</td></tr>
+<tr><td><code>docx_source_ingest</code></td><td>P1</td><td>接入 Word 文档并生成标准源对象</td><td><code>source_uri</code>, <code>source_id</code>, <code>source_name</code>, <code>metadata</code>, <code>load_mode</code></td><td>自研。后续正文解析可复用 <code>KAG</code>，但接入层应统一自建。</td></tr>
+<tr><td><code>markdown_source_ingest</code></td><td>P0</td><td>接入 Markdown 文档或文本片段</td><td><code>source_text/source_uri</code>, <code>source_id</code>, <code>title</code>, <code>metadata</code></td><td>自研。接入和抽取逻辑解耦，适合作为标准入口。</td></tr>
+<tr><td><code>webpage_source_ingest</code></td><td>P0</td><td>接入网页 URL 并记录抓取上下文</td><td><code>url</code>, <code>source_id</code>, <code>fetch_mode</code>, <code>headers</code>, <code>metadata</code></td><td>自研。网页抓取和重试逻辑应在我们自己的接入层。</td></tr>
+<tr><td><code>rss_source_ingest</code></td><td>P1</td><td>接入 RSS/Atom 订阅源并输出资讯记录</td><td><code>feed_url</code>, <code>source_id</code>, <code>poll_window</code>, <code>dedup_key</code></td><td>自研。<code>KAG</code> 不负责资讯源接入。</td></tr>
+<tr><td><code>structured_table_source_ingest</code></td><td>P0</td><td>接入 CSV/Excel/DB 行数据，转成标准结构化源</td><td><code>source_uri/table_name</code>, <code>pk_fields</code>, <code>field_mapping</code>, <code>load_mode</code></td><td>自研。后续可接 <code>KAG mapping</code>，但接入本身仍是我们自己的职责。</td></tr>
+<tr><td><code>api_source_ingest</code></td><td>P1</td><td>拉取第三方 API 数据源</td><td><code>endpoint</code>, <code>auth_config</code>, <code>pagination</code>, <code>retry_policy</code>, <code>field_mapping</code></td><td>自研。偏连接器能力，不建议塞进 <code>KAG</code>。</td></tr>
+</tbody></table>
+<h3>4.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>giks_batch_load</code></td><td>P1</td><td>对接 GIKS 产业知识云，按主题批量加载数据</td><td><code>dataset_type</code>, <code>industry_code</code>, <code>region_code</code>, <code>version</code>, <code>sync_mode</code></td><td>自研。明确属于业务专属连接器。</td></tr>
+<tr><td><code>industry_chain_topic_load</code></td><td>P1</td><td>按产业链专题拉取企业、产品、技术、政策等专题数据</td><td><code>chain_code</code>, <code>region_scope</code>, <code>time_range</code>, <code>data_scopes</code></td><td>自研。</td></tr>
+<tr><td><code>policy_corpus_load</code></td><td>P1</td><td>按区域/时间/主题接入政策法规语料</td><td><code>region_code</code>, <code>policy_type</code>, <code>time_range</code>, <code>source_scope</code></td><td>自研。</td></tr>
+<tr><td><code>innovation_asset_load</code></td><td>P1</td><td>加载专利、论文、成果、软著等创新链数据</td><td><code>asset_type</code>, <code>ipc_code</code>, <code>owner_scope</code>, <code>time_range</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>5. 数据预处理与结构化</h2>
+<h3>5.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>pdf_parse</code></td><td>P0</td><td>把 PDF 源解析成标准 <code>DocumentDTO</code></td><td><code>parse_mode</code>, <code>page_range</code>, <code>ocr_enabled</code>, <code>layout_enabled</code></td><td>包装 <code>KAG PDFReader</code>。需要补 DTO 适配和异常处理。</td></tr>
+<tr><td><code>docx_parse</code></td><td>P1</td><td>解析 docx 文档正文与标题层级</td><td><code>parse_mode</code>, <code>include_comments</code>, <code>extract_tables</code></td><td>包装 <code>KAG DocxReader</code>。</td></tr>
+<tr><td><code>html_extract</code></td><td>P0</td><td>提取网页正文、标题、发布时间、链接结构</td><td><code>content_selector</code>, <code>clean_html</code>, <code>keep_links</code></td><td>包装 <code>KAG</code> 读入能力 + 自研正文提取。</td></tr>
+<tr><td><code>markdown_normalize</code></td><td>P0</td><td>统一 Markdown 标题层级、引用块、列表结构</td><td><code>normalize_heading</code>, <code>normalize_quote</code>, <code>strip_empty_blocks</code></td><td>包装 <code>KAG MarkDownReader</code> + 自研规范化。</td></tr>
+<tr><td><code>document_clean</code></td><td>P0</td><td>清理乱码、页眉页脚、冗余空白、无效噪声</td><td><code>clean_rules</code>, <code>dedup_paragraph</code>, <code>remove_boilerplate</code></td><td>自研。 <code>KAG</code> 无现成稳定清洗算子。</td></tr>
+<tr><td><code>text_chunk_split</code></td><td>P0</td><td>按长度、语义或标题切分 chunk</td><td><code>split_mode</code>, <code>chunk_size</code>, <code>overlap</code>, <code>heading_aware</code></td><td>包装 <code>KAG LengthSplitter/SemanticSplitter/OutlineSplitter</code>。</td></tr>
+<tr><td><code>outline_extract</code></td><td>P1</td><td>提取章节和段落层级结构</td><td><code>max_depth</code>, <code>preserve_section_id</code></td><td>包装 <code>KAG OutlineExtractor</code>。</td></tr>
+<tr><td><code>table_extract</code></td><td>P1</td><td>从文档中抽取表格块及表格上下文</td><td><code>table_mode</code>, <code>keep_context</code>, <code>max_cells</code></td><td>包装 <code>KAG TableExtractor</code>。</td></tr>
+<tr><td><code>format_normalize</code></td><td>P1</td><td>统一日期、金额、编码、标点等文本格式</td><td><code>date_format</code>, <code>currency_format</code>, <code>normalize_punctuation</code></td><td>自研。</td></tr>
+</tbody></table>
+<h3>5.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>industry_document_parse</code></td><td>P1</td><td>识别产业文档类型并恢复章节逻辑</td><td><code>doc_type_hint</code>, <code>section_schema</code>, <code>extract_appendix</code></td><td>包装通用解析算子 + 自研规则。</td></tr>
+<tr><td><code>patent_fulltext_preprocess</code></td><td>P1</td><td>专利全文拆成摘要、权利要求、说明书等模块</td><td><code>split_claims</code>, <code>split_description</code>, <code>drop_legal_notice</code></td><td>自研。专利文本结构有明显业务特性。</td></tr>
+<tr><td><code>policy_text_normalize</code></td><td>P1</td><td>标准化政策文本层级、文号、有效期等信息</td><td><code>extract_doc_no</code>, <code>extract_effective_date</code>, <code>clause_mode</code></td><td>自研。</td></tr>
+<tr><td><code>announcement_normalize</code></td><td>P1</td><td>清洗企业公告、招投标公告等文本</td><td><code>announcement_type</code>, <code>drop_risk_note</code>, <code>extract_subject</code></td><td>自研。</td></tr>
+<tr><td><code>industry_code_normalize</code></td><td>P1</td><td>标准化 IPC、ICD、行业代码、区域码等</td><td><code>code_system</code>, <code>version</code>, <code>strict_validate</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>6. 知识抽取</h2>
+<h3>6.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>entity_extract</code></td><td>P0</td><td>从 chunk 中抽实体候选</td><td><code>schema_ref</code>, <code>entity_types</code>, <code>llm_profile</code>, <code>confidence_threshold</code></td><td>包装 <code>KAG schema_constraint_extractor.named_entity_recognition</code>。</td></tr>
+<tr><td><code>entity_standardize</code></td><td>P0</td><td>对抽出的实体做标准化和别名归并</td><td><code>schema_ref</code>, <code>normalize_mode</code>, <code>official_name_enabled</code></td><td>包装 <code>KAG schema_constraint_extractor.named_entity_standardization</code>，并补业务别名策略。</td></tr>
+<tr><td><code>relation_extract</code></td><td>P0</td><td>从文本中抽关系候选</td><td><code>schema_ref</code>, <code>relation_types</code>, <code>llm_profile</code>, <code>confidence_threshold</code></td><td>包装 <code>KAG schema_constraint_extractor.relations_extraction</code>。</td></tr>
+<tr><td><code>event_extract</code></td><td>P0</td><td>从文本中抽事件候选</td><td><code>schema_ref</code>, <code>event_types</code>, <code>time_extraction</code>, <code>location_extraction</code></td><td>包装 <code>KAG schema_constraint_extractor.event_extraction</code>。</td></tr>
+<tr><td><code>concept_seed_extract</code></td><td>P1</td><td>从文本中抽概念候选或概念归属</td><td><code>concept_types</code>, <code>schema_ref</code>, <code>mode</code></td><td>包装 <code>KAG</code> 抽取结果 + 自研概念候选整理。</td></tr>
+<tr><td><code>table_fact_extract</code></td><td>P1</td><td>从表格 seed 中抽结构化事实</td><td><code>fact_schema</code>, <code>header_mode</code>, <code>merge_cells</code></td><td>包装 <code>KAG TableExtractor</code> 结果并二次整理。</td></tr>
+<tr><td><code>summary_extract</code></td><td>P2</td><td>提取 chunk 或文档摘要，用于后续检索与解释</td><td><code>summary_length</code>, <code>style</code>, <code>schema_hint</code></td><td>包装 <code>KAG SummaryExtractor</code>。</td></tr>
+</tbody></table>
+<h3>6.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>policy_factor_extract</code></td><td>P1</td><td>抽取政策主体、对象、支持方向、申报条件、额度等要素</td><td><code>policy_schema</code>, <code>region_scope</code>, <code>support_type</code></td><td>包装通用抽取 + 自研政策要素模板。</td></tr>
+<tr><td><code>patent_core_factor_extract</code></td><td>P1</td><td>抽专利申请人、发明人、IPC、技术点、权利要求核心约束</td><td><code>patent_schema</code>, <code>extract_claim_core</code>, <code>extract_ipc</code></td><td>包装通用抽取 + 自研专利逻辑。</td></tr>
+<tr><td><code>industry_chain_relation_extract</code></td><td>P1</td><td>抽取上下游、供需、配套、替代等产业链关系</td><td><code>chain_schema</code>, <code>relation_set</code>, <code>industry_scope</code></td><td>自研为主，<code>KAG</code> 负责底层实体/关系抽取。</td></tr>
+<tr><td><code>enterprise_capability_extract</code></td><td>P1</td><td>抽企业科创能力、制造能力、平台能力等</td><td><code>capability_schema</code>, <code>dimension_set</code>, <code>score_hint</code></td><td>包装通用抽取 + 自研业务规则。</td></tr>
+<tr><td><code>financing_event_extract</code></td><td>P1</td><td>抽融资轮次、金额、投资方、用途等</td><td><code>event_schema</code>, <code>currency_norm</code>, <code>round_norm</code></td><td>包装 <code>event_extract</code> + 自研后处理。</td></tr>
+<tr><td><code>talent_factor_extract</code></td><td>P2</td><td>抽人物职称、教育背景、机构归属、成果能力</td><td><code>talent_schema</code>, <code>career_mode</code>, <code>title_norm</code></td><td>包装通用抽取 + 自研。</td></tr>
+<tr><td><code>risk_event_extract</code></td><td>P1</td><td>抽供应链风险、经营风险、合规风险事件</td><td><code>risk_schema</code>, <code>severity_mode</code>, <code>time_window</code></td><td>包装通用事件抽取 + 自研风险类型映射。</td></tr>
+</tbody></table>
+<hr/>
+<h2>7. 知识对齐与标准化</h2>
+<h3>7.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>entity_link</code></td><td>P1</td><td>把实体候选链接到标准实体库</td><td><code>entity_type</code>, <code>match_keys</code>, <code>fuzzy_match</code>, <code>threshold</code></td><td>自研。<code>KAG</code> 无完整多源主实体归一框架。</td></tr>
+<tr><td><code>entity_deduplicate</code></td><td>P1</td><td>对同批抽取结果中的重复实体做归并</td><td><code>entity_type</code>, <code>match_fields</code>, <code>merge_strategy</code></td><td>自研。</td></tr>
+<tr><td><code>attribute_normalize</code></td><td>P1</td><td>统一日期、金额、代码、地址、别名等属性格式</td><td><code>attribute_set</code>, <code>normalize_rules</code>, <code>strict_mode</code></td><td>自研。</td></tr>
+<tr><td><code>term_standardize</code></td><td>P1</td><td>把术语、简称、别名归并到标准术语表</td><td><code>term_dict</code>, <code>normalize_mode</code>, <code>allow_new_term</code></td><td>自研。</td></tr>
+<tr><td><code>time_normalize</code></td><td>P1</td><td>统一事件时间、发布日期、有效期等时间字段</td><td><code>timezone</code>, <code>time_granularity</code>, <code>infer_partial_time</code></td><td>自研。</td></tr>
+<tr><td><code>region_normalize</code></td><td>P1</td><td>标准化省市区和行政编码</td><td><code>region_version</code>, <code>strict_region_match</code></td><td>自研。</td></tr>
+</tbody></table>
+<h3>7.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>enterprise_identity_resolve</code></td><td>P0</td><td>企业名称、简称、信用代码、多源别名统一</td><td><code>match_priority</code>, <code>credit_code_first</code>, <code>alias_fields</code></td><td>自研，优先复用当前 <code>entity_resolver</code> 逻辑。</td></tr>
+<tr><td><code>technology_term_align</code></td><td>P1</td><td>技术术语对齐到标准技术体系</td><td><code>taxonomy_ref</code>, <code>alias_dict</code>, <code>embedding_match</code></td><td>自研。</td></tr>
+<tr><td><code>industry_standard_align</code></td><td>P1</td><td>把行业分类、产业链分类、IPC/ICD 等统一对齐</td><td><code>standard_system</code>, <code>version</code>, <code>fallback_map</code></td><td>自研。</td></tr>
+<tr><td><code>policy_clause_align</code></td><td>P1</td><td>将政策条款映射到统一条款层级结构</td><td><code>clause_schema</code>, <code>region_scope</code>, <code>policy_level</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>8. 知识融合与图构建</h2>
+<h3>8.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>structured_entity_map</code></td><td>P0</td><td>把结构化对象映射成图节点</td><td><code>schema_ref</code>, <code>type_name</code>, <code>field_mapping</code>, <code>upsert_key</code></td><td>包装 <code>KAG spg_type_mapping</code>。</td></tr>
+<tr><td><code>structured_relation_map</code></td><td>P0</td><td>把结构化关系映射成图边</td><td><code>schema_ref</code>, <code>relation_name</code>, <code>subject_key</code>, <code>object_key</code></td><td>包装 <code>KAG spo_mapping</code>。</td></tr>
+<tr><td><code>concept_hierarchy_map</code></td><td>P1</td><td>把概念层级映射为 <code>isA</code>/概念边</td><td><code>concept_type</code>, <code>path_separator</code>, <code>hypernym_predicate</code></td><td>包装 <code>KAG spg_type_mapping</code> 的概念能力。</td></tr>
+<tr><td><code>subgraph_assemble</code></td><td>P1</td><td>把实体、关系、事件、证据装成统一子图</td><td><code>graph_schema</code>, <code>merge_mode</code>, <code>keep_evidence</code></td><td>包装 <code>KAG</code> 子图拼装 + 自研 DTO 适配。</td></tr>
+<tr><td><code>graph_import</code></td><td>P0</td><td>把子图导入 OpenSPG</td><td><code>project_id</code>, <code>namespace</code>, <code>write_mode</code>, <code>batch_size</code></td><td>包装 <code>KAG kg_writer</code> 或当前 <code>OpenSPGImporter</code>。</td></tr>
+</tbody></table>
+<h3>8.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>multi_source_enterprise_fusion</code></td><td>P0</td><td>融合工商、专利、公告、舆情、投融资等多源企业数据</td><td><code>source_priority</code>, <code>merge_rules</code>, <code>entity_type</code></td><td>自研，优先复用现有融合链。</td></tr>
+<tr><td><code>industry_chain_graph_fusion</code></td><td>P1</td><td>融合产业链节点、上下游关系、产能和供需信息</td><td><code>chain_code</code>, <code>relation_priority</code>, <code>merge_rules</code></td><td>自研。</td></tr>
+<tr><td><code>ipc_icd_dual_chain_fusion</code></td><td>P1</td><td>将创新链与产业链做双链融合</td><td><code>ipc_taxonomy</code>, <code>icd_taxonomy</code>, <code>link_rules</code></td><td>自研。</td></tr>
+<tr><td><code>knowledge_freshness_update</code></td><td>P1</td><td>增量更新知识版本、归档旧值</td><td><code>version_key</code>, <code>update_window</code>, <code>archive_policy</code></td><td>自研。</td></tr>
+<tr><td><code>knowledge_compliance_check</code></td><td>P2</td><td>对敏感数据、涉密信息、合规风险做校验</td><td><code>compliance_policy</code>, <code>mask_mode</code>, <code>sensitivity_level</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>9. 知识检索与召回</h2>
+<h3>9.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>vector_retrieve</code></td><td>P1</td><td>向量语义检索 chunk、摘要或知识单元</td><td><code>query</code>, <code>top_k</code>, <code>similarity_threshold</code>, <code>index_name</code></td><td>包装现有向量检索能力，<code>KAG</code> 可部分复用，整体编排需自研。</td></tr>
+<tr><td><code>graph_retrieve</code></td><td>P1</td><td>按实体、关系、属性或路径做图谱精确检索</td><td><code>query_pattern</code>, <code>entity_type</code>, <code>relation_type</code>, <code>limit</code></td><td>复用 <code>OpenSPG</code> 图查询能力，包装成算子。</td></tr>
+<tr><td><code>hybrid_retrieve</code></td><td>P1</td><td>混合向量检索、图检索、关键词检索结果</td><td><code>query</code>, <code>top_k</code>, <code>weights</code>, <code>rerank_strategy</code></td><td>自研编排层，底层复用多种检索能力。</td></tr>
+<tr><td><code>entity_profile_retrieve</code></td><td>P1</td><td>检索某实体的全景信息</td><td><code>entity_id</code>, <code>profile_scope</code>, <code>limit</code></td><td>复用 <code>OpenSPG</code> 查询 + 自研结果组装。</td></tr>
+</tbody></table>
+<h3>9.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>industry_chain_topic_retrieve</code></td><td>P1</td><td>定向召回产业链专题知识</td><td><code>chain_code</code>, <code>region_scope</code>, <code>topic_scope</code>, <code>top_k</code></td><td>自研，底层可复用图检索。</td></tr>
+<tr><td><code>policy_match_retrieve</code></td><td>P1</td><td>为企业或项目召回匹配政策</td><td><code>target_entity</code>, <code>region_code</code>, <code>industry_code</code>, <code>top_k</code></td><td>自研。</td></tr>
+<tr><td><code>patent_similarity_retrieve</code></td><td>P2</td><td>按技术语义和 IPC 召回相似专利</td><td><code>patent_id/query</code>, <code>ipc_scope</code>, <code>top_k</code>, <code>similarity_mode</code></td><td>自研，底层可复用向量检索。</td></tr>
+<tr><td><code>investment_target_retrieve</code></td><td>P2</td><td>按投融资主题召回候选企业/项目</td><td><code>industry_code</code>, <code>stage</code>, <code>region_scope</code>, <code>top_k</code></td><td>自研。</td></tr>
+<tr><td><code>talent_match_retrieve</code></td><td>P2</td><td>按产业和技术方向检索人才资源</td><td><code>industry_code</code>, <code>tech_term</code>, <code>region_scope</code>, <code>top_k</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>10. 推理与决策生成</h2>
+<h3>10.1 通用基础算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>classification_reasoner</code></td><td>P2</td><td>基于规则和知识图谱做分类判断</td><td><code>target_type</code>, <code>rule_set</code>, <code>confidence_threshold</code></td><td>自研。</td></tr>
+<tr><td><code>multi_hop_reasoner</code></td><td>P1</td><td>基于图谱做多跳事实推理</td><td><code>start_entity</code>, <code>hop_limit</code>, <code>constraint_set</code>, <code>top_k</code></td><td>复用 <code>OpenSPG</code> 图查询，推理编排自研。</td></tr>
+<tr><td><code>rule_reasoner</code></td><td>P1</td><td>执行业务规则和 if-then 逻辑</td><td><code>rule_set</code>, <code>input_bundle</code>, <code>strict_mode</code></td><td>自研。</td></tr>
+<tr><td><code>numeric_reasoner</code></td><td>P2</td><td>做统计、占比、增长率、对比等数值推理</td><td><code>metric_set</code>, <code>aggregation_mode</code>, <code>time_window</code></td><td>自研。</td></tr>
+<tr><td><code>result_verifier</code></td><td>P1</td><td>对推理结果做事实校验和来源验证</td><td><code>verification_scope</code>, <code>evidence_required</code>, <code>strict_mode</code></td><td>自研，底层复用检索与图查询。</td></tr>
+<tr><td><code>answer_generator</code></td><td>P2</td><td>基于检索/推理结果生成结构化或自然语言输出</td><td><code>output_format</code>, <code>style</code>, <code>with_evidence</code></td><td>自研。</td></tr>
+</tbody></table>
+<h3>10.2 业务扩展算子</h3>
+<table>
+<thead><tr><th>算子名称</th><th>优先级</th><th>功能</th><th>第一版关键参数</th><th>实现方案</th></tr></thead>
+<tbody>
+<tr><td><code>enterprise_classification_reasoner</code></td><td>P1</td><td>做企业行业、资质、科创等级、风险等级分类</td><td><code>classification_schema</code>, <code>rule_set</code>, <code>evidence_required</code></td><td>自研。</td></tr>
+<tr><td><code>policy_enterprise_match_reasoner</code></td><td>P1</td><td>推理企业和政策的匹配关系</td><td><code>enterprise_id</code>, <code>policy_scope</code>, <code>match_rules</code>, <code>top_k</code></td><td>自研。</td></tr>
+<tr><td><code>industry_chain_path_reasoner</code></td><td>P1</td><td>推理产业链上下游链路和薄弱环节</td><td><code>chain_code</code>, <code>start_node</code>, <code>path_constraint</code>, <code>hop_limit</code></td><td>自研。</td></tr>
+<tr><td><code>supply_chain_risk_reasoner</code></td><td>P2</td><td>推理供应链风险传播和影响</td><td><code>risk_event</code>, <code>propagation_rules</code>, <code>time_window</code></td><td>自研。</td></tr>
+<tr><td><code>innovation_capability_reasoner</code></td><td>P2</td><td>推理企业科创能力和技术成熟度</td><td><code>enterprise_id</code>, <code>capability_dimensions</code>, <code>score_rules</code></td><td>自研。</td></tr>
+<tr><td><code>report_generator</code></td><td>P2</td><td>自动生成产业研判/企业分析报告</td><td><code>report_type</code>, <code>template_id</code>, <code>evidence_scope</code></td><td>自研。</td></tr>
+</tbody></table>
+<hr/>
+<h2>11. 哪些优先复用 KAG</h2>
+<p>优先直接包装 <code>KAG</code> 的算子如下：</p>
+<h3>11.1 直接可包装</h3>
+<ul><li><code>pdf_parse</code></li><li><code>docx_parse</code></li><li><code>markdown_normalize</code></li><li><code>text_chunk_split</code></li><li><code>outline_extract</code></li><li><code>table_extract</code></li><li><code>entity_extract</code></li><li><code>entity_standardize</code></li><li><code>relation_extract</code></li><li><code>event_extract</code></li><li><code>structured_entity_map</code></li><li><code>structured_relation_map</code></li><li><code>concept_hierarchy_map</code></li><li><code>graph_import</code></li></ul>
+<h3>11.2 需要“包装 KAG + 自研”的</h3>
+<ul><li><code>html_extract</code></li><li><code>concept_seed_extract</code></li><li><code>table_fact_extract</code></li><li><code>subgraph_assemble</code></li></ul>
+<p>这些能力底层可借 <code>KAG</code>，但 DTO、业务 schema 和执行编排必须由我们自己补。</p>
+<hr/>
+<h2>12. 哪些必须自研</h2>
+<p>以下类别不建议试图塞进 <code>KAG</code> 本体，而应由我们自己的知识计算算子层负责：</p>
+<ul><li>所有 source ingest 连接器</li><li>实体归一和多源对齐</li><li>产业链/政策/专利/人才等业务专属抽取</li><li>多源融合</li><li>专题检索</li><li>业务推理</li><li>报告生成</li><li>工作台、registry、pipeline 编排、试跑、保存</li></ul>
+<p>这些是业务平台能力，不是 <code>KAG</code> 通用组件能力。</p>
+<hr/>
+<h2>13. 首期建议实现批次</h2>
+<h3>第一批：P0 基础链</h3>
+<ul><li><code>pdf_source_ingest</code></li><li><code>markdown_source_ingest</code></li><li><code>structured_table_source_ingest</code></li><li><code>pdf_parse</code></li><li><code>markdown_normalize</code></li><li><code>document_clean</code></li><li><code>text_chunk_split</code></li><li><code>entity_extract</code></li><li><code>entity_standardize</code></li><li><code>relation_extract</code></li><li><code>event_extract</code></li><li><code>structured_entity_map</code></li><li><code>structured_relation_map</code></li><li><code>graph_import</code></li><li><code>enterprise_identity_resolve</code></li><li><code>multi_source_enterprise_fusion</code></li></ul>
+<p>目标：</p>
+<ul><li>跑通“原始数据 -&gt; 预处理 -&gt; 抽取 -&gt; 对齐 -&gt; 融合 -&gt; 落图”的最小闭环。</li></ul>
+<h3>第二批：P1 业务增强</h3>
+<ul><li><code>policy_factor_extract</code></li><li><code>patent_core_factor_extract</code></li><li><code>industry_chain_relation_extract</code></li><li><code>financing_event_extract</code></li><li><code>industry_document_parse</code></li><li><code>policy_text_normalize</code></li><li><code>industry_standard_align</code></li><li><code>industry_chain_graph_fusion</code></li><li><code>knowledge_freshness_update</code></li><li><code>vector_retrieve</code></li><li><code>graph_retrieve</code></li><li><code>hybrid_retrieve</code></li><li><code>multi_hop_reasoner</code></li><li><code>policy_enterprise_match_reasoner</code></li></ul>
+<p>目标：</p>
+<ul><li>支撑产业研究分析的关键主题场景。</li></ul>
+<hr/>
+<h2>14. 落地建议</h2>
+<h3>14.1 当前仓库内的建议组织方式</h3>
+<p>建议继续沿用当前仓库组织，但逐步把：</p>
+<ul><li>knowledge_extraction_operators</li></ul>
+<p>演进成更明确的“知识计算算子层”。短期内不强制改目录路径，避免一次性迁移过大。</p>
+<h3>14.2 与 KAG/OpenSPG 的分工</h3>
+<ul><li><code>KAG</code></li><li>通用 builder component</li><li><code>OpenSPG</code></li><li>schema、图谱存储、图谱查询</li><li>我们自己的算子层</li><li>DTO、registry、runtime、业务扩展算子、工作台、pipeline 编排</li></ul>
+<h3>14.3 核心实现原则</h3>
+<ol><li>能包装 <code>KAG</code> 的，不重复造轮子</li><li>业务逻辑不回写进 <code>KAG</code> 本体</li><li>工作台始终面向“知识计算目录”而不是“内部实现分层”</li><li>实现优先级始终以 P0/P1 为主，不追求一次性铺满全目录</li></ol>
+<hr/>
+<h2>15. 最终建议</h2>
+<p>最终建议可以收敛成一句话：</p>
+<p><strong>后续实现时，先按 7 类知识计算目录来组织算子，用“通用基础 / 业务扩展”作为第二维，并优先包装 <code>KAG</code> 的通用组件；凡是涉及实体归一、多源融合、产业专题检索和业务推理的部分，统一放在我们自己的知识计算算子层实现。</strong></p>
+</body></html>

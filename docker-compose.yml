@@ -131,11 +131,90 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # Graphiti 独立 Neo4j 实例
+  graphiti-neo4j:
+    image: neo4j:5.20
+    container_name: zhilian-graphiti-neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/${GRAPHITI_NEO4J_PASSWORD:-password123}
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_memory_pagecache_size=512M
+    volumes:
+      - graphiti_neo4j_data:/data
+      - graphiti_neo4j_logs:/logs
+    networks:
+      - zhilian-network
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Graphiti 动态事件预处理服务
+  graphiti:
+    build:
+      context: .
+      dockerfile: deploy/graphiti/Dockerfile
+    image: zhilian-graphiti:latest
+    container_name: zhilian-graphiti
+    ports:
+      - "127.0.0.1:${GRAPHITI_PORT:-18000}:8000"
+    environment:
+      - OPENAI_API_KEY=your_api_key_here
+      - OPENAI_BASE_URL=${GRAPHITI_OPENAI_BASE_URL:-}
+      - MODEL_NAME=${GRAPHITI_MODEL_NAME:-}
+      - EMBEDDING_MODEL_NAME=${GRAPHITI_EMBEDDING_MODEL_NAME:-}
+      - EMBEDDING_DIM=${GRAPHITI_EMBEDDING_DIM:-1024}
+      - NEO4J_URI=bolt://graphiti-neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=${GRAPHITI_NEO4J_PASSWORD:-password123}
+      - PORT=8000
+      - db_backend=neo4j
+      - SEMAPHORE_LIMIT=${GRAPHITI_SEMAPHORE_LIMIT:-10}
+    depends_on:
+      graphiti-neo4j:
+        condition: service_healthy
+    networks:
+      - zhilian-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthcheck', timeout=10)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   # 后端服务
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     image: zhilian-backend:latest
     container_name: zhilian-backend
     ports:
@@ -146,12 +225,21 @@ services:
       - NEO4J_USER=${NEO4J_USER:-neo4j}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password123}
       - MONGODB_URI=${MONGODB_URI:-mongodb://admin:password123@mongodb:27017}
+      - MONGODB_DATABASE=${MONGODB_DATABASE:-zhilian_robot}
+      - ODS_MONGODB_URI=${ODS_MONGODB_URI}
+      - ODS_MONGODB_DATABASE=${ODS_MONGODB_DATABASE}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - MYSQL_HOST=${MYSQL_HOST:-mysql}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-password123}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENSPG_BASE_URL=${OPENSPG_BASE_URL:-http://172.17.0.1:8887}
+      - OPENSPG_DEMO_DATA_DIR=/app/data/openspg_demo
+      - OPENAI_API_KEY=your_api_key_here
       - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.deepseek.com}
       - OPENAI_MODEL=${OPENAI_MODEL:-deepseek-chat}
+      - GRAPHITI_ENABLED=${GRAPHITI_ENABLED:-true}
+      - GRAPHITI_BASE_URL=${GRAPHITI_BASE_URL:-http://graphiti:8000}
+      - GRAPHITI_TIMEOUT_SECONDS=${GRAPHITI_TIMEOUT_SECONDS:-30}
+      - GRAPHITI_GROUP_PREFIX=${GRAPHITI_GROUP_PREFIX:-openks}
     depends_on:
       neo4j:
         condition: service_healthy
@@ -161,6 +249,12 @@ services:
         condition: service_healthy
       mysql:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+      graphiti:
+        condition: service_healthy
+    volumes:
+      - openspg_demo_state:/app/data/openspg_demo
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=15)"]
@@ -184,15 +278,153 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # KAG MCP 服务
+  kag-mcp:
+    build:
+      context: .
+      dockerfile: deploy/kag-mcp/Dockerfile
+    image: zhilian-kag-mcp:latest
+    container_name: zhilian-kag-mcp
+    ports:
+      - "${KAG_MCP_PORT:-3000}:3000"
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - OPENAI_API_KEY=your_api_key_here
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.deepseek.com}
+      - OPENAI_MODEL=${OPENAI_MODEL:-deepseek-chat}
+      - OPENSPG_BASE_URL=${OPENSPG_BASE_URL:-http://172.17.0.1:8887}
+      - KAG_PROJECT_HOST_ADDR=${KAG_PROJECT_HOST_ADDR:-http://172.17.0.1:8887}
+      - KAG_PROJECT_ID=${KAG_PROJECT_ID:-1}
+      - KAG_PROJECT_NAMESPACE=${KAG_PROJECT_NAMESPACE:-zhilian}
+      - KAG_PROJECT_LANGUAGE=${KAG_PROJECT_LANGUAGE:-zh}
+      - KAG_CHAT_API_KEY=${KAG_CHAT_API_KEY:-}
+      - KAG_CHAT_API_BASE=${KAG_CHAT_API_BASE:-}
+      - KAG_CHAT_MODEL=${KAG_CHAT_MODEL:-}
+      - KAG_VECTOR_API_KEY=${KAG_VECTOR_API_KEY:-}
+      - KAG_VECTOR_API_BASE=${KAG_VECTOR_API_BASE:-}
+      - KAG_VECTOR_MODEL=${KAG_VECTOR_MODEL:-}
+      - KAG_VECTOR_DIMENSIONS=${KAG_VECTOR_DIMENSIONS:-1024}
+      - GIT_PYTHON_REFRESH=quiet
+      - MPLCONFIGDIR=/tmp/matplotlib
+      - KAG_MCP_TRANSPORT=${KAG_MCP_TRANSPORT:-sse}
+      - KAG_MCP_ENABLED_TOOLS=${KAG_MCP_ENABLED_TOOLS:-all}
+      - KAG_MCP_LOG_LEVEL=${KAG_MCP_LOG_LEVEL:-INFO}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('127.0.0.1', 3000), 5); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - zhilian-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # 资讯融合大图 MCP 服务
+  news-graph-mcp:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: zhilian-backend:latest
+    container_name: zhilian-news-graph-mcp
+    ports:
+      - "${NEWS_GRAPH_MCP_PORT:-3010}:${NEWS_GRAPH_MCP_PORT:-3010}"
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - NEWS_GRAPH_NEO4J_URI=${NEWS_GRAPH_NEO4J_URI:-bolt://neo4j:7687}
+      - NEWS_GRAPH_NEO4J_USER=${NEWS_GRAPH_NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password123}
+      - NEWS_GRAPH_NEO4J_PASSWORD=${NEWS_GRAPH_NEO4J_PASSWORD:-}
+      - NEWS_GRAPH_NEO4J_DATABASE=${NEWS_GRAPH_NEO4J_DATABASE:-}
+      - NEWS_GRAPH_MCP_TRANSPORT=${NEWS_GRAPH_MCP_TRANSPORT:-sse}
+      - NEWS_GRAPH_MCP_PORT=${NEWS_GRAPH_MCP_PORT:-3010}
+      - PYTHONPATH=/app/backend
+    command: ["python", "scripts/run_news_graph_mcp.py", "--transport", "${NEWS_GRAPH_MCP_TRANSPORT:-sse}", "--port", "${NEWS_GRAPH_MCP_PORT:-3010}"]
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, socket; port=int(os.getenv('NEWS_GRAPH_MCP_PORT', '3010')); s=socket.create_connection(('127.0.0.1', port), 5); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - zhilian-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   # 前端服务
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_OPENKS_PORTAL_URL=${VITE_OPENKS_PORTAL_URL:-}
     image: zhilian-frontend:latest
     container_name: zhilian-frontend
     ports:
       - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - zhilian-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  openks-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.openks
+      args:
+        - VITE_OPENKS_PORTAL_URL=${VITE_OPENKS_PORTAL_URL:-}
+    image: zhilian-openks-frontend:latest
+    container_name: zhilian-openks-frontend
+    ports:
+      - "${OPENKS_FRONTEND_PORT:-8205}:80"
     depends_on:
       backend:
         condition: service_healthy
@@ -230,12 +462,17 @@ services:
       - NEO4J_USER=${NEO4J_USER:-neo4j}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password123}
       - MONGODB_URI=${MONGODB_URI:-mongodb://admin:password123@mongodb:27017}
+      - MONGODB_DATABASE=${MONGODB_DATABASE:-zhilian_robot}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - MYSQL_HOST=${MYSQL_HOST:-mysql}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-password123}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=your_api_key_here
       - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.deepseek.com}
       - OPENAI_MODEL=${OPENAI_MODEL:-deepseek-chat}
+      - GRAPHITI_ENABLED=${GRAPHITI_ENABLED:-true}
+      - GRAPHITI_BASE_URL=${GRAPHITI_BASE_URL:-http://graphiti:8000}
+      - GRAPHITI_TIMEOUT_SECONDS=${GRAPHITI_TIMEOUT_SECONDS:-30}
+      - GRAPHITI_GROUP_PREFIX=${GRAPHITI_GROUP_PREFIX:-openks}
     depends_on:
       neo4j:
         condition: service_healthy
@@ -272,7 +509,7 @@ services:
   celery-beat:
     image: zhilian-backend:latest
     container_name: zhilian-celery-beat
-    command: celery -A app.tasks.celery_app beat --loglevel=info
+    command: celery -A app.tasks.celery_app beat --loglevel=info --schedule=/tmp/celerybeat-schedule
     environment:
       - TZ=${TZ:-Asia/Shanghai}
       - REDIS_HOST=${REDIS_HOST:-redis}
@@ -280,9 +517,13 @@ services:
       - NEO4J_USER=${NEO4J_USER:-neo4j}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password123}
       - MONGODB_URI=${MONGODB_URI:-mongodb://admin:password123@mongodb:27017}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=your_api_key_here
       - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.deepseek.com}
       - OPENAI_MODEL=${OPENAI_MODEL:-deepseek-chat}
+      - GRAPHITI_ENABLED=${GRAPHITI_ENABLED:-true}
+      - GRAPHITI_BASE_URL=${GRAPHITI_BASE_URL:-http://graphiti:8000}
+      - GRAPHITI_TIMEOUT_SECONDS=${GRAPHITI_TIMEOUT_SECONDS:-30}
+      - GRAPHITI_GROUP_PREFIX=${GRAPHITI_GROUP_PREFIX:-openks}
     depends_on:
       redis:
         condition: service_healthy
@@ -290,7 +531,7 @@ services:
         condition: service_started
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "test -f celerybeat-schedule || exit 0"]
+      test: ["CMD-SHELL", "test -f /tmp/celerybeat-schedule || exit 0"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -354,11 +595,11 @@ services:
     container_name: zhilian-minio
     ports:
       - "${MINIO_API_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+      - "${MINIO_CONSOLE_PORT:-9100}:9100"
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-admin}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-password123}
-    command: server /data --console-address ":9001"
+    command: server /data --console-address ":9100"
     volumes:
       - minio_data:/data
     networks:
@@ -385,10 +626,13 @@ services:
 volumes:
   neo4j_data:
   neo4j_logs:
+  graphiti_neo4j_data:
+  graphiti_neo4j_logs:
   mongodb_data:
   redis_data:
   mysql_data:
   minio_data:
+  openspg_demo_state:
 
 
 networks:

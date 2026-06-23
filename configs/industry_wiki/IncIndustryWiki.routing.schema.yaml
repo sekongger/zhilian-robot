@@ -1,0 +1,123 @@
+version: "0.2"
+name: "IncIndustryWikiRoutingSchema"
+description: "Wikipedia/Wikidata industry-chain base graph routing schema aligned with IncCore_0422"
+target_namespace: "IncCore"
+target_schema: "IncCore_0422_最新.schema"
+
+categories:
+  Enterprise:
+    target_type: "IncCore.Enterprise"
+    modules:
+      basic_profile:
+        route: intrinsic
+        properties:
+          officialName: P1448
+          shortName: P1813
+          inception: P571
+          status: P576
+          officialWebsite: P856
+          companyScale: P1128
+      industry_position:
+        route: relational
+        properties:
+          belongsToIndustry: P452
+        edge: belongsToIndustry
+        target_type: "IncCore.Industry"
+      product_portfolio:
+        route: relational
+        properties:
+          manufacturer: P1056
+        edge: manufacturer
+        direction: reverse
+        target_type: "IncCore.ProductModel"
+      ownership:
+        route: relational
+        properties:
+          shareholder: P127
+          belongsToGroup: P749
+          childOrganization: P355
+        edges:
+          shareholder: shareholder
+          belongsToGroup: belongsToGroup
+          childOrganization: childOrganization
+        target_type: "IncCore.Enterprise"
+      region_presence:
+        route: relational
+        properties:
+          region: P159
+          countryRegion: P17
+          adminRegion: P131
+          locatedRegion: P276
+        edge: region
+        target_type: "IncCore.Region"
+
+  ProductModel:
+    target_type: "IncCore.ProductModel"
+    modules:
+      product_description:
+        route: intrinsic
+        properties:
+          officialName: P1448
+          shortName: P1813
+          brand: P1716
+          series: P179
+          model: P528
+          publishDate: P577
+      manufacturer:
+        route: relational
+        properties:
+          manufacturer: P176
+          developerManufacturer: P178
+        edge: manufacturer
+        target_type: "IncCore.Enterprise"
+      standard_product:
+        route: relational
+        properties:
+          belongsToProduct: P31
+          parentProduct: P279
+        edge: belongsToProduct
+        target_type: "IncCore.Product"
+
+  Product:
+    target_type: "IncCore.Product"
+    modules:
+      basic_profile:
+        route: intrinsic
+        properties:
+          officialName: P1448
+          shortName: P1813
+      hierarchy:
+        route: relational
+        properties:
+          subclassOf: P279
+        edge: subclassOf
+        target_type: "IncCore.Product"
+
+  Technology:
+    target_type: "IncCore.Technology"
+    modules: {}
+
+  Industry:
+    target_type: "IncCore.Industry"
+    modules:
+      basic_profile:
+        route: intrinsic
+        properties:
+          officialName: P1448
+          shortName: P1813
+
+  Region:
+    target_type: "IncCore.Region"
+    modules:
+      basic_profile:
+        route: intrinsic
+        properties:
+          officialName: P1448
+          shortName: P1813
+      hierarchy:
+        route: relational
+        properties:
+          belongToRegion: P131
+          countryRegion: P17
+        edge: belongToRegion
+        target_type: "IncCore.Region"

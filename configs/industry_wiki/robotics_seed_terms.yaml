@@ -1,0 +1,44 @@
+domain: robotics
+keywords:
+  en:
+    - robotics
+    - industrial robot
+    - humanoid robot
+    - service robot
+    - automation
+    - sensor
+    - actuator
+    - servo motor
+    - controller
+    - machine vision
+    - lidar
+    - motion control
+    - intelligent manufacturing
+  zh:
+    - 机器人
+    - 工业机器人
+    - 人形机器人
+    - 服务机器人
+    - 自动化
+    - 传感器
+    - 执行器
+    - 伺服电机
+    - 控制器
+    - 机器视觉
+    - 激光雷达
+    - 运动控制
+    - 智能制造
+
+seed_qids:
+  Enterprise:
+    - Q4830453
+  ProductModel:
+    - Q783794
+  Technology:
+    - Q11016
+  Industry:
+    - Q8148
+    - Q170978
+  Region:
+    - Q515
+    - Q6256

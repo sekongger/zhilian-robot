@@ -1,0 +1,3634 @@
+version: '0.1'
+name: IncIndustryWikiTypeWhitelist
+description: Wikidata P31/P279 type whitelist for IncCore all-industry graph extraction.
+profiles:
+  all_industry:
+    description: No keyword search. Select enterprise/product/industry/technology
+      candidates by structured Wikidata type gates.
+    categories:
+      Enterprise:
+        include:
+        - qid: Q4830453
+          label_en: business
+          label_zh: 商业实体
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Commercial, industrial, or professional activity; maps to IncCore
+            Enterprise.
+        - qid: Q783794
+          label_en: company
+          label_zh: 公司
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Legal entity with a business objective; maps to IncCore Enterprise.
+        - qid: Q891723
+          label_en: public company
+          label_zh: 上市公司
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Publicly traded company; maps to IncCore Enterprise.
+        - qid: Q6881511
+          label_en: enterprise
+          label_zh: 企业
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Economic unit producing goods or services; maps to IncCore Enterprise.
+        - qid: Q41253
+          label_en: 電影院
+          label_zh: ''
+          description_en: 場地，通常是建築物，用於觀看電影
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q112046
+          label_en: 输电系统运营商
+          label_zh: ''
+          description_en: entity which operates infrastructure for bulk transfer of
+            electrical energy on a national or regional level
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q129238
+          label_en: 创业公司
+          label_zh: ''
+          description_en: 處於初創階段的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q133215
+          label_en: 賭場
+          label_zh: ''
+          description_en: facility which houses and accommodates certain types of
+            gambling activities
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q161726
+          label_en: 跨國公司
+          label_zh: ''
+          description_en: 在世界多國有營運的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q185241
+          label_en: LAN gaming center
+          label_zh: ''
+          description_en: business where one can use a computer connected over a LAN
+            to other computers
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q194195
+          label_en: 游乐园
+          label_zh: ''
+          description_en: 娱乐游乐的公园
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q200764
+          label_en: 書店
+          label_zh: ''
+          description_en: 銷售書籍的商店
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q216931
+          label_en: 廣告代理商
+          label_zh: ''
+          description_en: business creating advertisements and/or placing them in
+            third-party media publications
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q217107
+          label_en: 旅行社
+          label_zh: ''
+          description_en: 公司类型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q219577
+          label_en: 控股公司
+          label_zh: ''
+          description_en: 公司類型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q220142
+          label_en: 寵物店
+          label_zh: ''
+          description_en: establishment that sells pets, pet food, or related equipment
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q283315
+          label_en: Briquette Factory
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q290000
+          label_en: 空殼公司
+          label_zh: ''
+          description_en: company with few, if any, actual assets or operations
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q291240
+          label_en: 汽車租賃
+          label_zh: ''
+          description_en: 出租服务
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q295382
+          label_en: 永續產業
+          label_zh: ''
+          description_en: an organization that creates value on a long-term scale
+            without causing harm
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q331803
+          label_en: sales agencies
+          label_zh: ''
+          description_en: legally independent institutions that are supportive effect
+            in the distribution process
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q377688
+          label_en: 字体开发公司
+          label_zh: ''
+          description_en: 設計或發行字體的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q380342
+          label_en: 手工作坊式生产模式
+          label_zh: ''
+          description_en: manufacturing facility where products are hand-made
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q388570
+          label_en: film laboratory
+          label_zh: ''
+          description_en: commercial service enterprise and technical facility for
+            the film industry where specialists develop, print, and conform film material
+            for classical film production
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q397648
+          label_en: 派驻国同意
+          label_zh: ''
+          description_en: official approval for diplomatic or military mission
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q468755
+          label_en: Colonization Societies
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q476118
+          label_en: 再保險
+          label_zh: ''
+          description_en: insurance that is purchased by an insurance company, in
+            which some part of its own insurance liabilities is passed on to another
+            insurance company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q489209
+          label_en: 合資公司
+          label_zh: ''
+          description_en: business agreement to develop, for a finite time, a new
+            entity
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q563787
+          label_en: 健康维护组织
+          label_zh: ''
+          description_en: organization providing insurance for health services
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q567521
+          label_en: commercial company
+          label_zh: ''
+          description_en: type of private company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q613142
+          label_en: 律師事務所
+          label_zh: ''
+          description_en: 律师执业组织
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q637776
+          label_en: 乳業公司
+          label_zh: ''
+          description_en: business enterprise established for the processing of animal
+            milk
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q672070
+          label_en: 影樓
+          label_zh: ''
+          description_en: place or organisation that undertakes professional-quality
+            photography
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q721067
+          label_en: 职业摔角联盟
+          label_zh: ''
+          description_en: company or business that organizes professional wrestling
+            events
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q726870
+          label_en: 实业公司
+          label_zh: ''
+          description_en: class of organisations or businesses who heavily rely on
+            buildings, production facilities, or physical stores for operations
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q740752
+          label_en: 運輸公司
+          label_zh: ''
+          description_en: organization involved in transport of people and goods for
+            commercial purposes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q748645
+          label_en: 船舶代理
+          label_zh: ''
+          description_en: designated person or agency held responsible for handling
+            shipments and cargo
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q760102
+          label_en: 受託研究機構
+          label_zh: ''
+          description_en: type of healthcare company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q761977
+          label_en: 原廠委託設計代工
+          label_zh: ''
+          description_en: ODM・設計及製造產品的公司，將其品牌重塑為另一家要出售的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q765517
+          label_en: 信用評等機構
+          label_zh: ''
+          description_en: company that assigns credit ratings
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q770881
+          label_en: 線上賭場
+          label_zh: ''
+          description_en: casino operated on an internet platform
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q771063
+          label_en: 婚姻介紹所
+          label_zh: ''
+          description_en: business which acts as a service for matchmaking between
+            potential couples
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q772184
+          label_en: The Improv
+          label_zh: ''
+          description_en: business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q789782
+          label_en: Q789782
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q835400
+          label_en: 聯合廠
+          label_zh: ''
+          description_en: industrial business group, conglomerate or trust in the
+            former socialist countries
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q858859
+          label_en: 四大银行
+          label_zh: ''
+          description_en: colloquial name given to the four main banks in several
+            countries where the banking industry is dominated by just four institutions
+            and where the phrase has thus gained currency
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q859936
+          label_en: Q859936
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q860572
+          label_en: 图片社
+          label_zh: ''
+          description_en: business that manages photography
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q860828
+          label_en: sculpture foundry
+          label_zh: ''
+          description_en: company that casts works of art
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q920671
+          label_en: parapharmacy
+          label_zh: ''
+          description_en: commercial activity of sale of parapharmaceuticals and pharmaceutical
+            products without prescription
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q921773
+          label_en: engineering activities and related technical consultancy
+          label_zh: ''
+          description_en: company of engineers in practice
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q967140
+          label_en: media agency
+          label_zh: ''
+          description_en: advise companies on the scattering of an advertising budget
+            in various mass media
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1007870
+          label_en: 藝廊
+          label_zh: ''
+          description_en: 以藝術展覽與銷售為主要目的的場所
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1058914
+          label_en: 軟件公司
+          label_zh: ''
+          description_en: 開發軟件的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q4830453
+          depth: 1
+          reason: Subclass of Q4830453; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4539
+          label_en: 合作社
+          label_zh: ''
+          description_en: autonomous association of persons or organizations
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q162157
+          label_en: 特许公司
+          label_zh: ''
+          description_en: company created to colonize and trade
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q167037
+          label_en: 法人團體
+          label_zh: ''
+          description_en: 獨立的法律實體，通過立法建立的立法或註冊程序成立
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q197952
+          label_en: 公司集團
+          label_zh: ''
+          description_en: 通過共同的控制來源收集母公司和子公司，這些公司作為單一的經濟實體發揮作用
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q316182
+          label_en: policyholder
+          label_zh: ''
+          description_en: party to an insurance contract who takes out insurance cover
+            and owes the insurance premium
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q460178
+          label_en: 有限責任公司
+          label_zh: ''
+          description_en: 德國的公司類型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q658255
+          label_en: 子公司
+          label_zh: ''
+          description_en: 公司完全或部分拥有并部分或完全由另一家公司控制
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q677066
+          label_en: 大到不能倒
+          label_zh: ''
+          description_en: a concept that certain corporations or financial institutions
+            are so large and interconnected that their failure would be disastrous
+            to the greater economic system, and that they therefore must be supported
+            by government when facing potential failure
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q745109
+          label_en: 關係企業
+          label_zh: ''
+          description_en: accounting and business valuation concept
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q811930
+          label_en: 建筑企业
+          label_zh: ''
+          description_en: construction company providing civil engineering and other
+            construction services
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1266169
+          label_en: 電訊公司
+          label_zh: ''
+          description_en: 提供电话及其他电信服务的机构
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1331793
+          label_en: 媒體企業
+          label_zh: ''
+          description_en: business that focuses primarily in mass media
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1341478
+          label_en: energy company
+          label_zh: ''
+          description_en: company in the energy field
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1434636
+          label_en: 大公司
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1516258
+          label_en: choral group
+          label_zh: ''
+          description_en: Association for the cultivation of singing
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1529128
+          label_en: 邮政服务
+          label_zh: ''
+          description_en: company or government agency in charge of transporting and
+            delivering mail
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1660104
+          label_en: 房地產公司
+          label_zh: ''
+          description_en: type of business company brokering real estate
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q1797878
+          label_en: joint municipality
+          label_zh: ''
+          description_en: type of municipal entity in Norway
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2085381
+          label_en: 出版社
+          label_zh: ''
+          description_en: 印製和發行成版作品或電子媒體的組織
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2089936
+          label_en: 咨询公司
+          label_zh: ''
+          description_en: 提供专家意见的专業公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2168828
+          label_en: Red Cross Nurses (Germany)
+          label_zh: ''
+          description_en: nurses association in the German Red Cross
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2401749
+          label_en: 电信服务提供商
+          label_zh: ''
+          description_en: 电信行业企业
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2534781
+          label_en: event management company
+          label_zh: ''
+          description_en: company offering purposeful and systematic planning of public
+            events
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2607729
+          label_en: multi-utility
+          label_zh: ''
+          description_en: companies offering a wide range of services and/or products
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2900145
+          label_en: voorcompagnie
+          label_zh: ''
+          description_en: trading company from Republic of the Seven United Netherlands
+            that traded in Asia between 1594 and 1602 before these merged to form
+            the Dutch East India Company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2990216
+          label_en: 矿业公司
+          label_zh: ''
+          description_en: type of company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3055270
+          label_en: 中间市场公司
+          label_zh: ''
+          description_en: definition of the size of a company by either revenue, asset
+            size, or number of employees
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3478395
+          label_en: 种子公司
+          label_zh: ''
+          description_en: business that sells seeds for flowers, fruit, or vegetables
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3487766
+          label_en: SCOP
+          label_zh: ''
+          description_en: worker cooperative legal form in france
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3488683
+          label_en: sister company
+          label_zh: ''
+          description_en: relation between two companies
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3631469
+          label_en: 葡萄酒公司
+          label_zh: ''
+          description_en: company that produces wine
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3800506
+          label_en: internet company
+          label_zh: ''
+          description_en: company wholly reliant on the Internet for the basic business
+            model
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q3963777
+          label_en: società consortile
+          label_zh: ''
+          description_en: type of business entity
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q4043163
+          label_en: Look-through company
+          label_zh: ''
+          description_en: tax structure
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q4230292
+          label_en: Komsomolskoye mining company
+          label_zh: ''
+          description_en: the biggest Ukrainian supplier of limestone flux to the
+            metallurgical and food industries
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q4387609
+          label_en: 建築公司
+          label_zh: ''
+          description_en: 僱用有執照的建築師，提供與建築相關的服務的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q4504516
+          label_en: 修理咖啡館
+          label_zh: ''
+          description_en: workshops with DIY items repair
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q4671390
+          label_en: Academy company
+          label_zh: ''
+          description_en: Talent pool reservoirs for recruiters
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5125097
+          label_en: Claims management company
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5154974
+          label_en: 社区利益公司
+          label_zh: ''
+          description_en: a type of company in the United Kingdom designed for enterprises
+            that use their profits and assets for the public good
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5298073
+          label_en: 休眠公司
+          label_zh: ''
+          description_en: currently inactive company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5428293
+          label_en: Face-amount certificate company
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5468383
+          label_en: 外汇经纪商
+          label_zh: ''
+          description_en: about Foreign exchange company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q783794
+          depth: 1
+          reason: Subclass of Q783794; expanded for IncCore Enterprise candidate gating.
+        - qid: Q279014
+          label_en: 欧洲股份公司
+          label_zh: ''
+          description_en: legal form for stock corporations in the European Union
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q498289
+          label_en: 雙重上市公司
+          label_zh: ''
+          description_en: corporate structure in which two corporations function as
+            a single operating business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q2308203
+          label_en: 特殊目的收购公司
+          label_zh: ''
+          description_en: publicly traded shell company created to take a private
+            company public by acquiring it
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q5225895
+          label_en: 公开股份有限公司
+          label_zh: ''
+          description_en: 一种公司类型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q6785141
+          label_en: master limited partnership
+          label_zh: ''
+          description_en: limited partnership that is publicly traded on a securities
+            exchange
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q10273129
+          label_en: 法人公共实体
+          label_zh: ''
+          description_en: type of legal entity in Portugal
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q13641190
+          label_en: 開放型合股公司
+          label_zh: ''
+          description_en: type of joint-stock company in many successor states of
+            the Soviet Union
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q14942889
+          label_en: allmennaksjeselskap
+          label_zh: ''
+          description_en: Norwegian legal form of a public limited company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q20746571
+          label_en: public company limited by shares
+          label_zh: ''
+          description_en: Australian legal form
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q29566739
+          label_en: public company limited by guarantee
+          label_zh: ''
+          description_en: legal form of corporation under Australian corporations
+            law
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q30056758
+          label_en: julkinen osakeyhtiö
+          label_zh: ''
+          description_en: Finnish equivalent of a public limited company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q63439515
+          label_en: berhad
+          label_zh: ''
+          description_en: legal form for company in Malaysia
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q65176929
+          label_en: 公開股份公司
+          label_zh: ''
+          description_en: Russian type of joint-stock company
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q91417950
+          label_en: Perseroan Terbuka
+          label_zh: ''
+          description_en: legal entiity in Indonesia
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q105688853
+          label_en: United Kingdom Societas
+          label_zh: ''
+          description_en: type of company, converted from Societas Europaea
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q117273356
+          label_en: public company
+          label_zh: ''
+          description_en: South Africa legal form
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q122898840
+          label_en: 公有制企业
+          label_zh: ''
+          description_en: 任何公共机构拥有的公司
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q129256578
+          label_en: Q129256578
+          label_zh: ''
+          description_en: legal form in Tuvalu
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q129514785
+          label_en: Q129514785
+          label_zh: ''
+          description_en: legal form in the Bahamas
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130018333
+          label_en: Q130018333
+          label_zh: ''
+          description_en: legal form in Brunei Darussalam
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130271539
+          label_en: Q130271539
+          label_zh: ''
+          description_en: legal form in Abu Dhabi, United Arab Emirates
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130271610
+          label_en: Q130271610
+          label_zh: ''
+          description_en: legal form in the Emirate of Dubai, United Arab Emirates
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130284100
+          label_en: Q130284100
+          label_zh: ''
+          description_en: legal form in Mauritius
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130284110
+          label_en: Q130284110
+          label_zh: ''
+          description_en: legal form in Mauritius
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130295516
+          label_en: Q130295516
+          label_zh: ''
+          description_en: legal form in Lesotho
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130315899
+          label_en: Q130315899
+          label_zh: ''
+          description_en: legal form in the Seychelles
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q130326112
+          label_en: 凯洛格公司
+          label_zh: ''
+          description_en: brand
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q137969627
+          label_en: Perusahaan Umum Daerah
+          label_zh: ''
+          description_en: type of legal entity in Indonesia
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q891723
+          depth: 1
+          reason: Subclass of Q891723; expanded for IncCore Enterprise candidate gating.
+        - qid: Q22687
+          label_en: 銀行
+          label_zh: ''
+          description_en: 金融機構
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q27686
+          label_en: 飯店
+          label_zh: ''
+          description_en: 提供安全、舒適的空間使顧客得以休息或睡眠的商業設施
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q289612
+          label_en: 承建商
+          label_zh: ''
+          description_en: profession, construction site manager
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q331814
+          label_en: 超級廣場
+          label_zh: ''
+          description_en: type of retailing
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q622439
+          label_en: 中小型企業
+          label_zh: ''
+          description_en: type of business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q672386
+          label_en: 討債公司
+          label_zh: ''
+          description_en: business or other entity that specializes in debt collection,
+            most of these operate as agents of creditors
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q734253
+          label_en: 企業電子化
+          label_zh: ''
+          description_en: 在信息和通信技術的幫助下，公司的所有可自動化業務流程的集成執行
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q786820
+          label_en: 汽车制造商
+          label_zh: ''
+          description_en: company that makes automobiles
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q842410
+          label_en: 微型企业
+          label_zh: ''
+          description_en: 企业类型的一种
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q895709
+          label_en: Boxing stable
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1125882
+          label_en: Q1125882
+          label_zh: ''
+          description_en: legal form in Hungary
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1179791
+          label_en: glassworks
+          label_zh: ''
+          description_en: manufactory that produces glass and glass products
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1326576
+          label_en: Q1326576
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1337949
+          label_en: issuer
+          label_zh: ''
+          description_en: legal entity that develops, registers and sells securities
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1416636
+          label_en: 非銀行金融機構
+          label_zh: ''
+          description_en: financial institution that does not have a full banking
+            license or is not supervised by a national or international banking regulatory
+            agency
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1742253
+          label_en: cinema owner
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1752459
+          label_en: 投资公司
+          label_zh: ''
+          description_en: company whose main business is holding and managing securities
+            for investment purposes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1819524
+          label_en: 里昂惕夫生产函数
+          label_zh: ''
+          description_en: Function in economics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1821173
+          label_en: letter shop
+          label_zh: ''
+          description_en: type of business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q1941779
+          label_en: fashion house
+          label_zh: ''
+          description_en: business which designs and sells usually high-end clothing
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q2108913
+          label_en: Q2108913
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q2127545
+          label_en: Raiffeisen
+          label_zh: ''
+          description_en: collective name for cooperative companies and trade marks
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q2235104
+          label_en: 船用杂货商
+          label_zh: ''
+          description_en: a retail dealer who specialises in supplies or equipment
+            for ships
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q2865305
+          label_en: 贸易行
+          label_zh: ''
+          description_en: company specialized in trade
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q2912172
+          label_en: 獨資企業
+          label_zh: ''
+          description_en: business legally synonymous with its owner
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q3460326
+          label_en: Szybowcowy Zakład Doświadczalny
+          label_zh: ''
+          description_en: Polish glider design and research centre
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q3488214
+          label_en: Sotelma
+          label_zh: ''
+          description_en: telecommunications company in Mali
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q3591545
+          label_en: financial services company
+          label_zh: ''
+          description_en: type of business enterprise
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q3631457
+          label_en: agricultural enterprise
+          label_zh: ''
+          description_en: organizational unit producing agricultural goods or services
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q3631468
+          label_en: Q3631468
+          label_zh: ''
+          description_en: Italian legal form
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4067004
+          label_en: Anti-café
+          label_zh: ''
+          description_en: co-working space
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4165967
+          label_en: Q4165967
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4310373
+          label_en: Q4310373
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4380220
+          label_en: 工业公司
+          label_zh: ''
+          description_en: group of companies working together to manufacture a product
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4412807
+          label_en: peat company
+          label_zh: ''
+          description_en: type of business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q4985357
+          label_en: Buegeleisen and Jacobson
+          label_zh: ''
+          description_en: Musical instrument distributor
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q5037337
+          label_en: 卡拉宝能量饮料
+          label_zh: ''
+          description_en: energy drink from Thailand
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q5124708
+          label_en: 民營企業
+          label_zh: ''
+          description_en: type of enterprise in China
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q5657895
+          label_en: Administradora de fondos de ahorro previsional
+          label_zh: ''
+          description_en: type of business entity in Uruguay
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q5672604
+          label_en: 廢品舊貨鋪子
+          label_zh: ''
+          description_en: type of shop
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+        - qid: Q6017411
+          label_en: 獨立企業
+          label_zh: ''
+          description_en: type of business
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q6881511
+          depth: 1
+          reason: Subclass of Q6881511; expanded for IncCore Enterprise candidate
+            gating.
+      ProductModel:
+        include:
+        - qid: Q2424752
+          label_en: product
+          label_zh: 产品
+          match_strength: strong
+          source: seed
+          expand_subclasses: false
+          reason: Market-offered object or service; maps to IncCore ProductModel for
+            first-stage extraction.
+        - qid: Q28877
+          label_en: goods
+          label_zh: 商品
+          match_strength: medium
+          source: seed
+          expand_subclasses: false
+          reason: Economic goods; used as product candidate when linked to manufacturer/product
+            relations.
+        - qid: Q7397
+          label_en: software
+          label_zh: 软件
+          match_strength: medium
+          source: seed
+          expand_subclasses: true
+          reason: Software product class; maps to ProductModel before finer product
+            taxonomy is available.
+        - qid: Q431289
+          label_en: brand
+          label_zh: 品牌
+          match_strength: weak
+          source: seed
+          expand_subclasses: false
+          reason: Brand-like product object; kept as weak candidate pending product/brand
+            split.
+        - qid: Q416
+          label_en: 磁盘杂志
+          label_zh: ''
+          description_en: electronic magazine to be read using computers
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q11287
+          label_en: 漏洞利用
+          label_zh: ''
+          description_en: 利用缺陷或漏洞协助恶意软件部署的方法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q14001
+          label_en: 恶意软件
+          label_zh: ''
+          description_en: 软件、保安风险
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q19541
+          label_en: 搜索引擎
+          label_zh: ''
+          description_en: 提供搜尋服務的系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q35127
+          label_en: 網站
+          label_zh: ''
+          description_en: 在同一单个特定网域域名下多个相关连网页面的集合
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q58199
+          label_en: 即時通訊
+          label_zh: ''
+          description_en: 通訊類型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q93661
+          label_en: 圖書館自動化系統
+          label_zh: ''
+          description_en: software that organizes and provides access to a library
+            collection
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q104851
+          label_en: 韌體
+          label_zh: ''
+          description_en: 傳統上在唯讀記憶體中保存的低层軟件
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q116112
+          label_en: bulk email software
+          label_zh: ''
+          description_en: software
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q131093
+          label_en: 内容管理系统
+          label_zh: ''
+          description_en: 軟件
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q137742
+          label_en: 自動回應器
+          label_zh: ''
+          description_en: computer program that automatically answers e-mail sent
+            to it
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q166142
+          label_en: 應用軟件
+          label_zh: ''
+          description_en: 為用戶利益而設計的能執行一組協調功能、任務或活動的電腦軟件
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q188860
+          label_en: 函式庫
+          label_zh: ''
+          description_en: 计算机程序所使用的非易失性资源的集合，通常用于开发软件；可被其他软件用于一个特定的目的的软件组成部分。
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q208218
+          label_en: 修補程式
+          label_zh: ''
+          description_en: piece of software designed to update a computer program
+            to fix or improve it
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q210499
+          label_en: 電子佈告欄系統
+          label_zh: ''
+          description_en: 網絡通訊系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q218616
+          label_en: 专有软件
+          label_zh: ''
+          description_en: 根據許可證發佈的電腦軟件，限制使用、研究或重新分配
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q281039
+          label_en: 老软件
+          label_zh: ''
+          description_en: product, typically software, ignored by its owner and manufacturer
+            and for which no support is available
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q282283
+          label_en: 预测市场
+          label_zh: ''
+          description_en: 以进行预测为目的而产生的一种投机市场
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q339628
+          label_en: 定制软件
+          label_zh: ''
+          description_en: software that is specially developed for some specific organization
+            or other user
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q351507
+          label_en: 模板引擎
+          label_zh: ''
+          description_en: software that produces documents by combining templates
+            with a data model
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q358785
+          label_en: Administrationsprogramm (Administration program)
+          label_zh: ''
+          description_en: 'Software: simplifies the work of a system administrator
+            to administrate Computer-systems'
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q386197
+          label_en: 綠色軟體
+          label_zh: ''
+          description_en: computer program configured store its settings and data
+            separately from the system, so that it can be relocated
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q438556
+          label_en: PHP加速軟件
+          label_zh: ''
+          description_en: speeds up software applications written in the PHP programming
+            language
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q444835
+          label_en: 虚拟世界
+          label_zh: ''
+          description_en: computer-based simulated environment populated by many users
+            who can create a personal avatar, and simultaneously and independently
+            explore the virtual world, participate in its activities and communicate
+            with others
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q460982
+          label_en: Cryptographic Service Provider
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q528166
+          label_en: 客户端
+          label_zh: ''
+          description_en: 一塊電腦硬體或軟體存取伺服器服務
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q529029
+          label_en: 输入法
+          label_zh: ''
+          description_en: 允許接收任何資料（如鍵盤敲擊或滑鼠移動）作為輸入的作業系統元件或程式
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q574582
+          label_en: 反作弊软件
+          label_zh: ''
+          description_en: 电子游戏中用于反作弊的软件
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q581319
+          label_en: 規則系統
+          label_zh: ''
+          description_en: 生產人工智慧規則的系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q596391
+          label_en: Q596391
+          label_zh: ''
+          description_en: Android作業系統的軟體檔案格式
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q598205
+          label_en: 自製軟體頻道
+          label_zh: ''
+          description_en: software produced by consumers for proprietary hardware
+            that is not typically user-programmable
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q604270
+          label_en: 试用软件
+          label_zh: ''
+          description_en: 软件版本
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q606516
+          label_en: 数据包生成器
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q629399
+          label_en: 遺傳運算元
+          label_zh: ''
+          description_en: type of operator used in genetic algorithms to guide the
+            algorithm towards a solution to a given problem
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q639653
+          label_en: VNC
+          label_zh: ''
+          description_en: 圖形化桌面分享系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q676202
+          label_en: 系統軟體
+          label_zh: ''
+          description_en: 為應用軟體提供執行環境的電腦軟體
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q694007
+          label_en: 学习管理系统
+          label_zh: ''
+          description_en: software system that serves the delivery of learning content
+            and the organisation of learning processes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q735918
+          label_en: 小應用程式
+          label_zh: ''
+          description_en: internet applet are small programs that are embedded in
+            the web pages and a run on viewer's machine in a secured manner by Java
+            capable Browsers
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q753486
+          label_en: 螢幕保護裝置
+          label_zh: ''
+          description_en: 电脑程式
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q767899
+          label_en: 关卡编辑器
+          label_zh: ''
+          description_en: software tool to design video game graphics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q806106
+          label_en: perpetual beta
+          label_zh: ''
+          description_en: software or a system that never leaves the beta development
+            stage
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q816659
+          label_en: notification area
+          label_zh: ''
+          description_en: operating system shell feature
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q830743
+          label_en: 網頁計數器
+          label_zh: ''
+          description_en: web page hit count indicator
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q854840
+          label_en: 任务栏
+          label_zh: ''
+          description_en: bar displayed on an edge of a GUI desktop that is used to
+            launch and monitor running applications
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q856108
+          label_en: 圣经软件
+          label_zh: ''
+          description_en: computer applications to read or study biblical texts
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q861170
+          label_en: 虛擬鍵盤
+          label_zh: ''
+          description_en: 輸入軟體
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q861531
+          label_en: Q861531
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q872058
+          label_en: 灰色軟件
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q876057
+          label_en: 多用户
+          label_zh: ''
+          description_en: 允許多台計算機用戶訪問的軟件
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+        - qid: Q884270
+          label_en: Braille translator
+          label_zh: ''
+          description_en: software that transliterates a script into braille and sends
+            it to a braille embosser
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q7397
+          depth: 1
+          reason: Subclass of Q7397; expanded for IncCore ProductModel candidate gating.
+      Industry:
+        include:
+        - qid: Q8148
+          label_en: industrial sector
+          label_zh: 工业部门
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Industrial sector concept; maps to IncCore Industry.
+        - qid: Q170978
+          label_en: robotics
+          label_zh: 机器人学
+          match_strength: medium
+          source: seed
+          expand_subclasses: true
+          reason: Pilot industry concept retained from robotics validation.
+        - qid: Q1945618
+          label_en: Q1945618
+          label_zh: ''
+          description_en: industrial sector
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q2336754
+          label_en: Q2336754
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q5556213
+          label_en: Q5556213
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q10422298
+          label_en: Q10422298
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q10670202
+          label_en: Q10670202
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q11660455
+          label_en: Q11660455
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q11828873
+          label_en: Q11828873
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q11926623
+          label_en: in vitro diagnosis sanitation?
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q11926627
+          label_en: Q11926627
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q12144911
+          label_en: Q12144911
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q16713326
+          label_en: Q16713326
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q20091979
+          label_en: Q20091979
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q20091980
+          label_en: Q20091980
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q20091981
+          label_en: Q20091981
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q20091982
+          label_en: Q20091982
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q21075341
+          label_en: Q21075341
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q97197127
+          label_en: Q97197127
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q121031993
+          label_en: Q121031993
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q125497595
+          label_en: Q125497595
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q133857619
+          label_en: Q133857619
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q136832124
+          label_en: Engineering industry
+          label_zh: ''
+          description_en: industrial sector involving engineering services, technical
+            design, manufacturing support, and applied engineering activities
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q137485788
+          label_en: graphic arts industry
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8148
+          depth: 1
+          reason: Subclass of Q8148; expanded for IncCore Industry candidate gating.
+        - qid: Q169290
+          label_en: 開源機器人
+          label_zh: ''
+          description_en: robotics developed with open-source hardware and free and
+            open-source software, publicly sharing blueprints, schematics, and source
+            code
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q587024
+          label_en: 奈米機器人學
+          label_zh: ''
+          description_en: branch of robotics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q859951
+          label_en: 人与机器人交互
+          label_zh: ''
+          description_en: interdisciplinary research field studying the interaction
+            between humans and robots
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q986433
+          label_en: 仿生机器人学
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q1038799
+          label_en: 认知机械人学
+          label_zh: ''
+          description_en: robot with processing architecture that will allow it to
+            learn
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q1851985
+          label_en: 遙控機器人
+          label_zh: ''
+          description_en: area of robotics concerned with the control of semi-autonomous
+            robots from a distance
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q2402635
+          label_en: 微型機器人
+          label_zh: ''
+          description_en: branch of robotics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q2446723
+          label_en: 蜂群機器人學
+          label_zh: ''
+          description_en: 協調多台機器人的系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q3657270
+          label_en: 生物机器人
+          label_zh: ''
+          description_en: interdisciplinary science that combines the fields of biomedical
+            engineering, cybernetics, and robotics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4416626
+          label_en: Robot planning
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4680661
+          label_en: adaptable robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4770870
+          label_en: Ant robotics
+          label_zh: ''
+          description_en: special case of swarm robotics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4773875
+          label_en: anthrobotics
+          label_zh: ''
+          description_en: developing and studying robots that are either entirely
+            or in some way human-like
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4880688
+          label_en: 行為模式導向的機器人學
+          label_zh: ''
+          description_en: branch of robotics that incorporates modular or behavior-based
+            AI
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q4914594
+          label_en: bio-inspired robotics
+          label_zh: ''
+          description_en: field in robotics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q6158996
+          label_en: Japanese robotics
+          label_zh: ''
+          description_en: Japanese robots
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q7002613
+          label_en: neurorobotics
+          label_zh: ''
+          description_en: combined study of neuroscience, robotics, and artificial
+            intelligence
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q12038398
+          label_en: mobile robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q16655792
+          label_en: 智能机器人
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q17136907
+          label_en: Urology robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q19599448
+          label_en: Italian robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q24327151
+          label_en: soft robotics
+          label_zh: ''
+          description_en: subfield of robotics dealing with constructing robots from
+            highly compliant materials
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q60790336
+          label_en: Articulated soft robotics
+          label_zh: ''
+          description_en: furfura Sharif ahale sunnatul jamat(A)
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q65090881
+          label_en: Fog robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q112980803
+          label_en: Manufacturing robotics
+          label_zh: ''
+          description_en: field of research
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q113369048
+          label_en: 死灵机器人学
+          label_zh: ''
+          description_en: practice of using biotic materials as robotic components
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q113557429
+          label_en: social robotics
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+        - qid: Q122363403
+          label_en: Quantum robotics
+          label_zh: ''
+          description_en: field of robotics, physics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q170978
+          depth: 1
+          reason: Subclass of Q170978; expanded for IncCore Industry candidate gating.
+      Technology:
+        include:
+        - qid: Q11016
+          label_en: technology
+          label_zh: 技术
+          match_strength: strong
+          source: seed
+          expand_subclasses: true
+          reason: Technology concept; maps to IncCore Technology.
+        - qid: Q8366
+          label_en: algorithm
+          label_zh: 算法
+          match_strength: medium
+          source: seed
+          expand_subclasses: true
+          reason: Technical method candidate; maps to IncCore Technology.
+        - qid: Q7108
+          label_en: 生物技术
+          label_zh: ''
+          description_en: 利用生命系统和生物开发或生产有用的产品
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q11468
+          label_en: 纳米技术
+          label_zh: ''
+          description_en: field of applied science whose theme is the control of matter
+            on atomic and (supra)molecular scale
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q12333
+          label_en: IPv6转换机制
+          label_zh: ''
+          description_en: technologies that facilitate the transition between the
+            IPv4 and IPv6 systems on the Internet
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q12739
+          label_en: 核動力
+          label_zh: ''
+          description_en: 利用可控核反應來獲取能量
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q104954
+          label_en: 射频识别
+          label_zh: ''
+          description_en: 利用电磁场自动识别和跟踪附在物体上的标签的技术
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q120208
+          label_en: 新兴技术
+          label_zh: ''
+          description_en: Technologies whose development, practical applications,
+            or both are still largely unrealized
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q180165
+          label_en: 机械电子学
+          label_zh: ''
+          description_en: combination of electronics and mechanics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q186249
+          label_en: 药剂学
+          label_zh: ''
+          description_en: science that deals with the properties of medicines
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q190660
+          label_en: 防鎖死煞車系統
+          label_zh: ''
+          description_en: safety anti-skid braking system
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q194118
+          label_en: 农业工程
+          label_zh: ''
+          description_en: application of engineering for agricultural purposes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q208163
+          label_en: 信号处理
+          label_zh: ''
+          description_en: models and analyzes data representations of physical events
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q211017
+          label_en: 电子政务
+          label_zh: ''
+          description_en: use of electronic communications to improve government services
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q211485
+          label_en: 航天技术
+          label_zh: ''
+          description_en: technology developed for use in space
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q211500
+          label_en: 气动
+          label_zh: ''
+          description_en: branch of mechanics
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q251072
+          label_en: 機器對機器
+          label_zh: ''
+          description_en: technologies that allow both wireless and wired systems
+            to communicate with other devices of the same type
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q282413
+          label_en: Roman technology
+          label_zh: ''
+          description_en: engineering practice which supported Roman civilization
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q319963
+          label_en: waste treatment technologies
+          label_zh: ''
+          description_en: types of solid waste treatment techniques employed in waste
+            management infrastructure
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q329864
+          label_en: 军事技术与装备
+          label_zh: ''
+          description_en: 列表
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q336170
+          label_en: wastewater technology
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q348091
+          label_en: 核技术
+          label_zh: ''
+          description_en: technology that involves the reactions of atomic nuclei
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q391690
+          label_en: 輻射加熱
+          label_zh: ''
+          description_en: technology for heating indoor and outdoor areas
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q466410
+          label_en: 高科技
+          label_zh: ''
+          description_en: technology that is at the cutting edge
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q537823
+          label_en: 适用技术
+          label_zh: ''
+          description_en: technology that is suitable to the social and economic conditions
+            of the geographic area in which it is to be applied, is environmentally
+            sound, and promotes self-sufficiency on the part of those using it
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q538722
+          label_en: 应用计算机科学
+          label_zh: ''
+          description_en: area of computer science that do not fall under the umbrella
+            of theoretical computer science, but based on practical technical implementations
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q609131
+          label_en: 传动技术
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q633079
+          label_en: NanoLED technology
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q681566
+          label_en: trenchless technology
+          label_zh: ''
+          description_en: type of underground construction
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q742715
+          label_en: 輔助系統
+          label_zh: ''
+          description_en: 協助產品使用者的系統
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q743030
+          label_en: 環境科技
+          label_zh: ''
+          description_en: technical and technological processes for protection of
+            the environment
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q786887
+          label_en: 低科技
+          label_zh: ''
+          description_en: simple technology, often of a traditional or non-mechanical
+            kind, such as crafts and tools that pre-date the Industrial Revolution
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q794827
+          label_en: 净室
+          label_zh: ''
+          description_en: 低汙染環境
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q829532
+          label_en: coating technology
+          label_zh: ''
+          description_en: technology used to apply coating materials to surfaces
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q864323
+          label_en: 生物濾池
+          label_zh: ''
+          description_en: pollution control technique
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q911772
+          label_en: chemical technology
+          label_zh: ''
+          description_en: technology that processes or produces chemicals
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q996551
+          label_en: Q996551
+          label_zh: ''
+          description_en: German political buzzword in technology policy
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1000064
+          label_en: nuclear reactor technology
+          label_zh: ''
+          description_en: Study of the design of nuclear fission reactors
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1001378
+          label_en: 电影技术
+          label_zh: ''
+          description_en: technique deployed in filmmaking
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1027795
+          label_en: 无源光网络
+          label_zh: ''
+          description_en: telecommunications technology used to provide fiber to the
+            end consumer
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1060280
+          label_en: 高级辅助驾驶系统
+          label_zh: ''
+          description_en: electronic systems that help the vehicle driver while driving
+            or during parking
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1068473
+          label_en: 教育技术学
+          label_zh: ''
+          description_en: 学科
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1076547
+          label_en: 知識市場
+          label_zh: ''
+          description_en: 分配知識資源的機制
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1099456
+          label_en: 清潔技術
+          label_zh: ''
+          description_en: comparatively environmentally friendly technology
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1122355
+          label_en: 计算机电话集成
+          label_zh: ''
+          description_en: technology that allows interactions on a telephone and a
+            computer to be coordinated
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1145644
+          label_en: 仿生材料學
+          label_zh: ''
+          description_en: imitation of biological systems to understand underlying
+            mechanisms and to obtain ideas from nature to benefit science, engineering,
+            and medicine
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1262529
+          label_en: 军民两用
+          label_zh: ''
+          description_en: technology that can be used for both civil and military
+            purposes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1262537
+          label_en: 双SIM卡
+          label_zh: ''
+          description_en: 手机功能
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1308255
+          label_en: 专利分类
+          label_zh: ''
+          description_en: category system for technologies
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1345036
+          label_en: 退磁
+          label_zh: ''
+          description_en: process of decreasing or eliminating a remnant magnetic
+            field
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1351910
+          label_en: 推送技术
+          label_zh: ''
+          description_en: style of Internet-based communication
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q1392806
+          label_en: 給藥裝置
+          label_zh: ''
+          description_en: methods for transporting a drug in the body as needed to
+            safely achieve its desired effect
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q11016
+          depth: 1
+          reason: Subclass of Q11016; expanded for IncCore Technology candidate gating.
+        - qid: Q2708
+          label_en: 上下文混合
+          label_zh: ''
+          description_en: data compression algorithm
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q130762
+          label_en: 乘法演算法
+          label_zh: ''
+          description_en: 用來運算2數相乘的演算法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q154021
+          label_en: 块密码的工作模式
+          label_zh: ''
+          description_en: 使用分組密碼提供諸如機密性或真實性的信息服務的算法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q167555
+          label_en: 光学字符识别
+          label_zh: ''
+          description_en: 对文本资料的图像文件进行识别，获取文字信息
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q176769
+          label_en: 隐马尔可夫模型
+          label_zh: ''
+          description_en: 马尔可夫统计模型
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q181666
+          label_en: automatic label placement
+          label_zh: ''
+          description_en: computer methods of placing labels automatically on a map
+            or chart
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q184741
+          label_en: 字符串算法
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q187631
+          label_en: 插值
+          label_zh: ''
+          description_en: 一种在已知数据点之间构建新数据点的方法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q201413
+          label_en: 启发法
+          label_zh: ''
+          description_en: 一种足以快速获得短期解决方案/近似值的解决问题的方法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q246593
+          label_en: 密码原语
+          label_zh: ''
+          description_en: established cryptographic algorithm used as a building block
+            for more complex cryptosystems
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q263499
+          label_en: 去馬賽克
+          label_zh: ''
+          description_en: digital image processing
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q264164
+          label_en: 递归
+          label_zh: ''
+          description_en: algorithmic technique in computer science of solving a problem
+            by reducing it to a smaller instance of the same problem
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q279748
+          label_en: out-of-core algorithm
+          label_zh: ''
+          description_en: algorithm to process data that is too large to fit into
+            a computer's main memory at one time, optimized to efficiently fetch and
+            access data stored in slow bulk memory (e.g. hard drives, tape drives,
+            remote network)
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q327675
+          label_en: 對稱密鑰加密
+          label_zh: ''
+          description_en: 算法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q420904
+          label_en: 奇异值分解
+          label_zh: ''
+          description_en: 一種矩陣分解方式
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q453200
+          label_en: Conway's LUX method for magic squares
+          label_zh: ''
+          description_en: algorithm for creating magic squares
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q475372
+          label_en: convolution reverberation
+          label_zh: ''
+          description_en: process for digitally simulating the reverberation of a
+            physical or virtual space
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q504353
+          label_en: 贪心法
+          label_zh: ''
+          description_en: 营销行为法则
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q527381
+          label_en: 高精度计算
+          label_zh: ''
+          description_en: calculations where numbers' precision is only limited by
+            computer memory
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q583461
+          label_en: 随机化算法
+          label_zh: ''
+          description_en: algorithm designed to use randomness from auxiliary inputs
+            as part of its logic
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q609057
+          label_en: 合一
+          label_zh: ''
+          description_en: algorithmic process of solving equations between symbolic
+            expressions
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q620622
+          label_en: 核技巧
+          label_zh: ''
+          description_en: class of algorithms for pattern analysis
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q621751
+          label_en: 近似算法
+          label_zh: ''
+          description_en: 用來計算某個常數的近似值的演算法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q623950
+          label_en: 快速傅里叶变换
+          label_zh: ''
+          description_en: 快速計算序列的離散傅立葉變換或其逆變換的方法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q629498
+          label_en: 遗传编程
+          label_zh: ''
+          description_en: technique whereby computer programs are encoded as a set
+            of genes
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q657037
+          label_en: 原地算法
+          label_zh: ''
+          description_en: computer algorithm that operates directly on an input data
+            structure, without needing a full temporary copy
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q657705
+          label_en: index calculus algorithm
+          label_zh: ''
+          description_en: probabilistic algorithm for computing discrete logarithms
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q671298
+          label_en: 分治法
+          label_zh: ''
+          description_en: algorithm design paradigm based on multi-branched recursion
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q676024
+          label_en: 交换 (计算机编程)
+          label_zh: ''
+          description_en: process of swapping data between computer variables
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q690505
+          label_en: Todd–Coxeter algorithm
+          label_zh: ''
+          description_en: algorithm
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q739462
+          label_en: 網路圖
+          label_zh: ''
+          description_en: visualization of node-link graphs
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q755673
+          label_en: 搜索算法
+          label_zh: ''
+          description_en: any algorithm which solves the search problem, namely, to
+            retrieve information stored within some data structure, or calculated
+            in the search space of a problem domain, either with discrete or continuous
+            values
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q775963
+          label_en: 平滑
+          label_zh: ''
+          description_en: dataset modification using an approximating function to
+            capture important patterns in the data while leaving out noise
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q786431
+          label_en: 線上演算法
+          label_zh: ''
+          description_en: algorith that can process its input piece-by-piece in a
+            serial fashion, i.e., in the order that the input is fed to the algorithm,
+            without having the entire input available from the start
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q811591
+          label_en: method of analytic tableaux
+          label_zh: ''
+          description_en: fundamental concept in automated theorem proving
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q820272
+          label_en: 爬山算法
+          label_zh: ''
+          description_en: optimization algorithm
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q829546
+          label_en: 素性测试
+          label_zh: ''
+          description_en: 檢驗一個給定的整數是否為質數的演算法
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q838583
+          label_en: 矩形式树状结构绘图法
+          label_zh: ''
+          description_en: visualisation method for hierarchical data
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q850362
+          label_en: 暴力搜索法
+          label_zh: ''
+          description_en: computer problem-solving technique
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q858520
+          label_en: 整除规则
+          label_zh: ''
+          description_en: 用來判斷某整數是否為另一個整數的倍數的規則
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q970689
+          label_en: Q970689
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q979637
+          label_en: 星期的計算
+          label_zh: ''
+          description_en: methods to calculate the day of the week
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1047554
+          label_en: 互斥锁
+          label_zh: ''
+          description_en: property of concurrency control, which is instituted for
+            the purpose of preventing race conditions
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1059095
+          label_en: Q1059095
+          label_zh: ''
+          description_en: ''
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1064349
+          label_en: 确定性算法
+          label_zh: ''
+          description_en: algorithm which, given a particular input, will always produce
+            the same output
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1068675
+          label_en: 多项式长除法
+          label_zh: ''
+          description_en: dividing polynomials similar to long division for regular
+            numbers
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1087987
+          label_en: 平行演算法
+          label_zh: ''
+          description_en: algorithm which can do multiple operations in the same time
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1136501
+          label_en: 素数公式
+          label_zh: ''
+          description_en: formula whose values are exactly the prime numbers
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1192553
+          label_en: 人臉辨識系統
+          label_zh: ''
+          description_en: 计算机科学技术
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+        - qid: Q1196156
+          label_en: Flood fill
+          label_zh: ''
+          description_en: algorithm that determines the area connected to a given
+            node in a multi-dimensional array
+          match_strength: medium
+          source: wikidata_p279
+          parent_qid: Q8366
+          depth: 1
+          reason: Subclass of Q8366; expanded for IncCore Technology candidate gating.
+    property_triggers:
+      ProductModel:
+      - property_id: P176
+        label_en: manufacturer
+        label_zh: 制造商
+        match_strength: weak
+        reason: Subject with manufacturer is often a product/model/artifact; used
+          as supplemental product candidate trigger.
+    exclusions:
+      global:
+      - qid: Q5
+        label_en: human
+        label_zh: 人
+        reason: Person entities are not enterprise/product candidates.
+      - qid: Q515
+        label_en: city
+        label_zh: 城市
+        reason: Region entity; only used as relation target.
+      - qid: Q6256
+        label_en: country
+        label_zh: 国家
+        reason: Region entity; only used as relation target.
+      - qid: Q17334923
+        label_en: physical location
+        label_zh: 物理地点
+        reason: Location-like entity; avoid product false positives.
+      Enterprise:
+      - qid: Q3918
+        label_en: university
+        label_zh: 大学
+        reason: Education institution; not treated as Enterprise in the industry-chain
+          base graph MVP.
+      - qid: Q327333
+        label_en: government agency
+        label_zh: 政府机构
+        reason: Public-sector organization; exclude from enterprise base layer.
+      - qid: Q847017
+        label_en: sports club
+        label_zh: 体育俱乐部
+        reason: Sports organization; exclude from enterprise base layer.
+      - qid: Q12973014
+        label_en: sports team
+        label_zh: 运动队
+        reason: Sports team; exclude from enterprise base layer.
+      - qid: Q215380
+        label_en: musical group
+        label_zh: 音乐团体
+        reason: Cultural organization; exclude from enterprise base layer.
+      - qid: Q176799
+        label_en: military unit
+        label_zh: 军事单位
+        reason: Military organization; exclude from enterprise base layer.
+      ProductModel:
+      - qid: Q1496967
+        label_en: territorial entity
+        label_zh: 地域实体
+        reason: Location-like object; exclude from product candidates.
+expanded_from:
+  profile: all_industry
+  method: wikidata P279 direct-subclass BFS
+  max_depth: 1
+  limit_per_seed: 50
+  added_count: 362

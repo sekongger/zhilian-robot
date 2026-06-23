@@ -1,0 +1,160 @@
+version: "0.1"
+name: "IncIndustryWikiTypeWhitelist"
+description: "Wikidata P31/P279 type whitelist for IncCore all-industry graph extraction."
+
+profiles:
+  all_industry:
+    description: "No keyword search. Select enterprise/product/industry/technology candidates by structured Wikidata type gates."
+    categories:
+      Enterprise:
+        include:
+          - qid: Q4830453
+            label_en: business
+            label_zh: 商业实体
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Commercial, industrial, or professional activity; maps to IncCore Enterprise."
+          - qid: Q783794
+            label_en: company
+            label_zh: 公司
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Legal entity with a business objective; maps to IncCore Enterprise."
+          - qid: Q891723
+            label_en: public company
+            label_zh: 上市公司
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Publicly traded company; maps to IncCore Enterprise."
+          - qid: Q6881511
+            label_en: enterprise
+            label_zh: 企业
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Economic unit producing goods or services; maps to IncCore Enterprise."
+
+      ProductModel:
+        include:
+          - qid: Q2424752
+            label_en: product
+            label_zh: 产品
+            match_strength: strong
+            source: seed
+            expand_subclasses: false
+            reason: "Market-offered object or service; maps to IncCore ProductModel for first-stage extraction."
+          - qid: Q28877
+            label_en: goods
+            label_zh: 商品
+            match_strength: medium
+            source: seed
+            expand_subclasses: false
+            reason: "Economic goods; used as product candidate when linked to manufacturer/product relations."
+          - qid: Q7397
+            label_en: software
+            label_zh: 软件
+            match_strength: medium
+            source: seed
+            expand_subclasses: true
+            reason: "Software product class; maps to ProductModel before finer product taxonomy is available."
+          - qid: Q431289
+            label_en: brand
+            label_zh: 品牌
+            match_strength: weak
+            source: seed
+            expand_subclasses: false
+            reason: "Brand-like product object; kept as weak candidate pending product/brand split."
+
+      Industry:
+        include:
+          - qid: Q8148
+            label_en: industrial sector
+            label_zh: 工业部门
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Industrial sector concept; maps to IncCore Industry."
+          - qid: Q170978
+            label_en: robotics
+            label_zh: 机器人学
+            match_strength: medium
+            source: seed
+            expand_subclasses: true
+            reason: "Pilot industry concept retained from robotics validation."
+
+      Technology:
+        include:
+          - qid: Q11016
+            label_en: technology
+            label_zh: 技术
+            match_strength: strong
+            source: seed
+            expand_subclasses: true
+            reason: "Technology concept; maps to IncCore Technology."
+          - qid: Q8366
+            label_en: algorithm
+            label_zh: 算法
+            match_strength: medium
+            source: seed
+            expand_subclasses: true
+            reason: "Technical method candidate; maps to IncCore Technology."
+
+    property_triggers:
+      ProductModel:
+        - property_id: P176
+          label_en: manufacturer
+          label_zh: 制造商
+          match_strength: weak
+          reason: "Subject with manufacturer is often a product/model/artifact; used as supplemental product candidate trigger."
+
+    exclusions:
+      global:
+        - qid: Q5
+          label_en: human
+          label_zh: 人
+          reason: "Person entities are not enterprise/product candidates."
+        - qid: Q515
+          label_en: city
+          label_zh: 城市
+          reason: "Region entity; only used as relation target."
+        - qid: Q6256
+          label_en: country
+          label_zh: 国家
+          reason: "Region entity; only used as relation target."
+        - qid: Q17334923
+          label_en: physical location
+          label_zh: 物理地点
+          reason: "Location-like entity; avoid product false positives."
+      Enterprise:
+        - qid: Q3918
+          label_en: university
+          label_zh: 大学
+          reason: "Education institution; not treated as Enterprise in the industry-chain base graph MVP."
+        - qid: Q327333
+          label_en: government agency
+          label_zh: 政府机构
+          reason: "Public-sector organization; exclude from enterprise base layer."
+        - qid: Q847017
+          label_en: sports club
+          label_zh: 体育俱乐部
+          reason: "Sports organization; exclude from enterprise base layer."
+        - qid: Q12973014
+          label_en: sports team
+          label_zh: 运动队
+          reason: "Sports team; exclude from enterprise base layer."
+        - qid: Q215380
+          label_en: musical group
+          label_zh: 音乐团体
+          reason: "Cultural organization; exclude from enterprise base layer."
+        - qid: Q176799
+          label_en: military unit
+          label_zh: 军事单位
+          reason: "Military organization; exclude from enterprise base layer."
+      ProductModel:
+        - qid: Q1496967
+          label_en: territorial entity
+          label_zh: 地域实体
+          reason: "Location-like object; exclude from product candidates."

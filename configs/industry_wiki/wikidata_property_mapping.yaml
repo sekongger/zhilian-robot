@@ -1,0 +1,55 @@
+properties:
+  P31:
+    label: instance of
+    route_hint: category
+  P279:
+    label: subclass of
+    route_hint: hierarchy
+  P452:
+    label: industry
+    route_hint: relational
+  P1056:
+    label: product or material produced
+    route_hint: relational
+  P176:
+    label: manufacturer
+    route_hint: relational
+  P178:
+    label: developer
+    route_hint: relational
+  P127:
+    label: owned by
+    route_hint: relational
+  P749:
+    label: parent organization
+    route_hint: relational
+  P355:
+    label: subsidiary
+    route_hint: relational
+  P159:
+    label: headquarters location
+    route_hint: relational
+  P17:
+    label: country
+    route_hint: relational
+  P131:
+    label: located in administrative territorial entity
+    route_hint: relational
+  P276:
+    label: location
+    route_hint: relational
+  P571:
+    label: inception
+    route_hint: intrinsic
+  P1128:
+    label: employees
+    route_hint: intrinsic
+  P2139:
+    label: total revenue
+    route_hint: intrinsic
+  P414:
+    label: stock exchange
+    route_hint: relational
+  P856:
+    label: official website
+    route_hint: intrinsic

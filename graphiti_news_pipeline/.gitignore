@@ -1,0 +1,43 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local environment variables
+.env
+
+# Ignored directories
+graphiti-main/
+example.txt
+log.txt
+
+# /external_src/
+
+# Local docs / analysis artifacts (not tracked in this repo)
+docs/
+docs/02_architecture/IncCore.schema
+docs/02_architecture/数据结构对比.md
+docs/03_es/es原索引数据库结构.txt
+docs/03_es/es数据库连接信息.md
+docs/03_es/index_schema_documentation.md
+docs/04_plans_and_reviews/knowledge_calculation_review_*.md
+docs/04_plans_and_reviews/扩展能力探索.md
+docs/04_plans_and_reviews/事件脉络改造清单.md
+docs/05_work_reports/工作报告.md
+docs/06_data_samples/资讯样例数据*.xlsx
+docs/07_exports/graph_edges_*.json
+docs/07_exports/graph_nodes_*.json
+docs/07_exports/response_*.json
+
+# Local scripts / outputs
+es_scripts/
+results.txt
+
+# Crawler runtime outputs
+var/crawler/

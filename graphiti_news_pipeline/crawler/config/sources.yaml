@@ -1,0 +1,66 @@
+sources:
+  - id: octopus_news
+    type: octopus
+    name: Octopus News Feed
+    url: https://openapi.bazhuayu.com
+    enabled: true
+    priority: 0
+    quality_score: 0.95
+    rate_limit_per_min: 60
+    tags: [robotics, ai, octopus]
+    options:
+      task_group_name: graphiti数据源
+      task_ids: []
+      task_names: []
+      username: ""
+      password: ""
+
+  - id: rss_36kr_main
+    type: rss
+    name: 36Kr Main Feed
+    url: https://36kr.com/feed
+    enabled: true
+    priority: 1
+    quality_score: 0.92
+    rate_limit_per_min: 20
+    tags: [robotics, ai, supply_chain]
+
+  - id: rss_36kr_newsflash
+    type: rss
+    name: 36Kr Newsflash Feed
+    url: https://36kr.com/feed-newsflash
+    enabled: true
+    priority: 2
+    quality_score: 0.9
+    rate_limit_per_min: 20
+    tags: [robotics, ai, supply_chain]
+
+  - id: rss_ithome
+    type: rss
+    name: ITHome Feed
+    url: https://www.ithome.com/rss/
+    enabled: true
+    priority: 3
+    quality_score: 0.85
+    rate_limit_per_min: 20
+    tags: [robotics, ai]
+
+  - id: rss_ifanr
+    type: rss
+    name: ifanr Feed
+    url: https://www.ifanr.com/feed
+    enabled: true
+    priority: 4
+    quality_score: 0.82
+    rate_limit_per_min: 20
+    tags: [robotics, ai]
+
+  - id: rss_leiphone_robot
+    type: rss
+    name: Leiphone Robotics Feed
+    url: https://www.leiphone.com/feed/categoryRss/name/robot
+    enabled: true
+    priority: 5
+    quality_score: 0.88
+    rate_limit_per_min: 20
+    tags: [robotics]

@@ -1,0 +1,9 @@
+pipeline:
+  max_content_length: 5000
+  min_content_length: 80
+  dedup_similarity_threshold: 0.9
+  compress_max_chars: 200
+  ingest_retry_times: 2
+  relevance_mode: high_recall
+  gray_mode: true
+  schedule_hours: 4

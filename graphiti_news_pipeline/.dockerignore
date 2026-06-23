@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Python
+.venv
+__pycache__
+*.pyc
+
+# IDE / Editor
+.idea
+.vscode
+
+# Downloaded source code for reference
+external_src
+
+# Logs and local data
+log.txt
+example.txt
+var/crawler
+
+# Environment files
+.env
+.env.example

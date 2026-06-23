@@ -1,0 +1,2 @@
+com.antgroup.openspg.cloudext.impl.computingengine.local.LocalComputingEngineClientDriver
+com.antgroup.openspg.cloudext.impl.computingengine.aistudio.AiStudioClientDriver

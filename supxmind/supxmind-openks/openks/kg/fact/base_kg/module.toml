@@ -1,0 +1,7 @@
+name = "base_kg"
+title = "产业网链基础"
+stage = "fact"
+owner = "蔡旭东、陆文韬"
+status = "active"
+summary = "定义产业网链基础、统一 ID 规则和常用实体。"
+dependencies = []

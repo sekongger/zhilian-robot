@@ -1,0 +1,6 @@
+graph_id: base_kg
+graph_type: fact
+schema: openks.kg.fact.base_kg.schema.base_kg_schema.BaseKgSchema
+builder: openks.kg.fact.base_kg.builder.base_kg_builder.BaseKgBuilder
+reasoner: openks.kg.fact.base_kg.reasoner.base_kg_reasoner.BaseKgReasoner
+solver: openks.kg.fact.base_kg.solver.base_kg_solver.BaseKgSolver

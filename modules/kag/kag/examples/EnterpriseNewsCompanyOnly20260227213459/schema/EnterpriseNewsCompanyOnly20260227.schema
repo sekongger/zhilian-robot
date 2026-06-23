@@ -1,0 +1,5 @@
+namespace EnterpriseNewsCompanyOnly20260227
+
+Company(企业): EntityType
+	properties:
+		companyName(企业名称): Text

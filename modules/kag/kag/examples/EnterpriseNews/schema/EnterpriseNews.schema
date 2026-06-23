@@ -1,0 +1,51 @@
+namespace EnterpriseNews
+
+ApplicationScenario(应用场景): ConceptType
+	hypernymPredicate: isA
+
+Market(市场): ConceptType
+	hypernymPredicate: isA
+
+Company(企业): EntityType
+	properties:
+		shortName(简称): Text
+		industry(行业): Text
+	relations:
+		launchProduct(发布产品): Product
+
+Organization(组织): EntityType
+	properties:
+		orgType(组织类型): Text
+	relations:
+		promoteTechnology(推动技术): Technology
+
+Person(人物): EntityType
+	properties:
+		title(职位): Text
+	relations:
+		worksForCompany(任职企业): Company
+		worksForOrganization(任职组织): Organization
+
+Technology(技术): EntityType
+	properties:
+		alias(别名): Text
+		category(类别): Text
+
+Product(产品): EntityType
+	properties:
+		productSeries(产品系列): Text
+		keyFeature(关键特性): Text
+			constraint: MultiValue
+	relations:
+		supportsTechnology(支持技术): Technology
+		appliesToScenario(适用场景): ApplicationScenario
+		forMarket(面向市场): Market
+		hasMetric(关键指标): Metric
+
+Metric(指标): EntityType
+	properties:
+		metricName(指标名称): Text
+		metricValue(指标值): Text
+	relations:
+		aboutProduct(关联产品): Product
+		aboutMarket(关联市场): Market

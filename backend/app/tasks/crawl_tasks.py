@@ -4,13 +4,36 @@
 from celery import shared_task
 from app.crawler.news_crawler import news_crawler
 from app.crawler.rss_parser import rss_parser
-from app.nlp.llm import llm_processor
-from app.services.graph_service import graph_service
 from app.database.mongodb import mongodb_conn
+from app.news_pipeline.service import news_pipeline_service
 import logging
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
+
+
+def _save_article_and_process(article: dict, *, keyword: str | None = None) -> dict:
+    article_doc = {
+        'title': article.get('title'),
+        'content': article.get('content'),
+        'summary': article.get('summary'),
+        'source': article.get('source'),
+        'source_name': article.get('source'),
+        'url': article.get('url', ''),
+        'source_url': article.get('url', ''),
+        'keyword': article.get('keyword', keyword),
+        'published_at': article.get('published_at'),
+        'publish_time': article.get('published_at'),
+        'crawled_at': article.get('crawled_at', datetime.now()),
+        'processed': False,
+    }
+    result = mongodb_conn.get_collection('crawled_articles').insert_one(article_doc)
+    article_id = str(result.inserted_id)
+    process_result = news_pipeline_service.process_crawled_article(article_doc, external_id=article_id)
+    return {
+        "article_id": article_id,
+        "process_result": process_result,
+    }
 
 
 @shared_task(name='app.tasks.crawl_tasks.crawl_all_news', bind=True)
@@ -50,56 +73,11 @@ def crawl_all_news(self):
             
             for article in articles:
                 try:
-                    # 2. 使用DeepSeek提取实体和关系
-                    result = llm_processor.analyze_industry_chain(article['content'])
-                    entities = result.get('entities', {})
-                    relations = result.get('relations', [])
-                    
-                    # 3. 保存到Neo4j图数据库
-                    save_result = graph_service.save_analyzed_data(entities, relations)
-                    
-                    if save_result.get('success'):
-                        total_entities += save_result.get('entities_count', 0)
-                        total_relations += save_result.get('relations_count', 0)
-                    
-                    # 4. 保存原始数据到MongoDB
-                    article_doc = {
-                        'title': article['title'],
-                        'content': article['content'],
-                        'source': article['source'],
-                        'keyword': article.get('keyword', keyword),
-                        'url': article.get('url', ''),
-                        'entities': entities,
-                        'relations': relations,
-                        'crawled_at': article.get('crawled_at', datetime.now()),
-                        'processed_at': datetime.now(),
-                        'processed': True
-                    }
-                    
-                    result = mongodb_conn.get_collection('crawled_articles').insert_one(article_doc)
-                    article_id = str(result.inserted_id)
-                    
-                    # 创建文档实例
-                    from app.database.mongodb import document_instance_manager
-                    entity_references = []
-                    for category, items in entities.items():
-                        # Use lowercase category to match MongoDB entity IDs
-                        for item_name in items:
-                            entity_id = f"CANONICAL_{category}_{item_name}"
-                            entity_references.append({
-                                'entity_id': entity_id,
-                                'entity_name': item_name,
-                                'entity_type': category
-                            })
-                    
-                    if entity_references:
-                        document_instance_manager.save_document_instance(
-                            source_id=article['source'],
-                            title=article['title'],
-                            content=article.get('content', ''),
-                            extracted_time=article.get('crawled_at', datetime.now()),
-                            entity_references=entity_references
-                        )
+                    pipeline_result = _save_article_and_process(article, keyword=keyword)
+                    process_result = pipeline_result.get("process_result") or {}
+                    summary = process_result.get("process_result") or {}
+                    total_entities += int(summary.get('entities') or 0)
+                    total_relations += int(summary.get('relations') or 0)
                     
                     total_processed += 1
                     
@@ -192,58 +170,11 @@ def fetch_rss_updates(self):
         # 4. 处理新文章
         for article in new_articles:
             try:
-                # 2. 提取实体和关系
-                result = llm_processor.analyze_industry_chain(article['content'])
-                entities = result.get('entities', {})
-                relations = result.get('relations', [])
-                
-                # 3. 保存到图谱
-                save_result = graph_service.save_analyzed_data(entities, relations)
-                
-                if save_result.get('success'):
-                    total_entities += save_result.get('entities_count', 0)
-                    total_relations += save_result.get('relations_count', 0)
-                
-                # 4. 保存到MongoDB
-                article_doc = {
-                    'title': article['title'],
-                    'content': article['content'],
-                    'source': article['source'],
-                    'url': article.get('url', ''),
-                    'entities': entities,
-                    'relations': relations,
-                    'published_at': article.get('published_at'),
-                    'crawled_at': article.get('crawled_at', datetime.now()),
-                    'processed_at': datetime.now(),
-                    'processed': True
-                }
-                
-                result = mongodb_conn.get_collection('crawled_articles').insert_one(article_doc)
-                article_id = str(result.inserted_id)
-                
-                # 5. 创建文档实例（用于动量计算）
-                from app.database.mongodb import document_instance_manager
-                
-                # 构建实体引用列表
-                entity_references = []
-                for category, items in entities.items():
-                    # Use lowercase category to match MongoDB entity IDs
-                    for item_name in items:
-                        entity_id = f"CANONICAL_{category}_{item_name}"
-                        entity_references.append({
-                            'entity_id': entity_id,
-                            'entity_name': item_name,
-                            'entity_type': category
-                        })
-                
-                if entity_references:
-                    document_instance_manager.save_document_instance(
-                        source_id=article['source'],
-                        title=article['title'],
-                        content=article.get('content', ''),
-                        extracted_time=article.get('published_at', datetime.now()),
-                        entity_references=entity_references
-                    )
+                pipeline_result = _save_article_and_process(article)
+                process_result = pipeline_result.get("process_result") or {}
+                summary = process_result.get("process_result") or {}
+                total_entities += int(summary.get('entities') or 0)
+                total_relations += int(summary.get('relations') or 0)
                 
                 total_processed += 1
                 
@@ -297,53 +228,11 @@ def crawl_single_keyword(keyword: str):
         
         for article in articles:
             try:
-                result = llm_processor.analyze_industry_chain(article['content'])
-                entities = result.get('entities', {})
-                relations = result.get('relations', [])
-                
-                # 保存图谱并获取统计数据
-                save_result = graph_service.save_analyzed_data(entities, relations)
-                if save_result.get('success'):
-                    total_entities += save_result.get('entities_count', 0)
-                    total_relations += save_result.get('relations_count', 0)
-                
-                article_doc = {
-                    'title': article['title'],
-                    'content': article['content'],
-                    'source': article['source'],
-                    'keyword': keyword,
-                    'url': article.get('url', ''),
-                    'entities': entities,
-                    'relations': relations,
-                    'crawled_at': article.get('crawled_at', datetime.now()),
-                    'processed_at': datetime.now(),
-                    'processed': True  # 确保状态为已处理
-                }
-                
-                result = mongodb_conn.get_collection('crawled_articles').insert_one(article_doc)
-                article_id = str(result.inserted_id)
-                
-                # 创建文档实例
-                from app.database.mongodb import document_instance_manager
-                entity_references = []
-                for category, items in entities.items():
-                    # Use lowercase category to match MongoDB entity IDs
-                    for item_name in items:
-                        entity_id = f"CANONICAL_{category}_{item_name}"
-                        entity_references.append({
-                            'entity_id': entity_id,
-                            'entity_name': item_name,
-                            'entity_type': category
-                        })
-                
-                if entity_references:
-                    document_instance_manager.save_document_instance(
-                        source_id=article['source'],
-                        title=article['title'],
-                        content=article.get('content', ''),
-                        extracted_time=article.get('crawled_at', datetime.now()),
-                        entity_references=entity_references
-                    )
+                pipeline_result = _save_article_and_process(article, keyword=keyword)
+                process_result = pipeline_result.get("process_result") or {}
+                summary = process_result.get("process_result") or {}
+                total_entities += int(summary.get('entities') or 0)
+                total_relations += int(summary.get('relations') or 0)
                 
                 processed_count += 1
                 

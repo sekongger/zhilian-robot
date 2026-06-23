@@ -43,6 +43,22 @@ class GraphService:
         except Exception as e:
             logger.error(f"保存到图谱失败: {str(e)}", exc_info=True)
             return {"success": False, "error": str(e)}
+
+    def save_structured_data(self, entities: List[Dict], relations: List[Dict]) -> Dict:
+        """
+        保存已对齐本体的结构化实体与关系到图谱
+
+        Args:
+            entities: [{"entity_id": "", "name": "", "type": "", "confidence": 0.9}, ...]
+            relations: [{"subject_id": "", "object_id": "", "predicate_id": "", "label": "", "confidence": 0.9}, ...]
+        """
+        try:
+            logger.info(f"保存结构化图谱数据: {len(entities)} 个实体, {len(relations)} 个关系")
+            self._save_structured_to_graph(entities, relations)
+            return {"success": True, "entities_count": len(entities), "relations_count": len(relations)}
+        except Exception as exc:
+            logger.error(f"保存结构化图谱失败: {exc}", exc_info=True)
+            return {"success": False, "error": str(exc)}
     
     def build_graph_from_text(self, text: str, use_llm: bool = True) -> Dict:
         """
@@ -83,6 +99,17 @@ class GraphService:
         # 创建关系 - 智能合并
         for relation in relations:
             self._merge_relation(relation)
+
+    def _save_structured_to_graph(self, entities: List[Dict], relations: List[Dict]):
+        for entity in entities:
+            self._merge_entity_by_id(
+                entity_id=entity.get("entity_id"),
+                name=entity.get("name"),
+                entity_type=entity.get("type"),
+                confidence=entity.get("confidence", 0.9),
+            )
+        for relation in relations:
+            self._merge_relation_by_id(relation)
     
     def _merge_entity(self, name: str, entity_type: str, confidence: float = 0.9):
         """
@@ -108,6 +135,34 @@ class GraphService:
         RETURN e
         """
         self.neo4j.execute_write(query, {
+            "name": name,
+            "type": entity_type,
+            "confidence": confidence
+        })
+
+    def _merge_entity_by_id(self, entity_id: str, name: str, entity_type: str, confidence: float = 0.9):
+        query = """
+        MERGE (e:Entity {entity_id: $entity_id})
+        ON CREATE SET
+            e.name = $name,
+            e.type = $type,
+            e.confidence = $confidence,
+            e.created_at = datetime(),
+            e.updated_at = datetime(),
+            e.occurrence_count = 1
+        ON MATCH SET
+            e.updated_at = datetime(),
+            e.name = COALESCE(e.name, $name),
+            e.type = COALESCE(e.type, $type),
+            e.occurrence_count = e.occurrence_count + 1,
+            e.confidence = CASE
+                WHEN $confidence > e.confidence THEN $confidence
+                ELSE e.confidence
+            END
+        RETURN e
+        """
+        self.neo4j.execute_write(query, {
+            "entity_id": entity_id,
             "name": name,
             "type": entity_type,
             "confidence": confidence
@@ -171,6 +226,35 @@ class GraphService:
         self.neo4j.execute_write(query, {
             "subject": relation.get("subject"),
             "object": relation.get("object"),
+            "label": relation_label,
+            "confidence": relation.get("confidence", 0.9)
+        })
+
+    def _merge_relation_by_id(self, relation: Dict):
+        relation_type = relation.get("predicate_id") or relation.get("relation") or "RELATION"
+        relation_label = relation.get("label") or relation_type
+        relation_type_safe = str(relation_type).replace(" ", "_").replace("-", "_").replace(":", "_").upper()
+
+        query = f"""
+        MATCH (a:Entity {{entity_id: $subject_id}})
+        MATCH (b:Entity {{entity_id: $object_id}})
+        MERGE (a)-[r:{relation_type_safe}]->(b)
+        ON CREATE SET
+            r.label = $label,
+            r.confidence = $confidence,
+            r.created_at = datetime(),
+            r.updated_at = datetime(),
+            r.occurrence_count = 1
+        ON MATCH SET
+            r.updated_at = datetime(),
+            r.occurrence_count = r.occurrence_count + 1,
+            r.confidence = (r.confidence + $confidence) / 2
+        RETURN r
+        """
+
+        self.neo4j.execute_write(query, {
+            "subject_id": relation.get("subject_id"),
+            "object_id": relation.get("object_id"),
             "label": relation_label,
             "confidence": relation.get("confidence", 0.9)
         })

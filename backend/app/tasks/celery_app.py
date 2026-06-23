@@ -16,7 +16,8 @@ celery_app = Celery(
     backend=f'redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/0',
     include=[
         'app.tasks.crawl_tasks',
-        'app.tasks.data_tasks'
+        'app.tasks.data_tasks',
+        'app.tasks.kg_tasks',
     ]
 )
 
@@ -86,6 +87,12 @@ celery_app.conf.beat_schedule = {
         'task': 'app.tasks.data_tasks.cleanup_old_crawl_data',
         'schedule': crontab(day_of_week=1, hour=3, minute=0),
         'args': (30,),  # 清理30天前的数据
+    },
+    # 每30分钟消费一次 news_kg 队列
+    'build-news-kg-queue': {
+        'task': 'app.tasks.kg_tasks.build_news_kg_queue',
+        'schedule': crontab(minute='*/30'),
+        'args': (20,),
     },
 }
 

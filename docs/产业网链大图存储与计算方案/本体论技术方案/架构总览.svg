@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="900" height="580" fill="#fff"/>
+
+  <!-- 标题 -->
+  <text x="450" y="35" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a">产业网链数据海平台架构总览</text>
+
+  <!-- 数据服务层 -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="60" width="820" height="130" rx="8" fill="#f0f4f8" stroke="#5a7a9a" stroke-width="1.5"/>
+  </g>
+  <rect x="40" y="60" width="820" height="32" rx="8" fill="#5a7a9a"/>
+  <rect x="40" y="84" width="820" height="8" fill="#5a7a9a"/>
+  <text x="450" y="83" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" fill="#fff">数据服务层（检索 / 推理 / 场景）</text>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#333">
+    <!-- ES -->
+    <rect x="60" y="105" width="150" height="70" rx="4" fill="#fff" stroke="#ccd6e0" stroke-width="1"/>
+    <text x="135" y="125" text-anchor="middle" font-weight="bold" fill="#5a7a9a">Elasticsearch</text>
+    <text x="135" y="142" text-anchor="middle" font-size="10" fill="#666">全文检索引擎</text>
+    <text x="135" y="158" text-anchor="middle" font-size="10" fill="#666">支持复杂聚合查询</text>
+
+    <!-- Redis -->
+    <rect x="225" y="105" width="150" height="70" rx="4" fill="#fff" stroke="#ccd6e0" stroke-width="1"/>
+    <text x="300" y="125" text-anchor="middle" font-weight="bold" fill="#5a7a9a">Redis</text>
+    <text x="300" y="142" text-anchor="middle" font-size="10" fill="#666">高速缓存/会话管理</text>
+    <text x="300" y="158" text-anchor="middle" font-size="10" fill="#666">热点数据加速</text>
+
+    <!-- API网关 -->
+    <rect x="390" y="105" width="150" height="70" rx="4" fill="#fff" stroke="#ccd6e0" stroke-width="1"/>
+    <text x="465" y="125" text-anchor="middle" font-weight="bold" fill="#5a7a9a">API 网关</text>
+    <text x="465" y="142" text-anchor="middle" font-size="10" fill="#666">统一接入/鉴权限流</text>
+    <text x="465" y="158" text-anchor="middle" font-size="10" fill="#666">协议转换/路由分发</text>
+
+    <!-- 查询编排 -->
+    <rect x="555" y="105" width="150" height="70" rx="4" fill="#fff" stroke="#ccd6e0" stroke-width="1"/>
+    <text x="630" y="125" text-anchor="middle" font-weight="bold" fill="#5a7a9a">查询编排</text>
+    <text x="630" y="142" text-anchor="middle" font-size="10" fill="#666">多源融合查询</text>
+    <text x="630" y="158" text-anchor="middle" font-size="10" fill="#666">结果聚合与排序</text>
+
+    <!-- 向量检索 -->
+    <rect x="720" y="105" width="120" height="70" rx="4" fill="#fff" stroke="#ccd6e0" stroke-width="1"/>
+    <text x="780" y="125" text-anchor="middle" font-weight="bold" fill="#5a7a9a">向量检索</text>
+    <text x="780" y="142" text-anchor="middle" font-size="10" fill="#666">语义相似度匹配</text>
+    <text x="780" y="158" text-anchor="middle" font-size="10" fill="#666">Embedding索引</text>
+  </g>
+
+  <!-- 箭头1 -->
+  <path d="M450 190 L450 215" stroke="#8a9bab" stroke-width="2" fill="none"/>
+  <polygon points="450,225 444,215 456,215" fill="#8a9bab"/>
+
+  <!-- 数据要素层 -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="230" width="820" height="150" rx="8" fill="#f5f8f5" stroke="#6a8a6a" stroke-width="1.5"/>
+  </g>
+  <rect x="40" y="230" width="820" height="32" rx="8" fill="#6a8a6a"/>
+  <rect x="40" y="254" width="820" height="8" fill="#6a8a6a"/>
+  <text x="450" y="253" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" fill="#fff">数据要素层（语义与知识）</text>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#333">
+    <!-- 本体模型 -->
+    <rect x="60" y="275" width="220" height="90" rx="4" fill="#fff" stroke="#c5d6c5" stroke-width="1"/>
+    <text x="170" y="295" text-anchor="middle" font-weight="bold" fill="#6a8a6a">本体模型</text>
+    <text x="170" y="312" text-anchor="middle" font-size="10" fill="#666">类/属性/关系定义</text>
+    <text x="170" y="328" text-anchor="middle" font-size="10" fill="#666">语义约束与版本管理</text>
+    <text x="170" y="344" text-anchor="middle" font-size="9" fill="#888">MySQL元数据库</text>
+
+    <!-- 知识网络 -->
+    <rect x="310" y="275" width="280" height="90" rx="4" fill="#fff" stroke="#c5d6c5" stroke-width="1"/>
+    <text x="450" y="295" text-anchor="middle" font-weight="bold" fill="#6a8a6a">知识网络</text>
+    <text x="450" y="312" text-anchor="middle" font-size="10" fill="#666">standard_document / micro_document</text>
+    <text x="450" y="328" text-anchor="middle" font-size="10" fill="#666">entity / context / statement</text>
+    <text x="450" y="344" text-anchor="middle" font-size="9" fill="#888">MongoDB + Neo4j + Milvus</text>
+
+    <!-- 主题数仓 -->
+    <rect x="620" y="275" width="220" height="90" rx="4" fill="#fff" stroke="#c5d6c5" stroke-width="1"/>
+    <text x="730" y="295" text-anchor="middle" font-weight="bold" fill="#6a8a6a">主题数仓</text>
+    <text x="730" y="312" text-anchor="middle" font-size="10" fill="#666">业务域分层建模</text>
+    <text x="730" y="328" text-anchor="middle" font-size="10" fill="#666">指标口径统一管理</text>
+    <text x="730" y="344" text-anchor="middle" font-size="9" fill="#888">Doris</text>
+  </g>
+
+  <!-- 箭头2 -->
+  <path d="M450 380 L450 405" stroke="#8a9bab" stroke-width="2" fill="none"/>
+  <polygon points="450,415 444,405 456,405" fill="#8a9bab"/>
+
+  <!-- 数据资源层 -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="420" width="820" height="150" rx="8" fill="#faf8f5" stroke="#9a8a6a" stroke-width="1.5"/>
+  </g>
+  <rect x="40" y="420" width="820" height="32" rx="8" fill="#9a8a6a"/>
+  <rect x="40" y="444" width="820" height="8" fill="#9a8a6a"/>
+  <text x="450" y="443" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" fill="#fff">数据资源层（原始与贴源）</text>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#333">
+    <!-- 采集接入 -->
+    <rect x="60" y="465" width="180" height="90" rx="4" fill="#fff" stroke="#d6cfc0" stroke-width="1"/>
+    <text x="150" y="485" text-anchor="middle" font-weight="bold" fill="#9a8a6a">采集接入</text>
+    <text x="150" y="502" text-anchor="middle" font-size="10" fill="#666">API/CDC/爬虫/文件导入</text>
+    <text x="150" y="518" text-anchor="middle" font-size="10" fill="#666">数据类型：资讯/研报/政策</text>
+    <text x="150" y="534" text-anchor="middle" font-size="9" fill="#888">专利/企业/产品...</text>
+
+    <!-- 贴源明细 -->
+    <rect x="260" y="465" width="180" height="90" rx="4" fill="#fff" stroke="#d6cfc0" stroke-width="1"/>
+    <text x="350" y="485" text-anchor="middle" font-weight="bold" fill="#9a8a6a">贴源明细库</text>
+    <text x="350" y="502" text-anchor="middle" font-size="10" fill="#666">原始数据保真</text>
+    <text x="350" y="518" text-anchor="middle" font-size="10" fill="#666">结构化归档</text>
+    <text x="350" y="534" text-anchor="middle" font-size="9" fill="#888">resource_* 集合</text>
+
+    <!-- 对象与文档存储 -->
+    <rect x="460" y="465" width="180" height="90" rx="4" fill="#fff" stroke="#d6cfc0" stroke-width="1"/>
+    <text x="550" y="485" text-anchor="middle" font-weight="bold" fill="#9a8a6a">对象与文档存储</text>
+    <text x="550" y="502" text-anchor="middle" font-size="10" fill="#666">MinIO对象存储</text>
+    <text x="550" y="518" text-anchor="middle" font-size="10" fill="#666">MongoDB文档存储</text>
+    <text x="550" y="534" text-anchor="middle" font-size="9" fill="#888">SHA-256内容去重</text>
+
+    <!-- 元数据管理 -->
+    <rect x="660" y="465" width="180" height="90" rx="4" fill="#fff" stroke="#d6cfc0" stroke-width="1"/>
+    <text x="750" y="485" text-anchor="middle" font-weight="bold" fill="#9a8a6a">元数据管理</text>
+    <text x="750" y="502" text-anchor="middle" font-size="10" fill="#666">数据血缘/质量监控</text>
+    <text x="750" y="518" text-anchor="middle" font-size="10" fill="#666">数据类型字典</text>
+    <text x="750" y="534" text-anchor="middle" font-size="9" fill="#888">inc_data_type_dict</text>
+  </g>
+</svg>

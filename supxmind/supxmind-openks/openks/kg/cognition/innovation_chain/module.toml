@@ -1,0 +1,7 @@
+name = "innovation_chain"
+title = "创新链图谱库"
+stage = "cognition"
+owner = "待定"
+status = "skeleton"
+summary = "追踪技术创新、成果转化和协同主体。"
+dependencies = ['industry_chain']

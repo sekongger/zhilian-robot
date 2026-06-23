@@ -1,0 +1,1 @@
+from .innovation_chain_schema import InnovationChainSchema

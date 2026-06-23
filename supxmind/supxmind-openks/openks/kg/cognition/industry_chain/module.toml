@@ -1,0 +1,7 @@
+name = "industry_chain"
+title = "产业链图谱库"
+stage = "cognition"
+owner = "杨辰、雅馨"
+status = "skeleton"
+summary = "定义产业网链主结构，承接事实要素并组织链路。"
+dependencies = ['news_kg', 'report_kg', 'enterprise_kg', 'technology_kg', 'product_kg']

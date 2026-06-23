@@ -1,0 +1,6 @@
+graph_id: industry_chain
+graph_type: cognition
+schema: openks.kg.cognition.industry_chain.schema.industry_chain_schema.IndustryChainSchema
+builder: openks.kg.cognition.industry_chain.builder.industry_chain_builder.IndustryChainBuilder
+reasoner: openks.kg.cognition.industry_chain.reasoner.industry_chain_reasoner.IndustryChainReasoner
+solver: openks.kg.cognition.industry_chain.solver.industry_chain_solver.IndustryChainSolver

@@ -1,0 +1,6 @@
+graph_id: innovation_chain
+graph_type: cognition
+schema: openks.kg.cognition.innovation_chain.schema.innovation_chain_schema.InnovationChainSchema
+builder: openks.kg.cognition.innovation_chain.builder.innovation_chain_builder.InnovationChainBuilder
+reasoner: openks.kg.cognition.innovation_chain.reasoner.innovation_chain_reasoner.InnovationChainReasoner
+solver: openks.kg.cognition.innovation_chain.solver.innovation_chain_solver.InnovationChainSolver

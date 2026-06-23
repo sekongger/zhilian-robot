@@ -1,0 +1,1 @@
+from .industry_chain_schema import IndustryChainSchema
